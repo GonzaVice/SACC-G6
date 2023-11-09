@@ -12,10 +12,23 @@ python -m venv env
 
 2. Activar la variable de entorno:
 
-En Windows:
+En Windows y CMD:
 
 ```
 env\Scripts\activate.bat
+```
+
+En Windows y Powershell:
+i. Cambiar la política de ejecución de PowerShell
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+ii. Activar la variable de entorno
+
+```
+env\Scripts\Activate
 ```
 
 En MacOS o Linux:

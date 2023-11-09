@@ -56,12 +56,12 @@ def control_led(request):
 
 def post_to_esp32(request):
     # URL del ESP32 y su endpoint para recibir la solicitud POST
-    esp32_url = "http://192.168.5.20/your-endpoint"
+    esp32_url = "http://10.33.3.166/your-endpoint"
 
     # Datos de la reservación en formato JSON
     instruction_data = {
-        "locker": "1",
-        "servo": "close", ## open/close
+        "locker": "2",  ## 1/2/3
+        "servo": "open", ## open/close
         "client_request" : "True" ##True/False
     }
 
@@ -78,7 +78,7 @@ def post_to_esp32(request):
 
 def get_from_esp32(request):
     # URL del ESP32 y su endpoint para recibir la solicitud GET
-    esp32_url = "http://192.168.5.20/your-endpoint"
+    esp32_url = "http://10.33.3.166/your-endpoint"
 
     # Realiza una solicitud GET al ESP32
     response = requests.get(esp32_url)

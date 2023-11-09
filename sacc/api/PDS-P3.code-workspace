@@ -1,0 +1,16 @@
+{
+  "folders": [
+	{
+		"path": "../.."
+	},
+	{
+		"name": "ESP32",
+		"path": "../../../ESP32"
+	},
+	{
+		"name": "serial:/COM3",
+		"uri": "serial://com3/"
+	}
+],
+  "settings": {}
+}

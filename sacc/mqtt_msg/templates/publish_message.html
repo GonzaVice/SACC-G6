@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Publish Message</title>
+  </head>
+  <body>
+    <h2>Publish Message</h2>
+    <form method="post" action="{% url 'publish_message' %}">
+      {% csrf_token %}
+      <label for="message">Mensaje:</label>
+      <input type="text" name="message" required />
+      <button type="submit">Publicar</button>
+    </form>
+
+    {% if message_sent %}
+    <p>Mensaje enviado con éxito. ¡Envía otro!</p>
+    {% endif %}
+  </body>
+</html>

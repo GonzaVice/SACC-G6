@@ -1,0 +1,16 @@
+<!-- myapp/templates/myapp/receive_message.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Receive Message</title>
+  </head>
+  <body>
+    <h2>Receive Message</h2>
+
+    {% for message in messages %}
+    <p>Mensaje recibido: {{ message }}</p>
+    {% endfor %}
+
+    <!-- Puedes agregar lógica adicional aquí para mostrar los mensajes recibidos dinámicamente -->
+  </body>
+</html>

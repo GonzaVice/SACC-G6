@@ -6,6 +6,19 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt  # Importa el decorador csrf_exempt
 import requests
 import json
+from django.http import HttpResponse
+from .mqtt_manager import MQTTManager
+
+# Configuración de la conexión MQTT
+SERVER = "86718d4d31714885a63c85b39185fb86.s1.eu.hivemq.cloud"
+PORT = 8883
+USER = "KaijuRex"
+PASSWORD = "Qwerty123"
+CLIENT_ID = "DjangoApp"  # Cambia esto a un identificador único para tu aplicación Django
+
+# Instanciar el gestor MQTT
+mqtt_manager = MQTTManager(SERVER, PORT, USER, PASSWORD, CLIENT_ID)
+
 
 @api_view(['GET'])
 def getUsers(request):
@@ -33,7 +46,6 @@ def addReservation(request):
         serializer.save()
     return Response(serializer.data)
 
-
 @csrf_exempt
 def control_led(request):
     if request.method == 'GET':
@@ -54,7 +66,7 @@ def control_led(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud no admitida'})
 
-def post_to_esp32(request):
+def post_esp32(request):
     # URL del ESP32 y su endpoint para recibir la solicitud POST
     esp32_url = "http://10.33.3.166/your-endpoint"
 
@@ -74,9 +86,7 @@ def post_to_esp32(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Error en la solicitud POST al ESP32'})
 
-
-
-def get_from_esp32(request):
+def get_esp32(request):
     # URL del ESP32 y su endpoint para recibir la solicitud GET
     esp32_url = "http://10.33.3.166/your-endpoint"
 

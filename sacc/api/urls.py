@@ -7,6 +7,6 @@ urlpatterns = [
     path('get_reservations/', views.getReservations, name='get_reservations'),  # Nueva ruta para obtener reservaciones
     path('add_reservations/', views.addReservation, name='add_reservations'),
     path('control-led/', views.control_led, name='control_led'),
-    path('get_from_esp32/', views.get_from_esp32, name='get_from_esp32'),
-    path('post_to_esp32/', views.post_to_esp32, name='post_to_esp32'),
+    path('get_esp32/', views.get_esp32, name='get_esp32'),
+    path('post_esp32/', views.post_esp32, name='post_esp32'),
 ]

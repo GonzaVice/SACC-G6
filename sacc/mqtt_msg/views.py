@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .mqtt_util import mqtt_connect_and_publish, mqtt_subscribe
+from .mqtt_util import mqtt_connect_and_publish, mqtt_subscribe, received_messages, mqtt_disconnect
 
 def publish_message(request):
     if request.method == 'POST':
@@ -10,6 +10,11 @@ def publish_message(request):
     return render(request, 'publish_message.html', {'message_sent': False})
 
 def receive_message(request):
+    mqtt_disconnect()  # Desconectar y limpiar el cliente antes de suscribirse nuevamente
     mqtt_subscribe('msg/hi-web')
+
+    messages = received_messages.copy()  # Copia los mensajes para mostrarlos en la plantilla
+    #received_messages.clear()  # Limpia la lista para evitar duplicados
     # Puedes agregar lógica adicional aquí para procesar mensajes recibidos si es necesario
-    return render(request, 'receive_message.html', {'messages': []}) # Pasa una lista vacía por ahora
+    # return render(request, 'receive_message.html', {'messages': []}) # Pasa una lista vacía por ahora
+    return render(request, 'receive_message.html', {'messages': messages})

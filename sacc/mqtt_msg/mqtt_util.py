@@ -8,11 +8,15 @@ mqtt_port = 8883
 mqtt_username = "KaijuRex"
 mqtt_password = "Qwerty123"
 
+received_messages = []  # Almacena los mensajes recibidos
+
 def on_connect(client, userdata, flags, rc):
     print(f"Conectado al servidor MQTT con resultado: {rc}")
 
 def on_message(client, userdata, msg):
-    print(f"Mensaje recibido en el topic {msg.topic}: {msg.payload.decode('utf-8')}")
+    message = msg.payload.decode('utf-8')
+    print(f"Mensaje recibido en el topic {msg.topic}: {message}")
+    received_messages.append(message)
 
 def mqtt_connect_and_publish(topic, message):
     client = mqtt.Client()
@@ -50,3 +54,10 @@ def mqtt_subscribe(topic):
 
     client.subscribe(topic)
     client.loop_start()
+
+def mqtt_disconnect():
+    client = mqtt.Client()
+    client.username_pw_set(username=mqtt_username, password=mqtt_password)
+    client.tls_set_context(context=ssl.create_default_context())
+    client.connect(mqtt_broker, mqtt_port, 60)
+    client.disconnect()

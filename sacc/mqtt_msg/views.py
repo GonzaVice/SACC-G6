@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 from .mqtt_util import mqtt_connect_and_publish, mqtt_subscribe, received_messages, mqtt_disconnect
 
 def publish_message(request):
@@ -18,3 +19,15 @@ def receive_message(request):
     # Puedes agregar lógica adicional aquí para procesar mensajes recibidos si es necesario
     # return render(request, 'receive_message.html', {'messages': []}) # Pasa una lista vacía por ahora
     return render(request, 'receive_message.html', {'messages': messages})
+
+def send_reservation_message(request):
+    mqtt_connect_and_publish('msg/reservation', 'Reserva realizada')
+    return JsonResponse({'status': 'success'})
+
+def send_load_message(request):
+    mqtt_connect_and_publish('msg/load', 'Carga realizada')
+    return JsonResponse({'status': 'success'})
+
+def send_unload_message(request):
+    mqtt_connect_and_publish('msg/unload', 'Descarga realizada')
+    return JsonResponse({'status': 'success'})

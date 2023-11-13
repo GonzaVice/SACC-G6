@@ -1,39 +1,34 @@
 import React from 'react';
+import axios from 'axios';
 
-const HandleReserva = () => {
-  //poner logica de reserva
-  console.log("Buscar casilleros disponibles");
-  console.log("De los disponibles, tomar los con el tamaño adecuado");
-  console.log("Asignar el casillero si hay disponibles");
-  console.log("Retornar casillero asignado si esque hay");
-  console.log("Casillero encontrado");
+// Function to get the CSRF token
+const getCsrfToken = () => {
+    return document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        .split('=')[1];
+        
 }
+console.log('cfsrfsrf KEY');
+console.log(getCsrfToken);
+console.log(' KEY');
 
-const HandleMailOperador = () => {
-  //poner logica de
-  console.log("Mail enviado a OPERADOR");
-
-}
-
-const HandleMailCliente = () => {
-  //poner logica de
-  console.log("Mail enviado a CLIENTE");
-
-}
 const BotonReserva = () => {
-  const manejarClick = () => {
-    console.log('Reservando');
-    console.log("Buscando casillero...");
-    HandleReserva();
-    console.log('Si existe casillero se reserva');
-    console.log("Reservando casillero...");
-    console.log("Reserva realizada");
-    console.log("Su casillero es el 1");
-    console.log("Mandando mensaje al operador y cliente...");
-    HandleMailCliente();
-    HandleMailOperador();
-    console.log("Listo");
-    console.log("\n");
+  const manejarClick = async() => {
+    const data = {
+      'height': 20,
+      'width':20,
+      'depth':20
+    };
+
+    try{
+      await axios.post('http://localhost:8000/mqtt/reservation-message/', data, {
+        headers: {
+          'X-CSRFToken': getCsrfToken()
+        }
+      });
+    } catch(error){
+      console.log(error)
+    }
   };
 
   return (

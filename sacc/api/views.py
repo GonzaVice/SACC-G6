@@ -17,7 +17,7 @@ PASSWORD = "Qwerty123"
 CLIENT_ID = "DjangoApp"  # Cambia esto a un identificador único para tu aplicación Django
 
 # Instanciar el gestor MQTT
-mqtt_manager = MQTTManager(SERVER, PORT, USER, PASSWORD, CLIENT_ID)
+#mqtt_manager = MQTTManager(SERVER, PORT, USER, PASSWORD, CLIENT_ID)
 
 
 @api_view(['GET'])

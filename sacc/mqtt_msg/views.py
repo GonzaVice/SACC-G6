@@ -5,7 +5,17 @@ from .mqtt_util import mqtt_connect_and_publish, mqtt_subscribe, received_messag
 from django.middleware.csrf import get_token
 import json
 import time
+import random
+import string
 
+client_passwords = {'1': {'password': ''},'2': {'password': ''},'3': {'password': ''}}
+operator_passwords = {'1': {'password': ''},'2': {'password': ''},'3': {'password': ''}}
+
+
+def generar_string():
+    caracteres = string.ascii_letters + string.digits  # letras y números
+    longitud = 6
+    return ''.join(random.choice(caracteres) for i in range(longitud))
 
 def publish_message(request):
     if request.method == 'POST':
@@ -70,19 +80,91 @@ def send_reservation_message(request):
                 print('==========')
                 print(json_message)
                 print('==========')
-                mqtt_connect_and_publish('msg/detail', json.dumps(json_message))
+
+                json_to_esp = {
+                    "station_id": 1 , 
+                    "nickname": locker['nickname'] 
+                }    
+
+                mqtt_connect_and_publish('msg/reservation', json.dumps(json_to_esp))
                 #mail a la cliente
                 #djgonzalez1@miuandes.cl
+                #client_password = generar_string()
+                client_password = "2"
+
+                client_passwords[str(locker['nickname'])]['password'] = client_password
+                #operator_password = generar_string()
+                operator_password = '1'
+                operator_passwords[str(locker['nickname'])]['password'] = operator_password
+                print('client passwords: ', client_passwords)
+                print('operator passwords: ', operator_passwords)
+
 
                 break
 
-    mqtt_connect_and_publish('msg/reservation', 'Reserva realizada')
     return JsonResponse({'status': 'success'})
 
 def send_load_message(request):
-    mqtt_connect_and_publish('msg/load', 'Carga realizada')
+    
+    if request.method == 'POST':
+        print('POST')
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        print(body)
+        mqtt_subscribe('msg/detail')
+        print('RECIEVE MESSAGES')
+        print(received_messages)
+        while received_messages == []:
+            print('WAITING')
+            time.sleep(2)
+        print('RECIEVE con algo')
+        print("este es el MENSAJE: \n" ,received_messages[-1])
+        json_message = json.loads(received_messages[-1])
+        print("ESTE ES EL JSON",json_message)
+        print('==========')
+
+        if json_message['station_id'] == 1:
+            for locker in json_message['lockers']:
+                if locker['nickname'] == body['nickname'] and body['password'] == operator_passwords[str(locker['nickname'])]['password']:
+                    
+                    json_to_esp = {
+                        "station_id": 1 , 
+                        "nickname": locker['nickname'] 
+                    }
+                    mqtt_connect_and_publish('msg/load', json.dumps(json_to_esp))
+                    break
+
+
     return JsonResponse({'status': 'success'})
 
 def send_unload_message(request):
-    mqtt_connect_and_publish('msg/unload', 'Descarga realizada')
-    return JsonResponse({'status': 'success'})
+        if request.method == 'POST':
+            print('POST')
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            print(body)
+            mqtt_subscribe('msg/detail')
+            print('RECIEVE MESSAGES')
+            print(received_messages)
+            while received_messages == []:
+                print('WAITING')
+                time.sleep(2)
+            print('RECIEVE con algo')
+            print("este es el MENSAJE: \n" ,received_messages[-1])
+            json_message = json.loads(received_messages[-1])
+            print("ESTE ES EL JSON",json_message)
+            print('==========')
+
+        if json_message['station_id'] == 1:
+            for locker in json_message['lockers']:
+                if locker['nickname'] == body['nickname'] and body['password'] == client_passwords[str(locker['nickname'])]['password']:
+                    
+                    json_to_esp = {
+                        "station_id": 1 , 
+                        "nickname": locker['nickname'] 
+                    }
+                    mqtt_connect_and_publish('msg/unload', json.dumps(json_to_esp))
+                    break
+
+
+        return JsonResponse({'status': 'success'})

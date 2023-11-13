@@ -7,6 +7,45 @@ import json
 import time
 import random
 import string
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from django.http import JsonResponse
+import os
+
+def send_email(to_address, subject, body):
+    SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+
+    creds = None
+    token_path = 'token.json'  # Path to the token file
+
+    if os.path.exists(token_path):
+        creds = Credentials.from_authorized_user_file(token_path)
+    
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open(token_path, 'w') as token:
+            token.write(creds.to_json())
+
+    service = build('gmail', 'v1', credentials=creds)
+
+    message = MIMEMultipart()
+    message['to'] = to_address
+    message['subject'] = subject
+    msg = MIMEText(body)
+    message.attach(msg)
+
+    raw = base64.urlsafe_b64encode(message.as_bytes()).decode("utf-8")
+    
+    message = service.users().messages().send(userId="me", body={"raw": raw}).execute()
+
+
 
 client_passwords = {'1': {'password': ''},'2': {'password': ''},'3': {'password': ''}}
 operator_passwords = {'1': {'password': ''},'2': {'password': ''},'3': {'password': ''}}
@@ -90,8 +129,10 @@ def send_reservation_message(request):
                 #mail a la cliente
                 #djgonzalez1@miuandes.cl
                 #client_password = generar_string()
-                client_password = "2"
+                send_email('dgonzalezguillard@gmail.com', 'Locker Reservation', 'Your locker is reserved.')
 
+
+                client_password = "2"
                 client_passwords[str(locker['nickname'])]['password'] = client_password
                 #operator_password = generar_string()
                 operator_password = '1'

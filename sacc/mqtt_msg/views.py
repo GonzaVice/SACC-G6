@@ -14,6 +14,9 @@ from googleapiclient.discovery import build
 from django.http import JsonResponse
 import os
 
+import smtplib
+from decouple import config
+
 def send_email(to_address, subject, body):
     SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
@@ -45,6 +48,20 @@ def send_email(to_address, subject, body):
     
     message = service.users().messages().send(userId="me", body={"raw": raw}).execute()
 
+def send_email_2(to_address, body):
+    message = body
+    subject = "SACC-G6"
+
+    message = "Subject: {}\n\n{}".format(subject, message)
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login("jtqueirolo@miuandes.cl", "") # AQUI AGREGAR GENTE Y CLAVE
+
+    server.sendmail("jtqueirolo@miuandes.cl", "jtqueirolo@miuandes.cl", message)
+
+    server.quit()
+
+    print("Email sent successfully to %s:" % (message))
 
 
 client_passwords = {'1': {'password': ''},'2': {'password': ''},'3': {'password': ''}}

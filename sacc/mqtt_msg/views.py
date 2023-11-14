@@ -55,14 +55,27 @@ def send_email_2(to_address, body):
     message = "Subject: {}\n\n{}".format(subject, message)
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login("jtqueirolo@miuandes.cl", "") # AQUI AGREGAR GENTE Y CLAVE
+    server.login("givicente@miuandes.cl", "Gonzalo1967!") # AQUI AGREGAR GENTE Y CLAVE
 
-    server.sendmail("jtqueirolo@miuandes.cl", "jtqueirolo@miuandes.cl", message)
+    server.sendmail("givicente@miuandes.cl", "givicente@miuandes.cl", message)
 
     server.quit()
 
     print("Email sent successfully to %s:" % (message))
 
+def email(message, subject, email_send, email_password, email_receive):
+    # Antes ir a la configuración de tu cuenta de Google -> Seguridad -> Acceso de aplicaciones menos seguras
+
+    message = "Subject: {}\n\n{}".format(subject, message)
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(email_send, email_password)
+
+    server.sendmail(email_send, email_receive, message)
+
+    server.quit()
+
+    print("Email sent successfully to %s:" % (message))
 
 client_passwords = {'1': {'password': ''},'2': {'password': ''},'3': {'password': ''}}
 operator_passwords = {'1': {'password': ''},'2': {'password': ''},'3': {'password': ''}}
@@ -181,6 +194,8 @@ def send_load_message(request):
         print("ESTE ES EL JSON",json_message)
         print('==========')
 
+
+
         if json_message['station_id'] == 1:
             for locker in json_message['lockers']:
                 if locker['nickname'] == body['nickname'] and body['password'] == operator_passwords[str(locker['nickname'])]['password']:
@@ -190,6 +205,9 @@ def send_load_message(request):
                         "nickname": locker['nickname'] 
                     }
                     mqtt_connect_and_publish('msg/load', json.dumps(json_to_esp))
+
+                    ## Mandar mail con la contraseña
+                    email("Hola, nuevo mail", "Contraseña: asd123", "givicente@miuandes.cl", "", "givicente@miuandes.cl")
                     break
 
 

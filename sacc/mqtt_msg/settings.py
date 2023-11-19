@@ -29,7 +29,12 @@ ALLOWED_HOSTS = ['192.168.5.19',
                  '10.33.2.14',
                  '127.0.0.1',
                  'localhost',
-                'http://127.0.0.1:5173']
+                'http://127.0.0.1:5173'
+                    'http://localhost:5174',
+                                    'http://127.0.0.1:5174'
+
+
+]
 
 
 # Application definition
@@ -50,9 +55,28 @@ INSTALLED_APPS = [
 CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:5173',
     'http://localhost:5173',
+        'http://127.0.0.1:5174',
+            'http://localhost:5174',
+
+
     
 ]
+# Optional: Allow all headers
+CORS_ALLOW_ALL_HEADERS = True
 
+# Optional: Allow all methods
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5174",  # Add your React app origin
+    # Add more origins if needed
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

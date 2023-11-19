@@ -13,7 +13,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from django.http import JsonResponse
 import os
-
+from . import MAIL
 import smtplib
 from decouple import config
 
@@ -55,9 +55,9 @@ def send_email_2(to_address, body):
     message = "Subject: {}\n\n{}".format(subject, message)
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login("givicente@miuandes.cl", "Gonzalo1967!") # AQUI AGREGAR GENTE Y CLAVE
+    server.login("givicente@miuandes.cl", "AlteredPassKey42!") # AQUI AGREGAR GENTE Y CLAVE
 
-    server.sendmail("givicente@miuandes.cl", "givicente@miuandes.cl", message)
+    server.sendmail("givicente@miuandes.cl", to_address, message)
 
     server.quit()
 
@@ -145,7 +145,7 @@ def send_reservation_message(request):
                 locker['width'] >= body['width'] and
                 locker['length'] >= body['length']):
                 print(f"The item can fit in locker {locker['nickname']}")
-                locker['state'] = 1
+                # locker['state'] = 1
                 print('==========')
                 print(json_message)
                 print('==========')
@@ -159,17 +159,16 @@ def send_reservation_message(request):
                 #mail a la cliente
                 #djgonzalez1@miuandes.cl
                 #client_password = generar_string()
-                send_email('dgonzalezguillard@gmail.com', 'Locker Reservation', 'Your locker is reserved.')
-
+                # send_email_2('jtqueirolo@miuandes.cl', 'Your locker is reserved.')
 
                 client_password = "2"
                 client_passwords[str(locker['nickname'])]['password'] = client_password
                 #operator_password = generar_string()
-                operator_password = '1'
+                operator_password = "1"
+                MAIL.sendMails('givicente@miuandes.cl', 'Contrasena: 1')
                 operator_passwords[str(locker['nickname'])]['password'] = operator_password
                 print('client passwords: ', client_passwords)
                 print('operator passwords: ', operator_passwords)
-
 
                 break
 
@@ -205,10 +204,9 @@ def send_load_message(request):
                         "nickname": locker['nickname'] 
                     }
                     mqtt_connect_and_publish('msg/load', json.dumps(json_to_esp))
-
-                    ## Mandar mail con la contraseña
-                    email("Hola, nuevo mail", "Contraseña: asd123", "givicente@miuandes.cl", "", "givicente@miuandes.cl")
+                    MAIL.sendMails('givicente@miuandes.cl', f"Producto en locker. Numero: {locker['nickname']} Contrasena: {client_passwords[str(locker['nickname'])]['password']}")
                     break
+
 
 
     return JsonResponse({'status': 'success'})
@@ -244,3 +242,22 @@ def send_unload_message(request):
 
 
         return JsonResponse({'status': 'success'})
+
+def details(request):
+    if request.method == 'GET':
+        print('GET')
+        print(request.GET)
+        csrf_token = get_token(request)
+        mqtt_subscribe('msg/detail')
+        print(received_messages)
+        while received_messages == []:
+            print('WAITING')
+            time.sleep(3)
+            
+        print('RECIEVE con algo')
+        print("este es el MENSAJE: \n" ,received_messages[-1])
+        json_message = json.loads(received_messages[-1])
+        print("ESTE ES EL JSON",json_message)
+        print('==========')
+        return JsonResponse({'details': json_message})
+    

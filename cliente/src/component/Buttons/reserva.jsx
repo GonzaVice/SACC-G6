@@ -9,7 +9,7 @@ const getCsrfToken = () => {
         
 }
 console.log('cfsrfsrf KEY');
-console.log(getCsrfToken);
+console.log(getCsrfToken());
 console.log(' KEY');
 
 const BotonReserva = () => {

@@ -21,4 +21,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("api.urls")),
     path("mqtt/", include('mqtt_msg.urls')),
+    path("base/", include("base.urls")),
 ]

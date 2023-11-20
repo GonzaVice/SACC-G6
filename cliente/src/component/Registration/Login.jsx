@@ -43,9 +43,11 @@ const Login = ({ onLogin }) => {
         if (userData.userType === 'cliente') {
             onLogin('cliente', userData.userId);  // Pass the user ID to the onLogin function
             console.log("ESTE ES EL USER ID:", userData.userId );
-            navigate('/cliente');
-        } else {
-            onLogin();
+            navigate('/cliente', { state: { userId: userData.userId } });
+        } else if (userData.userType == 'operador') {
+          onLogin('operador', userData.userId);
+          console.log("ESTE ES EL OPERADOR ID:", userData.userId );
+          navigate('/operador', { state: { userId: userData.userId } });
         }
       } else {
         console.error('Login failed:', response.data);

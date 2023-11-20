@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Signup from './Signup';
+import Cliente from '../Cliente/Cliente';
+import { useHistory } from 'react-router-dom'; // Importa useHistory desde React Router
 
 // Function to get the CSRF token
 const getCsrfToken = () => {
@@ -15,6 +17,8 @@ const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true); // To toggle between login and signup forms
+  const [userType, setUserType] = useState(''); // State to store the user type
+  const history = useHistory(); // Obtén el historial de navegación
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -31,18 +35,23 @@ const Login = ({ onLogin }) => {
       });
 
       if (response.status === 200) {
-        onLogin();
+        // Assuming the response contains user data with a 'userType' field
+        const userData = response.data;
+        setUserType(userData.userType);
+        console.log("USER TYPE:", userData.userType);
+        if (userData.userType === 'cliente') {
+          onLogin('cliente'); // Pass 'cliente' as a parameter to indicate the user type
+          history.push('/cliente'); // Redirige a la ruta '/cliente' cuando el usuario es cliente
+
+        } else {
+          onLogin();
+        }
       } else {
         console.error('Login failed:', response.data);
       }
     } catch (error) {
       console.error('Error during login:', error.message);
     }
-  };
-  const handleSignup = (e) => {
-    e.preventDefault();
-    // Perform signup logic here
-    onLogin();
   };
 
   return (

@@ -1,5 +1,3 @@
-// main.jsx
-
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.jsx';
@@ -13,10 +11,17 @@ const Main = () => {
     setIsLoggedIn(true);
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
     <React.StrictMode>
       {isLoggedIn ? (
-        <App />
+        <>
+          <App />
+          <button onClick={handleLogout}>Logout</button>
+        </>
       ) : (
         <Login onLogin={handleLogin} />
       )}

@@ -22,12 +22,27 @@ class User(models.Model):
 
     def __str__(self):
         return self.email
-
-## Modelo Reservación
+    
 class Reservation(models.Model):
-    description = models.CharField(max_length=200, default='Default Reservation')  # Cambia la longitud según tus necesidades
-    datetime = models.DateTimeField(auto_now_add=True)  # Se le da fecha al momento de crearse
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Una reserva pertenece a un usuario
+    # Define constantes para los estados
+    LOADING = 0
+    LOADED = 1
+    CONFIRMED = 2
+
+    # Opciones para los estados
+    RESERVATION_STATES = [
+        (LOADING, 'Cargando'),
+        (LOADED, 'Cargado'),
+        (CONFIRMED, 'Confirmado'),
+    ]
+
+    # Campos existentes
+    description = models.CharField(max_length=200, default='Default Reservation')
+    datetime = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # Nuevo campo para el estado de la reserva
+    state = models.IntegerField(choices=RESERVATION_STATES, default=LOADING)
 
     def __str__(self):
         return f"Reservation: {self.description} for {self.user.email} at {self.datetime}"
@@ -54,6 +69,15 @@ class Locker(models.Model):
     height = models.IntegerField()  # Campo para la altura en centímetros
     state = models.IntegerField(choices=STATE_CHOICES, default=0)  
     station = models.ForeignKey(Station, on_delete=models.CASCADE)  # Un casillero pertenece a una estación
+
+    reservation = models.ForeignKey(
+        Reservation,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='locker_reservation'
+    )
+
 
     def __str__(self):
         return f"Locker (ID: {self.id}) - State: {self.get_state_display()}"

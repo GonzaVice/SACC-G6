@@ -4,6 +4,10 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import App from './App.jsx';
 import Login from './component/Registration/Login.jsx';
 import Cliente from './component/Cliente/Cliente.jsx'; // Import the Cliente component
+import Operador from './component/Operador/Operador.jsx';  // Asegúrate de proporcionar la ruta correcta
+
+// ...
+
 import './index.css';
 
 const Main = () => {
@@ -30,8 +34,12 @@ const Main = () => {
             <>
               {userType === 'cliente' ? (
                 <Route path="/cliente" element={<Cliente />} />
-              ) : (
+                ) : (
+              userType === 'operador' ? (
+                <Route path="/operador" element={<Operador />} />
+                ) : (
                 <Route path="/app" element={<App />} />
+                )
               )}
             </>
           ) : (

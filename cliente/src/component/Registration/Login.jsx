@@ -43,8 +43,9 @@ const Login = ({ onLogin }) => {
           onLogin('cliente'); // Pass 'cliente' as a parameter to indicate the user type
           navigate('/cliente'); // Redirect to the Cliente component
         
-        } else {
-          onLogin();
+        } else if (userData.userType == 'operador') {
+          onLogin('operador');
+          navigate('/operador')
         }
       } else {
         console.error('Login failed:', response.data);

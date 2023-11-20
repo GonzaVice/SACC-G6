@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Signup from './Signup';
 import Cliente from '../Cliente/Cliente';
-import { useHistory } from 'react-router-dom'; // Importa useHistory desde React Router
+import { useNavigate } from 'react-router-dom';
 
 // Function to get the CSRF token
 const getCsrfToken = () => {
@@ -18,7 +18,7 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true); // To toggle between login and signup forms
   const [userType, setUserType] = useState(''); // State to store the user type
-  const history = useHistory(); // Obtén el historial de navegación
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();

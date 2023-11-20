@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'r
 import App from './App.jsx';
 import Login from './component/Registration/Login.jsx';
 import Cliente from './component/Cliente/Cliente.jsx'; // Import the Cliente component
+import Operador from './component/Operador/Operador.jsx';
 import './index.css';
 
 const LogoutButton = ({ onLogout }) => {
@@ -43,7 +44,11 @@ const Main = () => {
               {userType === 'cliente' ? (
                 <Route path="/cliente" element={<Cliente userId={userId} />} />
               ) : (
+              userType === 'operador' ? (
+                <Route path="/operador" element={<Operador userId={userId} />} />
+              ) : (
                 <Route path="/app" element={<App />} />
+              )
               )}
             </>
           ) : (

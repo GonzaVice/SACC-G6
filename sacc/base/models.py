@@ -43,7 +43,7 @@ class Reservation(models.Model):
     state = models.IntegerField(choices=RESERVATION_STATES, default=LOADING)
 
     def __str__(self):
-        return f"Reservation: {self.description} for {self.user.email} at {self.datetime}"
+        return f"Reservation: {self.description} at {self.datetime}"
 
 ## Modelo Estación de Casilleros
 class Station(models.Model):

@@ -39,9 +39,7 @@ class Reservation(models.Model):
     # Campos existentes
     description = models.CharField(max_length=200, default='Default Reservation')
     datetime = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # Nuevo campo para el estado de la reserva
+    users = models.ManyToManyField(User, related_name='reservations')  # Nuevo campo para el estado de la reserva
     state = models.IntegerField(choices=RESERVATION_STATES, default=LOADING)
 
     def __str__(self):
@@ -81,3 +79,5 @@ class Locker(models.Model):
 
     def __str__(self):
         return f"Locker (ID: {self.id}) - State: {self.get_state_display()}"
+    
+

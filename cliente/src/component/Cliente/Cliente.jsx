@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './Cliente.css';  // Import the CSS file
 
 const Cliente = ({ userId }) => {
   const [userData, setUserData] = useState(null);
@@ -28,15 +29,30 @@ const Cliente = ({ userId }) => {
     return <p>Loading user data...</p>;
   }
 
+  // Parse the 'reservas' field into a JavaScript object
+  const reservations = JSON.parse(userData.reservas);
+
   return (
-    <div>
+    <div className="container">
       <h2>User Information</h2>
-      <p>Name: {userData.name}</p>  
-      <p>Last Name: {userData.last_name}</p>  
-      <p>Email: {userData.email}</p>  
-      <p>User Type: {userData.user_type}</p>  
+      <div className="userInfo">
+        <p>Name: {userData.name}</p>
+        <p>Last Name: {userData.last_name}</p>
+        <p>Email: {userData.email}</p>
+        <p>User Type: {userData.user_type}</p>
+      </div>
+
+      <h2>Reservations</h2>
+      {reservations.map((reservation, index) => (
+        <div key={index} className="reservation">
+          <h3>Reservation {index + 1}</h3>
+          <p>Description: {reservation.fields.description}</p>
+          <p>Datetime: {new Date(reservation.fields.datetime).toLocaleString()}</p>
+          <p>State: {reservation.fields.state}</p>
+        </div>
+      ))}
     </div>
   );
 };
-
 export default Cliente;
+

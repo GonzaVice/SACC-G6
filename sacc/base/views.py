@@ -72,7 +72,8 @@ def get_user_by_id(request, user_id):
     try:
         user = User.objects.get(id=user_id)
         #user_data = serializers.serialize('json', [user, ])  # Serialize the user data to JSON
-        reservations = serializers.serialize('json', user.reservation_set.all())  # Serialize the reservations to JSON
+        reservations = serializers.serialize('json', user.reservations.all())  # Serialize the reservations to JSON
+
         data_json = {
             'name': user.first_name, 
             'last_name': user.last_name,
@@ -81,6 +82,8 @@ def get_user_by_id(request, user_id):
             'id': user.id,
             'reservas': reservations
         }
+        
+        print("Data json: ", data_json)
         return JsonResponse({'user_data': data_json}, status=200)  # Return the user data in the response
         
     except User.DoesNotExist:

@@ -16,8 +16,8 @@ def login_user(request):
         try:
             user = User.objects.get(email=email)
             if user.password == password:
-                # Authentication successful
-                return JsonResponse({'message': 'Login successful'})
+                user_type = user.user_type  # Assuming user_type is a field in your User model
+                return JsonResponse({'message': 'Login successful', 'userType': user_type})
             else:
                 # Authentication failed
                 return JsonResponse({'message': 'Invalid credentials'}, status=401)

@@ -18,6 +18,8 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true); // To toggle between login and signup forms
   const [userType, setUserType] = useState(''); // State to store the user type
+  const [userId, setUserId] = useState(null);  // Add a state variable for user ID
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -35,16 +37,15 @@ const Login = ({ onLogin }) => {
       });
 
       if (response.status === 200) {
-        // Assuming the response contains user data with a 'userType' field
         const userData = response.data;
         setUserType(userData.userType);
-        console.log("USER TYPE:", userData.userType);
+        setUserId(userData.userId);  // Save the user ID
         if (userData.userType === 'cliente') {
-          onLogin('cliente'); // Pass 'cliente' as a parameter to indicate the user type
-          navigate('/cliente'); // Redirect to the Cliente component
-        
+            onLogin('cliente', userData.userId);  // Pass the user ID to the onLogin function
+            console.log("ESTE ES EL USER ID:", userData.userId );
+            navigate('/cliente');
         } else {
-          onLogin();
+            onLogin();
         }
       } else {
         console.error('Login failed:', response.data);

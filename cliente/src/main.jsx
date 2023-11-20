@@ -9,11 +9,14 @@ import './index.css';
 const Main = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState(''); // Add a state variable for user type
+  const [userId, setUserId] = useState(null);  // Add a state variable for user ID
 
-  const handleLogin = (type) => {
+
+  const handleLogin = (type, userId) => {
     setIsLoggedIn(true);
-    setUserType(type); // Set the user type when logging in
-  };
+    setUserType(type);
+    setUserId(userId);  // Save the user ID
+};
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -29,7 +32,7 @@ const Main = () => {
           {isLoggedIn ? (
             <>
               {userType === 'cliente' ? (
-                <Route path="/cliente" element={<Cliente />} />
+                <Route path="/cliente" element={<Cliente userId={userId} />} />
               ) : (
                 <Route path="/app" element={<App />} />
               )}

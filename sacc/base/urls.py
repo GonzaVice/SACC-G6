@@ -9,4 +9,6 @@ urlpatterns = [
     # Endpoint for user registration
     path('register/', views.register_user, name='register'),
     # Add other endpoints as needed
+    path('user/<int:user_id>/', views.get_user_by_id), 
+
 ]

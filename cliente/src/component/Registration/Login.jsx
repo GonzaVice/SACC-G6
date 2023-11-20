@@ -41,8 +41,8 @@ const Login = ({ onLogin }) => {
         console.log("USER TYPE:", userData.userType);
         if (userData.userType === 'cliente') {
           onLogin('cliente'); // Pass 'cliente' as a parameter to indicate the user type
-          history.push('/cliente'); // Redirige a la ruta '/cliente' cuando el usuario es cliente
-
+          navigate('/cliente'); // Redirect to the Cliente component
+        
         } else {
           onLogin();
         }

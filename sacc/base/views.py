@@ -18,9 +18,8 @@ def login_user(request):
             user = User.objects.get(email=email)
             
             if user.password == password:
-                user_type = user.user_type  # Assuming user_type is a field in your User model
                 user_id = user.id  # Get the user ID
-                return JsonResponse({'message': 'Login successful', 'userType': user_type, 'userId': user_id})
+                return JsonResponse({'message': 'Login successful', 'userId': user_id})
             else:
                 # Authentication failed
                 return JsonResponse({'message': 'Invalid credentials'}, status=401)
@@ -77,7 +76,6 @@ def get_user_by_id(request, user_id):
             'name': user.first_name, 
             'last_name': user.last_name,
             'email': user.email,
-            'user_type': user.user_type,
             'id': user.id,
             
         }

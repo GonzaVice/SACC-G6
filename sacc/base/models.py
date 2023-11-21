@@ -23,7 +23,17 @@ class User(models.Model):
     def __str__(self):
         return self.email
     
+
+class Ecommerce(models.Model):
+    name = models.CharField(max_length=255)
+    key = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+    
+
 class Reservation(models.Model):
+    
     # Define constantes para los estados
     LOADING = 0
     LOADED = 1
@@ -37,13 +47,20 @@ class Reservation(models.Model):
     ]
 
     # Campos existentes
-    description = models.CharField(max_length=200, default='Default Reservation')
+    name = models.CharField(max_length=200, default='Default Reservation')
     datetime = models.DateTimeField(auto_now_add=True)
-    users = models.ManyToManyField(User, related_name='reservations')  # Nuevo campo para el estado de la reserva
-    state = models.IntegerField(choices=RESERVATION_STATES, default=LOADING)
+    operador = models.CharField(max_length=200,default='ValorPorDefecto') #mail del operador
+    operador_password = models.CharField(max_length=200,default='ValorPorDefecto') #mail del operador
+    cliente = models.CharField(max_length=200, default='ValorPorDefecto')
+    cliente_password = models.CharField(max_length=200, default='ValorPorDefectoPassword')
 
+    state = models.IntegerField(choices=RESERVATION_STATES, default=LOADING)  # Agregar el campo 'state'
+    ecommerce = models.ForeignKey(Ecommerce, on_delete=models.CASCADE, related_name='reservations', null=True)
+    
     def __str__(self):
-        return f"Reservation: {self.description} for {self.user.email} at {self.datetime}"
+        user_emails = ", ".join([user.email for user in self.users.all()])
+        return f"Reservation: {self.name} for {user_emails} at {self.datetime}"
+
 
 ## Modelo Estación de Casilleros
 class Station(models.Model):

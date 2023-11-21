@@ -72,7 +72,6 @@ def get_user_by_id(request, user_id):
     try:
         user = User.objects.get(id=user_id)
         #user_data = serializers.serialize('json', [user, ])  # Serialize the user data to JSON
-        reservations = serializers.serialize('json', user.reservations.all())  # Serialize the reservations to JSON
 
         data_json = {
             'name': user.first_name, 
@@ -80,7 +79,7 @@ def get_user_by_id(request, user_id):
             'email': user.email,
             'user_type': user.user_type,
             'id': user.id,
-            'reservas': reservations
+            
         }
         
         print("Data json: ", data_json)

@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+import secrets
 
 # Create your models here.
 
@@ -15,12 +18,18 @@ class User(models.Model):
     
 
 class Ecommerce(models.Model):
-    name = models.CharField(max_length=255)
-    key = models.CharField(max_length=100)
+    name = models.CharField(max_length=255, unique=True)
+    key = models.CharField(max_length=50, unique=True, blank=True)
+
 
     def __str__(self):
         return self.name
     
+@receiver(pre_save, sender=Ecommerce)
+def generate_key(sender, instance, **kwargs):
+    # Generar una clave solo si no se proporciona
+    if not instance.key:
+        instance.key = secrets.token_urlsafe(7)
 
 class Reservation(models.Model):
     

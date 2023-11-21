@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Signup from './Signup';
-import Cliente from '../Cliente/Cliente';
 import { useNavigate } from 'react-router-dom';
 
 // Function to get the CSRF token

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import './Operador.css';
 
-const Operador = () => {
+const Operador = ({userId}) => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const location = useLocation();
-    const userId = location.state?.userId;
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -29,11 +29,13 @@ const Operador = () => {
     return (
         <>
             {userData ? (
-                <div>
+                <div className="operador-container">
                     <h2>User Information</h2>
-                    <p>Name: {userData.name}</p>
-                    <p>Email: {userData.email}</p>
-                    <p>User Type: {userData.userType}</p>
+                    <div className="user-details">
+                        <p><strong>Name:</strong> {userData.name}</p>
+                        <p><strong>Email:</strong> {userData.email}</p>
+                        <p><strong>User Type:</strong> {userData.user_type}</p>
+                    </div>
                 </div>
             ) : (
                 <p>Loading user data...</p>

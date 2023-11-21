@@ -56,7 +56,7 @@ class Reservation(models.Model):
 
     state = models.IntegerField(choices=RESERVATION_STATES, default=LOADING)  # Agregar el campo 'state'
     ecommerce = models.ForeignKey(Ecommerce, on_delete=models.CASCADE, related_name='reservations', null=True)
-    
+
     def __str__(self):
         user_emails = ", ".join([user.email for user in self.users.all()])
         return f"Reservation: {self.name} for {user_emails} at {self.datetime}"

@@ -11,4 +11,20 @@ urlpatterns = [
     # Add other endpoints as needed
     path('user/<int:user_id>/', views.get_user_by_id), 
 
+    #1 
+    path('get_stations/', views.get_stations, name='get_stations'),
+    #2
+    path('reserva_casillero/', views.reserva_casillero, name='reserva_casillero'),
+    #3
+    path('confirmar_reserva/', views.confirmar_reserva, name='confirmar_reserva'),
+    #4
+    path('confirmar_paquete/', views.confirmar_paquete, name='confirmar_paquete'),
+    #5
+    path('cancelar_reserva/', views.cancelar_reserva, name='cancelar_reserva'),
+    #6
+    path('estado_reserva/', views.estado_reserva, name='estado_reserva'),
+    #7
+    path('reservas_activas/', views.reservas_activas, name='reservas_activas'),
+    #8
+    path('reservas_historicas', views.reservas_historicas, name='reservas_historicas')
 ]

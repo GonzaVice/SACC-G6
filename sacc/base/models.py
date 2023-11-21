@@ -57,16 +57,14 @@ class Reservation(models.Model):
     ecommerce = models.ForeignKey(Ecommerce, on_delete=models.CASCADE, related_name='reservations', null=True)
 
     def __str__(self):
-        user_emails = ", ".join([user.email for user in self.users.all()])
-        return f"Reservation: {self.name} for {user_emails} at {self.datetime}"
+        return f"Reservation: {self.name} "
 
 
 ## Modelo Estación de Casilleros
 class Station(models.Model):
-    state = models.BooleanField(default=True)  # True: Casilleros disponibles, False: Ningún casillero disponible
-
+    name = models.CharField(max_length=255)
     def __str__(self):
-        return f"Station (ID: {self.id}) - Available: {self.state}"
+        return f"Station (NAME: {self.name})"
 
 
 class Locker(models.Model):

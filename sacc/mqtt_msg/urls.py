@@ -8,5 +8,5 @@ urlpatterns = [
     path('load-message/', send_load_message, name='send_load_message'),
     path('unload-message/', send_unload_message, name='send_unload_message'),
     path('email/', email, name='email'),
-    path('details/',details, name='details')
+    path('details/',details, name='details'),
 ]

@@ -260,4 +260,4 @@ def details(request):
         print("ESTE ES EL JSON",json_message)
         print('==========')
         return JsonResponse({'details': json_message})
-    
+

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'r
 import App from './App.jsx';
 import Login from './component/Registration/Login.jsx';
 import Home from './component/Home/Home.jsx';
+import SendKey from './component/SendKey/SendKey.jsx';
 import './index.css';
 
 const LogoutButton = ({ onLogout }) => {
@@ -37,6 +38,7 @@ const Main = () => {
       <Router>
         {isLoggedIn && <LogoutButton onLogout={handleLogout} />}
         <Routes>
+          <Route path="/sendkey" element={<SendKey />} />
           <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect from root path to login path */}
           {isLoggedIn ? (
             <Route path="/home" element={<Home />}/>

@@ -41,7 +41,7 @@ const Login = ({ onLogin }) => {
         setUserId(userData.userId);  // Save the user ID
         onLogin('operador', userData.userId);  // Pass the user ID to the onLogin function
         console.log("ESTE ES EL USER ID:", userData.userId );
-        
+        navigate('/home')
       } else {
         console.error('Login failed:', response.data);
       }

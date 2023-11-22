@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import App from './App.jsx';
 import Login from './component/Registration/Login.jsx';
+import Home from './component/Home/Home.jsx';
 import './index.css';
 
 const LogoutButton = ({ onLogout }) => {
@@ -38,8 +39,7 @@ const Main = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect from root path to login path */}
           {isLoggedIn ? (
-            <>
-            </>
+            <Route path="/home" element={<Home />}/>
           ) : (
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
           )}

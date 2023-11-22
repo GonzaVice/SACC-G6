@@ -7,11 +7,11 @@ import Cliente from '../Cliente/Cliente';
 import { useNavigate } from 'react-router-dom';
 
 // Function to get the CSRF token
-const getCsrfToken = () => {
-    return document.cookie.split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        .split('=')[1];
-}
+// const getCsrfToken = () => {
+//     return document.cookie.split('; ')
+//         .find(row => row.startsWith('csrftoken='))
+//         .split('=')[1];
+// }
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');

@@ -18,7 +18,7 @@ const LogoutButton = ({ onLogout }) => {
 };
 
 const Main = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [userType, setUserType] = useState(''); // Add a state variable for user type
   const [userId, setUserId] = useState(null);  // Add a state variable for user ID
 
@@ -35,10 +35,11 @@ const Main = () => {
 
   return (
     <React.StrictMode>
-      <Router>
-        {isLoggedIn && <LogoutButton onLogout={handleLogout} />}
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect from root path to login path */}
+      <App />
+      {/* <Router> */}
+        {/* {isLoggedIn && <LogoutButton onLogout={handleLogout} />} */}
+        {/* <Routes>
+          <Route path="/" element={<Navigate to="/app" />} />
           {isLoggedIn ? (
             <>
               {userType === 'cliente' ? (
@@ -54,8 +55,8 @@ const Main = () => {
           ) : (
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
           )}
-        </Routes>
-      </Router>
+        </Routes> */}
+      {/* </Router> */}
     </React.StrictMode>
   );
 };

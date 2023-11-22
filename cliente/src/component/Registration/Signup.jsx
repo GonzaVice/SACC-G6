@@ -4,13 +4,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 // Function to get the CSRF token
-const getCsrfToken = () => {
-    return document.cookie.split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        .split('=')[1];
-}
+// const getCsrfToken = () => {
+//     return document.cookie.split('; ')
+//         .find(row => row.startsWith('csrftoken='))
+//         .split('=')[1];
+// }
 
-console.log(getCsrfToken());
+// console.log(getCsrfToken());
 
 const Signup = ({ onSignup }) => {
   const [firstName, setFirstName] = useState('');

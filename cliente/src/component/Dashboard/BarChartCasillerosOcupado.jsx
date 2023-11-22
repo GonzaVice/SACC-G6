@@ -1,7 +1,7 @@
 import React from "react";
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Legend, Bar, Tooltip } from "recharts";
 
-const SimpleBarCharts = ({data}) => {
+const BarChartCasillerosOcupado = ({data}) => {
     return (
         <ResponsiveContainer width="100%" aspect={2}>
             <BarChart width={600} height={300} data={data} margin={{top:5, right:30, left:20, bottom:5}}>
@@ -17,4 +17,4 @@ const SimpleBarCharts = ({data}) => {
     );
 };
 
-export default SimpleBarCharts;
+export default BarChartCasillerosOcupado;

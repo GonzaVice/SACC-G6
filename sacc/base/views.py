@@ -464,3 +464,95 @@ def reservas_historicas(request):
             return JsonResponse({'success': False, 'message': str(e)})
 
     return JsonResponse({'details': 'No data found'})
+
+def operador_abre(request):
+
+    if request.method == 'POST':
+        
+        #Obtenemos los datos
+        data = json.loads(request.body)
+        operador_clave = data.get('operador_clave')
+        station_name = data.get('station_name')
+        locker_id = data.get('locker_id')
+        operador = data.get('operador')
+
+
+        try:
+           
+            # Verificamos si existe la estacion y locker
+            station = Station.objects.get(name=station_name)
+            locker = Locker.objects.get(id=locker_id)
+            available_lockers = Locker.objects.filter(station=station, reservation=None)
+
+            #Verificamos que el locker este en estado 1
+            if locker.reservation.state != 2:
+                return JsonResponse({'success': False, 'message': 'Locker not in correct state. Locker state: ' + str(locker.reservation.state)})
+
+            if operador_clave != locker.reservation.operador_password:
+                return JsonResponse({'success': False, 'message': 'Invalid key/password'})
+            if operador != locker.reservation.operador:
+                return JsonResponse({'success': False, 'message': 'Invalid operator'})
+            
+            #Abrir locker
+            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_id)})
+
+            
+            
+        #Excpeciones
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
+        except Station.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Station does not exist'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'details': 'No data found'})
+
+
+def cliente_abre(request):
+
+    if request.method == 'POST':
+        
+        #Obtenemos los datos
+        data = json.loads(request.body)
+        cliente_clave = data.get('cliente_clave')
+        station_name = data.get('station_name')
+        locker_id = data.get('locker_id')
+        cliente = data.get('cliente')
+
+
+        try:
+            
+            # Verificamos si existe la estacion y locker
+            station = Station.objects.get(name=station_name)
+            locker = Locker.objects.get(id=locker_id)
+            available_lockers = Locker.objects.filter(station=station, reservation=None)
+
+            #Verificamos que el locker este en estado 1
+            if locker.reservation.state != 2:
+                return JsonResponse({'success': False, 'message': 'Locker not in correct state. Locker state: ' + str(locker.reservation.state)})
+
+            if cliente_clave != locker.reservation.cliente_password:
+                return JsonResponse({'success': False, 'message': 'Invalid key/password'})
+            if cliente != locker.reservation.cliente:
+                return JsonResponse({'success': False, 'message': 'Invalid operator'})
+            
+            #Abrir locker
+            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_id)})
+
+            
+            
+        #Excpeciones
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
+        except Station.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Station does not exist'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'details': 'No data found'})
+

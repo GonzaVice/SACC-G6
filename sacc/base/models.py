@@ -39,7 +39,7 @@ class Reservation(models.Model):
     CONFIRMADO_OP = 2
     CANCELADO = 3
     FINALIZADO = 4
-
+    
     # Opciones para los estados
     RESERVATION_STATES = [
         (RESERVADO, 'Reservado'),

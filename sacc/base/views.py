@@ -488,9 +488,9 @@ def operador_abre(request):
             if locker.reservation.state != 2:
                 return JsonResponse({'success': False, 'message': 'Locker not in correct state. Locker state: ' + str(locker.reservation.state)})
 
-            if usuario_clave != locker.reservation.usuario_password:
+            if usuario_clave != locker.reservation.operador_password:
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})
-            if usuario != locker.reservation.usuario:
+            if usuario != locker.reservation.operador:
                 return JsonResponse({'success': False, 'message': 'Invalid operator'})
             
             #Abrir locker
@@ -534,9 +534,9 @@ def cliente_abre(request):
             if locker.reservation.state != 2:
                 return JsonResponse({'success': False, 'message': 'Locker not in correct state. Locker state: ' + str(locker.reservation.state)})
 
-            if usuario_clave != locker.reservation.usuario_password:
+            if usuario_clave != locker.reservation.cliente_password:
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})
-            if usuario != locker.reservation.usuario:
+            if usuario != locker.reservation.cliente:
                 return JsonResponse({'success': False, 'message': 'Invalid operator'})
             
             #Abrir locker

@@ -471,10 +471,10 @@ def operador_abre(request):
         
         #Obtenemos los datos
         data = json.loads(request.body)
-        operador_clave = data.get('operador_clave')
+        usuario_clave = data.get('usuario_clave')
         station_name = data.get('station_name')
         locker_id = data.get('locker_id')
-        operador = data.get('operador')
+        usuario = data.get('usuario')
 
 
         try:
@@ -488,9 +488,9 @@ def operador_abre(request):
             if locker.reservation.state != 2:
                 return JsonResponse({'success': False, 'message': 'Locker not in correct state. Locker state: ' + str(locker.reservation.state)})
 
-            if operador_clave != locker.reservation.operador_password:
+            if usuario_clave != locker.reservation.usuario_password:
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})
-            if operador != locker.reservation.operador:
+            if usuario != locker.reservation.usuario:
                 return JsonResponse({'success': False, 'message': 'Invalid operator'})
             
             #Abrir locker
@@ -517,14 +517,14 @@ def cliente_abre(request):
         
         #Obtenemos los datos
         data = json.loads(request.body)
-        cliente_clave = data.get('cliente_clave')
+        usuario_clave = data.get('usuario_clave')
         station_name = data.get('station_name')
         locker_id = data.get('locker_id')
-        cliente = data.get('cliente')
+        usuario = data.get('usuario')
 
 
         try:
-            
+
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
             locker = Locker.objects.get(id=locker_id)
@@ -534,9 +534,9 @@ def cliente_abre(request):
             if locker.reservation.state != 2:
                 return JsonResponse({'success': False, 'message': 'Locker not in correct state. Locker state: ' + str(locker.reservation.state)})
 
-            if cliente_clave != locker.reservation.cliente_password:
+            if usuario_clave != locker.reservation.usuario_password:
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})
-            if cliente != locker.reservation.cliente:
+            if usuario != locker.reservation.usuario:
                 return JsonResponse({'success': False, 'message': 'Invalid operator'})
             
             #Abrir locker

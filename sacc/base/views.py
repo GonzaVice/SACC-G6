@@ -126,28 +126,50 @@ def get_stations(request):
 def reserva_casillero(request):
     if request.method == 'POST':
         
+        #Obtenemos los datos
         data = json.loads(request.body)
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
         station_name = data.get('station_name')
         locker_id = data.get('locker_id')
-        
+        cliente = data.get('cliente')
+        width = data.get('width')
+        height = data.get('height')
+        length = data.get('length')
+
         try:
            
+            # Verificamos que exista el ecommerce
             ecommerce = Ecommerce.objects.get(name=ecommerce_name)
             print("ESTO ES ECOMMERCE KEY: ", ecommerce.key)
             if key != ecommerce.key: 
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})
             
-            # Check if the station exists
+            # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
             locker = Locker.objects.get(id=locker_id)
             available_lockers = Locker.objects.filter(station=station, reservation=None)
 
-            # Logic to select and reserve a locker, then return a success response
-            # ...
+            # Verificamos que el locker este disponible
+            if locker not in available_lockers:
+                return JsonResponse({'success': False, 'message': 'Locker not available'})
 
-            return JsonResponse({'success': True, 'message': 'Locker reserved successfully'})
+            #Verificamos que quepa en el locker
+            if width > locker.width or height > locker.height or length > locker.length:
+                return JsonResponse({'success': False, 'message': 'Package does not fit in locker'})
+
+            # Creamos la reserva
+            reservation = Reservation.objects.create(
+                ecommerce=ecommerce,
+                cliente=cliente,
+                cliente_password="cliente",
+            )
+            locker.reservation = reservation
+            locker.save()
+
+            return JsonResponse({'success': True, 'message': f'Locker reserved successfully in locker {locker_id}'})
+        
+        #Excpeciones
         except Ecommerce.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
         except Station.DoesNotExist:
@@ -161,20 +183,284 @@ def reserva_casillero(request):
 
 
 def confirmar_reserva(request):
-    pass
+
+    if request.method == 'POST':
+        
+        #Obtenemos los datos
+        data = json.loads(request.body)
+        ecommerce_name = data.get('ecommerce')
+        key = data.get('key')
+        station_name = data.get('station_name')
+        locker_id = data.get('locker_id')
+
+        
+        try:
+            #Verificamos ecommerce
+            ecommerce = Ecommerce.objects.get(name=ecommerce_name)
+            print("ESTO ES ECOMMERCE KEY: ", ecommerce.key)
+            if key != ecommerce.key: 
+                return JsonResponse({'success': False, 'message': 'Invalid key/password'})    
+
+            #Verificamos que exista la estacion y locker
+            station = Station.objects.get(name=station_name)
+            locker = Locker.objects.get(id=locker_id)
+            
+            #Verificamos estado del locker
+            if locker.reservation.state != 0:
+                return JsonResponse({'success': False, 'message': 'Locker not reserved. Locker state: ' + str(locker.reservation.state)})
+
+            #Cambiamos el estado del locker
+            locker.reservation.state = 1
+            locker.reservation.save()
+            locker.save()
+            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully'})
+
+        except Locker.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Locker does not exist'})
+        except Station.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Station does not exist'})
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    
 
 def confirmar_paquete(request):
-    pass
+
+    if request.method == 'POST':
+        
+        #Obtenemos los datos
+        data = json.loads(request.body)
+        ecommerce_name = data.get('ecommerce')
+        key = data.get('key')
+        station_name = data.get('station_name')
+        locker_id = data.get('locker_id')
+        operador = data.get('operador')
+        width = data.get('width')
+        height = data.get('height')
+        length = data.get('length')
+
+        try:
+           
+            # Verificamos que exista el ecommerce
+            ecommerce = Ecommerce.objects.get(name=ecommerce_name)
+            print("ESTO ES ECOMMERCE KEY: ", ecommerce.key)
+            if key != ecommerce.key: 
+                return JsonResponse({'success': False, 'message': 'Invalid key/password'})
+            
+            # Verificamos si existe la estacion y locker
+            station = Station.objects.get(name=station_name)
+            locker = Locker.objects.get(id=locker_id)
+            available_lockers = Locker.objects.filter(station=station, reservation=None)
+
+            #Verificamos que el locker este en estado 1
+            if locker.reservation.state != 1:
+                return JsonResponse({'success': False, 'message': 'Locker not reserved. Locker state: ' + str(locker.reservation.state)})
+
+            #Verificamos dimensiones del locker
+            if width > locker.width or height > locker.height or length > locker.length:
+                return JsonResponse({'success': False, 'message': 'Package does not fit in locker'})
+                #Hacer logica para cambiar de locker
+
+            # Cambiamos el estado del locker
+            locker.reservation.state = 2
+            locker.reservation.operador = operador
+            locker.reservation.operador_password = "operador"
+            locker.reservation.save()
+            locker.save()
+            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_id)})
+
+            
+            
+        #Excpeciones
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
+        except Station.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Station does not exist'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'details': 'No data found'})
+
 
 def cancelar_reserva(request):
-    pass
+    if request.method == 'POST':
+        
+        #Obtenemos los datos
+        data = json.loads(request.body)
+        ecommerce_name = data.get('ecommerce')
+        key = data.get('key')
+        station_name = data.get('station_name')
+        locker_id = data.get('locker_id')
+
+
+        try:
+           
+            # Verificamos que exista el ecommerce
+            ecommerce = Ecommerce.objects.get(name=ecommerce_name)
+            print("ESTO ES ECOMMERCE KEY: ", ecommerce.key)
+            if key != ecommerce.key: 
+                return JsonResponse({'success': False, 'message': 'Invalid key/password'})
+            
+            # Verificamos si existe la estacion y locker
+            station = Station.objects.get(name=station_name)
+            locker = Locker.objects.get(id=locker_id)
+            
+            #Cambiamos de estado la reserva a cancelado
+            locker.reservation.state = 3
+
+            #Desasociamos el locker de la reserva
+            locker.reservation = None
+            locker.reservation.save()
+            locker.save()
+            return JsonResponse({'success': True, 'message': 'Reservation cancelled successfully in locker ' + str(locker_id)})
+
+        #Excpeciones
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
+        except Station.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Station does not exist'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'details': 'No data found'})
 
 def estado_reserva(request):
-    pass
+    if request.method == 'POST':
+        
+        #Obtenemos los datos
+        data = json.loads(request.body)
+        ecommerce_name = data.get('ecommerce')
+        key = data.get('key')
+        station_name = data.get('station_name')
+        locker_id = data.get('locker_id')
+
+
+        try:
+           
+            # Verificamos que exista el ecommerce
+            ecommerce = Ecommerce.objects.get(name=ecommerce_name)
+            print("ESTO ES ECOMMERCE KEY: ", ecommerce.key)
+            if key != ecommerce.key: 
+                return JsonResponse({'success': False, 'message': 'Invalid key/password'})
+            
+            # Verificamos si existe la estacion y locker
+            station = Station.objects.get(name=station_name)
+            locker = Locker.objects.get(id=locker_id)
+            
+            #Obtenemos json de la reserva
+            data = {
+                'id': locker.reservation.id,
+                'state': locker.reservation.state,
+                'ecommerce': locker.reservation.ecommerce.name,
+                'cliente': locker.reservation.cliente,
+                'operador': locker.reservation.operador,
+                'locker': locker.id
+            }
+
+            return JsonResponse({'success': True, 'message': data})
+        #Excpeciones
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
+        except Station.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Station does not exist'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'details': 'No data found'})
+
 
 def reservas_activas(request):
-    pass
+    if request.method == 'POST':
+        
+        #Obtenemos los datos
+        data = json.loads(request.body)
+        ecommerce_name = data.get('ecommerce')
+        key = data.get('key')
+        try:
+           
+            # Verificamos que exista el ecommerce
+            ecommerce = Ecommerce.objects.get(name=ecommerce_name)
+            print("ESTO ES ECOMMERCE KEY: ", ecommerce.key)
+            if key != ecommerce.key: 
+                return JsonResponse({'success': False, 'message': 'Invalid key/password'})
+            
+            #Obtenemos las reservas activas del ecommerce donde el estado sea distinto de 3 o 4
+            reservations = Reservation.objects.filter(ecommerce=ecommerce).exclude(state=3).exclude(state=4)           
+            
+            
+            # Construct JSON with reservation data
+            data = {
+                'reservations': [{
+                    'id': reservation.id,
+                    'name': reservation.name,
+                    'datetime': reservation.datetime.strftime('%Y-%m-%d %H:%M:%S'),
+                    'operador': reservation.operador,
+                    'cliente': reservation.cliente,
+                    'state': reservation.get_state_display()
+                } for reservation in reservations]
+            }
+
+            return JsonResponse({'success': True, 'message': data})
+        #Excpeciones
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
+        except Station.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Station does not exist'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'details': 'No data found'})
+
 
 def reservas_historicas(request):
-    pass
+    if request.method == 'POST':
+        
+        #Obtenemos los datos
+        data = json.loads(request.body)
+        ecommerce_name = data.get('ecommerce')
+        key = data.get('key')
+        try:
+        
+            # Verificamos que exista el ecommerce
+            ecommerce = Ecommerce.objects.get(name=ecommerce_name)
+            print("ESTO ES ECOMMERCE KEY: ", ecommerce.key)
+            if key != ecommerce.key: 
+                return JsonResponse({'success': False, 'message': 'Invalid key/password'})
+            
+            #Obtenemos las reservas activas del ecommerce donde el estado sea distinto de 3 o 4
+            reservations = Reservation.objects.filter(ecommerce=ecommerce).exclude(state=1).exclude(state=0).exclude(state=2)           
+            
+            # Construct JSON with reservation data
+            data = {
+                'reservations': [{
+                    'id': reservation.id,
+                    'name': reservation.name,
+                    'datetime': reservation.datetime.strftime('%Y-%m-%d %H:%M:%S'),
+                    'operador': reservation.operador,
+                    'cliente': reservation.cliente,
+                    'state': reservation.get_state_display()
+                } for reservation in reservations]
+            }
 
+            return JsonResponse({'success': True, 'message': data})
+        
+        #Exceptions
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
+        except Station.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Station does not exist'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'details': 'No data found'})

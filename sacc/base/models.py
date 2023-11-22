@@ -34,18 +34,23 @@ def generate_key(sender, instance, **kwargs):
 class Reservation(models.Model):
     
     # Define constantes para los estados
-    LOADING = 0
-    LOADED = 1
-    CONFIRMED = 2
+    RESERVADO = 0
+    CONFIRMADO_RESERVA = 1
+    CONFIRMADO_OP = 2
+    CANCELADO = 3
+    FINALIZADO = 4
 
     # Opciones para los estados
     RESERVATION_STATES = [
-        (LOADING, 'Cargando'),
-        (LOADED, 'Cargado'),
-        (CONFIRMED, 'Confirmado'),
+        (RESERVADO, 'Reservado'),
+        (CONFIRMADO_RESERVA, 'Confirmado_Reserva'),
+        (CONFIRMADO_OP, 'Confirmado_OP'),
+        (CANCELADO, 'Cancelado'),
+        (FINALIZADO, 'Finalizado')
     ]
 
     # Campos existentes
+
     name = models.CharField(max_length=200, default='Default Reservation')
     datetime = models.DateTimeField(auto_now_add=True)
     operador = models.CharField(max_length=200,default='ValorPorDefecto') #mail del operador
@@ -53,7 +58,7 @@ class Reservation(models.Model):
     cliente = models.CharField(max_length=200, default='ValorPorDefecto')
     cliente_password = models.CharField(max_length=200, default='ValorPorDefectoPassword')
 
-    state = models.IntegerField(choices=RESERVATION_STATES, default=LOADING)  # Agregar el campo 'state'
+    state = models.IntegerField(choices=RESERVATION_STATES, default=RESERVADO)  # Agregar el campo 'state'
     ecommerce = models.ForeignKey(Ecommerce, on_delete=models.CASCADE, related_name='reservations', null=True)
 
     def __str__(self):

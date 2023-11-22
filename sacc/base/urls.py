@@ -26,5 +26,5 @@ urlpatterns = [
     #7
     path('reservas_activas/', views.reservas_activas, name='reservas_activas'),
     #8
-    path('reservas_historicas', views.reservas_historicas, name='reservas_historicas')
+    path('reservas_historicas/', views.reservas_historicas, name='reservas_historicas')
 ]

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 // import BotonReserva from './component/Buttons/reserva';
 // import BotonCarga from './component/Buttons/carga';
 // import BotonDescarga from './component/Buttons/descarga';
-import LockerTable from './component/Buttons/lockertable';
 import axios from 'axios';
 
 const getCsrfToken = () => {
@@ -53,7 +52,6 @@ function App() {
       <BotonCarga />
       <BotonDescarga /> */}
       {/* Pasa los datos actualizados a la tabla */}
-      <LockerTable lockers={lockerData.lockers} stationId={lockerData.station_id} />
     </div>
   );
 }

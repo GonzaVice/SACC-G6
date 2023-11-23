@@ -1,7 +1,5 @@
 import React from "react";
-import SimpleBarCharts from "./Dashboard/SimpleBarChar";
 import SimplePieCharts from "./Dashboard/SimplePieChart";
-import TablaEstaciones from "./Tablas/TablasEstaciones";
 import TablaEstacion from "./Tablas/TablaEstacion";
 import SimpleCard from "./Dashboard/SimpleCard";
 import { useState, useEffect } from "react";
@@ -302,23 +300,13 @@ const datapie = [
       }
     }
 
-    const mostrarReservasPendientes = (data) => {
-      let reservasPendientes = 0;
-      data.forEach((locker) => {
-        if (locker.state==="Reservado") {
-          reservasPendientes++;
-        }
-      }
-      )
-      return reservasPendientes;
-    }
+
   
     useEffect(() => {
-      const casillerosOcupados = stationsData[stationIdx].casilleros.filter((casillero) => casillero.ocupado).length;
-      const casillerosDisponibles = stationsData[stationIdx].casilleros.filter((casillero) => !casillero.ocupado).length;
+      const casillerosOcupados = stationsData[stationIdx].lockers.filter((locker) => locker.ocupado).length;
+      const casillerosDisponibles = stationsData[stationIdx].lockers.filter((locker) => !locker.ocupado).length;
       setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
       mostrarEstadoConexion(stationsData[stationIdx].estadoConexion);
-      mostrarReservasPendientes(stationsData[stationIdx].casilleros);
     }, [stationIdx, stationsData]);
   
     const containerStyle = {
@@ -337,7 +325,6 @@ const datapie = [
           <SimpleCard title="Casilleros Ocupados" number="2" margin="10px" />
           <SimpleCard title="Casilleros Desocupados" number="1" margin="10px" />
           <SimpleCard title="Estado Conexión" number={estadoOnline} margin="10px" />
-          <SimpleCard title="# Reservas Pendientes" number={mostrarReservasPendientes(stationsData[stationIdx].casilleros)} margin="10px" />
         </div>
 
         <div style={containerStyle}> 

@@ -61,6 +61,14 @@ class Reservation(models.Model):
     state = models.IntegerField(choices=RESERVATION_STATES, default=RESERVADO)  # Agregar el campo 'state'
     ecommerce = models.ForeignKey(Ecommerce, on_delete=models.CASCADE, related_name='reservations', null=True)
 
+    horaConfirmacionReserva = models.DateTimeField(null=True)
+    horaConfirmacionOperador = models.DateTimeField(null=True)
+    horaCarga = models.DateTimeField(null=True)
+    horaDescarga = models.DateTimeField(null=True)
+    horaFinalizacion = models.DateTimeField(null=True)
+    horaCancelacion = models.DateTimeField(null=True)
+
+
     def __str__(self):
         return f"Reservation: {self.name} "
 
@@ -70,7 +78,7 @@ class Station(models.Model):
     name = models.CharField(max_length=255)
     def __str__(self):
         return f"Station (NAME: {self.name})"
-
+    conexion = models.CharField(max_length=255)
 
 class Locker(models.Model):
 
@@ -87,6 +95,8 @@ class Locker(models.Model):
     height = models.IntegerField()  # Campo para la altura en centímetros
     state = models.IntegerField(choices=STATE_CHOICES, default=0)  
     station = models.ForeignKey(Station, on_delete=models.CASCADE)  # Un casillero pertenece a una estación
+
+
 
     reservation = models.ForeignKey(
         Reservation,

@@ -26,154 +26,263 @@ const datapie = [
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
   
   const dataTablas = [
-      {
+    {
+      name: "Estación 1",
+      connection: true,
+      lockers: [ {
         id: 1,
-        address: 'Dirección 1',
-        cantidadCasilleros: 3,
-        cantidadCasillerosDisponibles: 2,
-        estadoConexion: true,
-        casilleros: [ {
-          id: 1,
-          dimensiones: '10x20x60',
-          reservado: false,
-          idReservaActual: 1,
-          ocupado: false,
-          porcentajeUso: 0,
-          historial: [
-            {
-              idReserva: 1,
-              horaReserva: '10:30',
-              horaCargado: '10:40',
-              horaDescargado: '18:51'
-            },
-            {
-              idReserva: 2,
-              horaReserva: '12:30',
-              horaCargado: '18:40',
-              horaDescargado: '20:51'
-            },
-          ],
-        },
-        {
-          id: 2,
-          dimensiones: '10x40x50',
-          reservado: true,
-          idReservaActual: 1,
-          ocupado: true,
-          porcentajeUso: 0,
-          historial: [
-            {
-              idReserva: 1,
-              horaReserva: '10:30',
-              horaCargado: '10:40',
-              horaDescargado: '18:51'
-            },
-            {
-              idReserva: 2,
-              horaReserva: '12:30',
-              horaCargado: '12:40',
-              horaDescargado: '20:51'
-            },
-          ],
-        },
-        {
-          id: 3,
-          dimensiones: '10x30x80',
-          reservado: false,
-          ocupado: false,
-          porcentajeUso: 0,
-          historial: [
-            {
-              idReserva: 1,
-              horaReserva: '10:30',
-              horaCargado: '10:40',
-              horaDescargado: '18:51'
-            },
-            {
-              idReserva: 2,
-              horaReserva: '12:30',
-              horaCargado: '12:40',
-              horaDescargado: '20:51'
-            },
-          ],
-        },
-        ]
+        length: '10',
+        width: '20',
+        height: '60',
+        state: 'disponible', // Disp, Res, Conf, Carg
+        reservations: [
+          {
+            name: "Reserva 1",
+            horaReserva: '10:30',
+            operador: 'Juan',
+            operadorPassword: '1234',
+            cliente: 'Maria',
+            clientePassword: '1234',
+            horaConfirmacionReserva: '10:35',
+            horaConfirmacionOperario: '10:36',
+            horaCarga: '10:40',
+            horaDescarga: '18:51',
+            horaFinalizacion: '18:51',
+            horaCancelacion: '',
+            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+            ecommerce: "Mercado Libre",
+          },
+          {
+            name: "Reserva 2",
+            horaReserva: '12:30',
+            operador: 'AAA',
+            operadorPassword: '1234',
+            cliente: 'Si',
+            clientePassword: '1234',
+            horaConfirmacionReserva: '12:35',
+            horaConfirmacionOperario: '12:36',
+            horaCarga: '12:40',
+            horaDescarga: '19:51',
+            horaFinalizacion: '19:51',
+            horaCancelacion: '',
+            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+            ecommerce: "Mercado Libre",
+          },
+        ],
       },
       {
         id: 2,
-        address: 'Dirección 2',
-        cantidadCasilleros: 3,
-        cantidadCasillerosDisponibles: 1,
-        estadoConexion: true,
-        casilleros: [
+        length: '30',
+        width: '20',
+        height: '30',
+        state: 'disponible', // Disp, Res, Conf, Carg
+        reservations: [
           {
-            id: 1,
-            dimensiones: '10x40x40',
-            reservado: false,
-            idReservaActual: 1,
-            ocupado: false,
-            porcentajeUso: 0,
-            historial: [
-              {
-                idReserva: 1,
-                horaReserva: '10:30',
-                horaCargado: '10:40',
-                horaDescargado: '18:51'
-              },
-              {
-                idReserva: 2,
-                horaReserva: '12:30',
-                horaCargado: '12:40',
-                horaDescargado: '20:51'
-              },
-            ],
+            name: "Reserva 3",
+            horaReserva: '10:39',
+            operador: 'QQQQ',
+            operadorPassword: '1234',
+            cliente: 'PPP',
+            clientePassword: '1234',
+            horaConfirmacionReserva: '10:39',
+            horaConfirmacionOperario: '10:39',
+            horaCarga: '10:40',
+            horaDescarga: '18:51',
+            horaFinalizacion: '18:51',
+            horaCancelacion: '',
+            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+            ecommerce: "Mercado Libre",
           },
           {
-            id: 2,
-            dimensiones: '10x30x30',
-            reservado: false,
-            idReservaActual: 1,
-            ocupado: false,
-            porcentajeUso: 0,
-            historial: [
-              {
-                idReserva: 1,
-                horaReserva: '10:30',
-                horaCargado: '10:40',
-                horaDescargado: '18:51'
-              },
-              {
-                idReserva: 2,
-                horaReserva: '12:30',
-                horaCargado: '12:40',
-                horaDescargado: '20:51'
-              },
-            ],
+            name: "Reserva 4",
+            horaReserva: '10:30',
+            operador: 'Juan',
+            operadorPassword: '1234',
+            cliente: 'Maria',
+            clientePassword: '1234',
+            horaConfirmacionReserva: '10:35',
+            horaConfirmacionOperario: '10:36',
+            horaCarga: '10:40',
+            horaDescarga: '18:51',
+            horaFinalizacion: '18:51',
+            horaCancelacion: '',
+            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+            ecommerce: "Mercado Libre",
           },
-          {
-            id: 3,
-            dimensiones: '10x50x50',
-            reservado: false,
-            idReservaActual: 1,
-            ocupado: false,
-            porcentajeUso: 0,
-            historial: [
-              {
-                idReserva: 1,
-                horaReserva: '10:30',
-                horaCargado: '10:40',
-                horaDescargado: '18:51'
-              },
-              {
-                idReserva: 2,
-                horaReserva: '12:30',
-                horaCargado: '12:40',
-                horaDescargado: '20:51'
-              },
-            ],
-          },
-        ]
+        ],
       },
+      {
+        id: 3,
+        length: '50',
+        width: '20',
+        height: '90',
+        state: 'disponible', // Disp, Res, Conf, Carg
+        reservations: [
+          {
+            name: "Reserva 5",
+            horaReserva: '10:30',
+            operador: 'Juan',
+            operadorPassword: '1234',
+            cliente: 'Maria',
+            clientePassword: '1234',
+            horaConfirmacionReserva: '10:35',
+            horaConfirmacionOperario: '10:36',
+            horaCarga: '10:40',
+            horaDescarga: '18:51',
+            horaFinalizacion: '18:51',
+            horaCancelacion: '',
+            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+            ecommerce: "Mercado Libre",
+          },
+          {
+            name: "Reserva 6",
+            horaReserva: '10:30',
+            operador: 'Juan',
+            operadorPassword: '1234',
+            cliente: 'Maria',
+            clientePassword: '1234',
+            horaConfirmacionReserva: '10:35',
+            horaConfirmacionOperario: '10:36',
+            horaCarga: '10:40',
+            horaDescarga: '18:51',
+            horaFinalizacion: '18:51',
+            horaCancelacion: '',
+            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+            ecommerce: "Mercado Libre",
+          },
+        ],
+      },
+      ]
+    },
+    {
+      name: "Estación 2",
+      estadoConexion: true,
+      lockers: [
+        {
+          id: 1,
+          length: '10',
+          width: '20',
+          height: '60',
+          state: 'disponible', // Disp, Res, Conf, Carg
+          reservations: [
+            {
+              name: "Reserva 7",
+              horaReserva: '10:30',
+              operador: 'Juan',
+              operadorPassword: '1234',
+              cliente: 'Maria',
+              clientePassword: '1234',
+              horaConfirmacionReserva: '10:35',
+              horaConfirmacionOperario: '10:36',
+              horaCarga: '10:40',
+              horaDescarga: '18:51',
+              horaFinalizacion: '18:51',
+              horaCancelacion: '',
+              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+              ecommerce: "Mercado Libre",
+            },
+            {
+              name: "Reserva 8",
+              horaReserva: '10:30',
+              operador: 'Juan',
+              operadorPassword: '1234',
+              cliente: 'Maria',
+              clientePassword: '1234',
+              horaConfirmacionReserva: '10:35',
+              horaConfirmacionOperario: '10:36',
+              horaCarga: '10:40',
+              horaDescarga: '18:51',
+              horaFinalizacion: '18:51',
+              horaCancelacion: '',
+              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+              ecommerce: "Mercado Libre",
+            },
+          ],
+        },
+        {
+          id: 1,
+          length: '10',
+          width: '20',
+          height: '60',
+          state: 'disponible', // Disp, Res, Conf, Carg
+          reservations: [
+            {
+              name: "Reserva 9",
+              horaReserva: '10:30',
+              operador: 'Juan',
+              operadorPassword: '1234',
+              cliente: 'Maria',
+              clientePassword: '1234',
+              horaConfirmacionReserva: '10:35',
+              horaConfirmacionOperario: '10:36',
+              horaCarga: '10:40',
+              horaDescarga: '18:51',
+              horaFinalizacion: '18:51',
+              horaCancelacion: '',
+              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+              ecommerce: "Mercado Libre",
+            },
+            {
+              name: "Reserva 10",
+              horaReserva: '10:30',
+              operador: 'Juan',
+              operadorPassword: '1234',
+              cliente: 'Maria',
+              clientePassword: '1234',
+              horaConfirmacionReserva: '10:35',
+              horaConfirmacionOperario: '10:36',
+              horaCarga: '10:40',
+              horaDescarga: '18:51',
+              horaFinalizacion: '18:51',
+              horaCancelacion: '',
+              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+              ecommerce: "Mercado Libre",
+            },
+          ],
+        },
+        {
+          id: 1,
+          length: '10',
+          width: '20',
+          height: '60',
+          state: 'disponible', // Disp, Res, Conf, Carg
+          reservations: [
+            {
+              name: "Reserva 11",
+              horaReserva: '10:30',
+              operador: 'Juan',
+              operadorPassword: '1234',
+              cliente: 'Maria',
+              clientePassword: '1234',
+              horaConfirmacionReserva: '10:35',
+              horaConfirmacionOperario: '10:36',
+              horaCarga: '10:40',
+              horaDescarga: '18:51',
+              horaFinalizacion: '18:51',
+              horaCancelacion: '',
+              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+              ecommerce: "Mercado Libre",
+            },
+            {
+              name: "Reserva 12",
+              horaReserva: '10:30',
+              operador: 'Juan',
+              operadorPassword: '1234',
+              cliente: 'Maria',
+              clientePassword: '1234',
+              horaConfirmacionReserva: '10:35',
+              horaConfirmacionOperario: '10:36',
+              horaCarga: '10:40',
+              horaDescarga: '18:51',
+              horaFinalizacion: '18:51',
+              horaCancelacion: '',
+              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
+              ecommerce: "Mercado Libre",
+            },
+          ],
+        },
+      ]
+    },
   ];
 
   const DashboardActualPorEstacion = () => {
@@ -195,33 +304,19 @@ const datapie = [
 
     const mostrarReservasPendientes = (data) => {
       let reservasPendientes = 0;
-      data.forEach((casillero) => {
-        if (casillero.reservado) {
+      data.forEach((locker) => {
+        if (locker.state==="Reservado") {
           reservasPendientes++;
         }
       }
       )
       return reservasPendientes;
     }
-
-    const mostrarPieEstadoReservaCarga = (data) => {
-      let tiempoReservaCarga = 0;
-      data.forEach((casillero) => {
-        if (casillero.reservado) {
-          let horaReserva = casillero.historial[casillero.historual.length-1].horaReserva;
-          let horaCargado = casillero.historial[casillero.historual.length-1].horaCargado;
-          let horaRetirado = casillero.historial[casillero.historual.length-1].horaDescargado;
-          tiempoReservaCarga = horaCargado - horaReserva;
-        }
-      }
-      )
-      return tiempoReservaCarga;
-    }
   
     useEffect(() => {
       const casillerosOcupados = stationsData[stationIdx].casilleros.filter((casillero) => casillero.ocupado).length;
       const casillerosDisponibles = stationsData[stationIdx].casilleros.filter((casillero) => !casillero.ocupado).length;
-      setDataOcupados([{ status: 'Ocupados', value: casillerosOcupados }, { status: 'Disponibles', value: casillerosDisponibles }]);
+      setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
       mostrarEstadoConexion(stationsData[stationIdx].estadoConexion);
       mostrarReservasPendientes(stationsData[stationIdx].casilleros);
     }, [stationIdx, stationsData]);
@@ -235,7 +330,7 @@ const datapie = [
   
     return (
       <div>
-        <h2 className="text-center text-2xl leading-9 font-bold">Dashboard Actual Por Estación</h2>
+        <h1 className="text-center text-2xl leading-9 font-bold">Dashboard Actual Por Estación</h1>
         <br />
   
         <div style={containerStyle}>

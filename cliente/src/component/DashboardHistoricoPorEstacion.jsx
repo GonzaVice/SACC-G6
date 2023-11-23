@@ -221,7 +221,7 @@ const datapie = [
     useEffect(() => {
       const casillerosOcupados = stationsData[stationIdx].casilleros.filter((casillero) => casillero.ocupado).length;
       const casillerosDisponibles = stationsData[stationIdx].casilleros.filter((casillero) => !casillero.ocupado).length;
-      setDataOcupados([{ status: 'Ocupados', value: casillerosOcupados }, { status: 'Disponibles', value: casillerosDisponibles }]);
+      setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
       mostrarEstadoConexion(stationsData[stationIdx].estadoConexion);
       mostrarReservasPendientes(stationsData[stationIdx].casilleros);
     }, [stationIdx, stationsData]);
@@ -235,7 +235,7 @@ const datapie = [
   
     return (
       <div>
-        <h2 className="text-center text-2xl leading-9 font-bold">Dashboard Historico Por Estación</h2>
+        <h1 className="text-center text-2xl leading-9 font-bold">Dashboard Historico Por Estación</h1>
         <br />
   
         <div style={containerStyle}>

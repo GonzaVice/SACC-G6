@@ -38,3 +38,5 @@ urlpatterns = [
     #Dashboard
     path('dashboard/', views.dashboard, name='dashboard')
 ]
+
+

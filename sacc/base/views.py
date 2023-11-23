@@ -7,7 +7,7 @@ from .models import Ecommerce
 from .models import Reservation
 from .models import Locker
 from .models import Station
-
+from datetime import datetime, timedelta
 import json
 from django.core import serializers
 
@@ -72,6 +72,7 @@ def register_user(request):
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)
 
+
 def get_user_by_id(request, user_id):
     try:
         user = User.objects.get(id=user_id)
@@ -104,6 +105,7 @@ def get_stations(request):
 
             for locker in lockers:
                 locker_info = {
+                    'name' : locker.name,
                     'id': locker.id,
                     'length': locker.length,
                     'width': locker.width,
@@ -131,7 +133,7 @@ def reserva_casillero(request):
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
         station_name = data.get('station_name')
-        locker_id = data.get('locker_id')
+        #locker_id = data.get('locker_id')
         cliente = data.get('cliente')
         width = data.get('width')
         height = data.get('height')
@@ -147,28 +149,30 @@ def reserva_casillero(request):
             
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(id=locker_id)
+            #locker = Locker.objects.get(id=locker_id)
             available_lockers = Locker.objects.filter(station=station, reservation=None)
 
             # Verificamos que el locker este disponible
-            if locker not in available_lockers:
-                return JsonResponse({'success': False, 'message': 'Locker not available'})
+            if not available_lockers:
+                return JsonResponse({'success': False, 'message': 'No lockers available'})
 
             #Verificamos que quepa en el locker
-            if width > locker.width or height > locker.height or length > locker.length:
-                return JsonResponse({'success': False, 'message': 'Package does not fit in locker'})
+            for locker in available_lockers:
+                if width <= locker.width and height <= locker.height and length <= locker.length:
+                    print("ENTRA EN ESTE LOCKER: ", locker.id)
+                    # Creamos la reserva
+                    reservation = Reservation.objects.create(
+                        ecommerce=ecommerce,
+                        cliente=cliente,
+                        cliente_password="cliente",
+                    )
+                    locker.reservation = reservation
+                    locker.save()
+                    return JsonResponse({'success': True, 'message': f'Locker reserved successfully in locker {locker.id}'})
+                    
+            return JsonResponse({'success': False, 'message': 'Package does not fit in any locker'})
 
-            # Creamos la reserva
-            reservation = Reservation.objects.create(
-                ecommerce=ecommerce,
-                cliente=cliente,
-                cliente_password="cliente",
-            )
-            locker.reservation = reservation
-            locker.save()
-
-            return JsonResponse({'success': True, 'message': f'Locker reserved successfully in locker {locker_id}'})
-        
+            
         #Excpeciones
         except Ecommerce.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
@@ -208,6 +212,13 @@ def confirmar_reserva(request):
             #Verificamos estado del locker
             if locker.reservation.state != 0:
                 return JsonResponse({'success': False, 'message': 'Locker not reserved. Locker state: ' + str(locker.reservation.state)})
+
+            #Verificamos que el tiempo de reserva no haya expirado
+            #El tiempo de reserva son 10 minutos
+            MAX_TIME = 10
+            if locker.reservation.datetime + timedelta(minutes=MAX_TIME) < datetime.now():
+                return JsonResponse({'success': False, 'message': 'Reservation time expired. Reservation max time: ' + str(MAX_TIME)})
+
 
             #Cambiamos el estado del locker
             locker.reservation.state = 1
@@ -328,6 +339,7 @@ def cancelar_reserva(request):
             return JsonResponse({'success': False, 'message': str(e)})
 
     return JsonResponse({'details': 'No data found'})
+
 
 def estado_reserva(request):
     if request.method == 'POST':
@@ -465,6 +477,7 @@ def reservas_historicas(request):
 
     return JsonResponse({'details': 'No data found'})
 
+
 def operador_abre(request):
 
     if request.method == 'POST':
@@ -494,7 +507,7 @@ def operador_abre(request):
                 return JsonResponse({'success': False, 'message': 'Invalid operator'})
             
             #Abrir locker
-            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_id)})
+            return JsonResponse({'success': True, 'message': ' Operador abriendo locker ' + str(locker_id)})
 
             
             

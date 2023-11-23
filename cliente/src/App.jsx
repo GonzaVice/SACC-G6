@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import LockerTable from './component/Buttons/lockertable';
 import axios from 'axios';
 import DashboardActualPorEstacion from './component/DashboardActualPorEstacion';
+import DashboardHistoricoPorEstacion from './component/DashboardHistoricoPorEstacion';
 
 // const getCsrfToken = () => {
 //   return document.cookie.split('; ')
@@ -44,6 +45,7 @@ function App() {
   return (
     <div>
       <DashboardActualPorEstacion />
+      <DashboardHistoricoPorEstacion />
     </div>
   );
 }

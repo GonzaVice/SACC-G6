@@ -176,7 +176,7 @@ const datapie = [
       },
   ];
 
-  const DashboardActualPorEstacion = () => {
+  const DashboardHistoricoPorEstacion = () => {
     const [stationsData, setStationsData] = useState(dataTablas);
     const [stationIdx, setStationIdx] = useState(0);
     const [stationName, setStationName] = useState(stationsData[stationIdx].address);
@@ -235,18 +235,18 @@ const datapie = [
   
     return (
       <div>
-        <h2 className="text-center text-2xl leading-9 font-bold">Dashboard Actual Por Estación</h2>
+        <h2 className="text-center text-2xl leading-9 font-bold">Dashboard Historico Por Estación</h2>
         <br />
   
         <div style={containerStyle}>
-          <SimpleCard title="Casilleros Ocupados" number="2" margin="10px" />
-          <SimpleCard title="Casilleros Desocupados" number="1" margin="10px" />
-          <SimpleCard title="Estado Conexión" number={estadoOnline} margin="10px" />
-          <SimpleCard title="# Reservas Pendientes" number={mostrarReservasPendientes(stationsData[stationIdx].casilleros)} margin="10px" />
+          <SimpleCard title="Promedio # Casilleros Usados" number="2" margin="10px" />
+          <SimpleCard title="Promedio # Casilleros Desocupados" number="1" margin="10px" />
+          <SimpleCard title="Promedio Tiempo Reserva-Carga" number={mostrarReservasPendientes(stationsData[stationIdx].casilleros)} margin="10px" />
+          <SimpleCard title="Promedio Tiempo Carga-Retiro" number={mostrarReservasPendientes(stationsData[stationIdx].casilleros)} margin="10px" />
         </div>
 
         <div style={containerStyle}> 
-          <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Estado Ocupado Casilleros"/>
+          <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Promedio Porcentaje Uso"/>
           <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Tiempo Reserva-Carga/Carga-Retiro"/>
         </div>
   
@@ -260,4 +260,4 @@ const datapie = [
   };
   
 
-export default DashboardActualPorEstacion;
+export default DashboardHistoricoPorEstacion;

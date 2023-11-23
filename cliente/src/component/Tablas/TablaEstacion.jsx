@@ -6,10 +6,6 @@ const TablaEstacion = ({ data, conexion }) => {
     console.log(`Redirigiendo a Reserva ${station.address}`);
   };
 
-  const handleViewCasillero = (casillero) => {
-    console.log(`Redirigiendo a Historial ${casillero.id}`);
-  };
-
   const renderReservado = (reservado) => (reservado ? 'Sí' : 'No');
   const renderOcupado = (ocupado) => (ocupado ? 'Sí' : 'No');
   const renderEstadoConexion = (estadoConexion) =>
@@ -30,14 +26,12 @@ const TablaEstacion = ({ data, conexion }) => {
           <th style={tableHeaderStyle}>Casillero</th>
           <th style={tableHeaderStyle}>Dimensiones (cm)</th>
           <th style={tableHeaderStyle}>Reservado</th>
-          <th style={tableHeaderStyle}>ID Reserva</th>
           <th style={tableHeaderStyle}>Hora Reserva</th>
           <th style={tableHeaderStyle}>Ocupado</th>
           <th style={tableHeaderStyle}>Hora Ocupado</th>
           <th style={tableHeaderStyle}>Estado Conexión</th>
           <th style={tableHeaderStyle}>Porcentaje de Uso</th>
           <th style={tableHeaderStyle}>Ver Reserva</th>
-          <th style={tableHeaderStyle}>Historial Casillero</th>
         </tr>
       </thead>
       <tbody>
@@ -46,15 +40,6 @@ const TablaEstacion = ({ data, conexion }) => {
             <td style={tableCellStyle}>{casillero.id}</td>
             <td style={tableCellStyle}>{casillero.dimensiones}</td>
             <td style={tableCellStyle}>{renderReservado(casillero.reservado)}</td>
-            <td style={tableCellStyle}>
-                {casillero.reservado ? (
-                    <div key={casillero.historial[casillero.historial.length - 1].idReserva}>
-                    {casillero.historial[casillero.historial.length - 1].idReserva}
-                    </div>
-                ) : (
-                    'N/A'
-                )}
-            </td>
             <td style={tableCellStyle}>
                 {casillero.reservado ? (
                     <div key={casillero.historial[casillero.historial.length - 1].horaReserva}>
@@ -79,14 +64,10 @@ const TablaEstacion = ({ data, conexion }) => {
             </td>
             <td style={tableCellStyle}>{casillero.porcentajeUso}</td>
             <td style={tableCellStyle}>
+            {casillero.reservado ? (
             <button onClick={() => handleViewReserva(casillero.idReserva)}>
                 Ver Reserva
-            </button>
-            </td>
-            <td style={tableCellStyle}>
-            <button onClick={() => handleViewCasillero(casillero)}>
-                Ver Historial
-            </button>
+            </button> ) : ('N/A')}
             </td>
         </tr>
         ))}

@@ -44,12 +44,10 @@ const SendKey = () => {
 
         try {
 
-            const lockerIdAsInt = parseInt(lockerId, 10);
-
             const apiUrl = userType === 'operador' ? 'http://127.0.0.1:8000/base/operador_abre/' : 'http://127.0.0.1:8000/base/cliente_abre/';
             const response = await axios.post(apiUrl, {
                 "station_name":stationId,
-                "locker_id":lockerIdAsInt,
+                "locker_name":lockerId,
                 "usuario_clave":lockerKey,
                 "usuario":userMail
             }, {

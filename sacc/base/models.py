@@ -98,6 +98,6 @@ class Locker(models.Model):
 
 
     def __str__(self):
-        return f"Locker (ID: {self.id}) - State: {self.get_state_display()}"
+        return f"Locker (Name: {self.name}) - State: {self.get_state_display()}"
     
 

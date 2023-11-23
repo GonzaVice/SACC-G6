@@ -32,6 +32,9 @@ urlpatterns = [
     path('operador_abre/', views.operador_abre, name='operador_abre'),
 
     #Cliente abre puerta
-    path('cliente_abre/', views.cliente_abre, name='cliente_abre')
+    path('cliente_abre/', views.cliente_abre, name='cliente_abre'),
     
+    
+    #Dashboard
+    path('dashboard/', views.dashboard, name='dashboard')
 ]

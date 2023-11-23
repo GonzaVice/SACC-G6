@@ -261,3 +261,30 @@ def details(request):
         print('==========')
         return JsonResponse({'details': json_message})
 
+def reservation(station,locker):
+    json_to_esp = {
+            "station_id": station , 
+            "nickname": locker
+        }    
+
+    mqtt_connect_and_publish('msg/reservation', json.dumps(json_to_esp))
+    pass
+
+def load(station,locker):
+    json_to_esp = {
+            "station_id": station , 
+            "nickname": locker
+        }    
+
+    mqtt_connect_and_publish('msg/load', json.dumps(json_to_esp))
+    pass
+
+def unload(station,locker):
+    json_to_esp = {
+            "station_id": station , 
+            "nickname": locker
+        }    
+
+    mqtt_connect_and_publish('msg/unload', json.dumps(json_to_esp))
+    pass
+

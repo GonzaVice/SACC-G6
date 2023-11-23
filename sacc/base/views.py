@@ -10,6 +10,26 @@ from .models import Station
 from datetime import datetime, timedelta
 import json
 from django.core import serializers
+from .mqtt_util import mqtt_connect_and_publish, mqtt_subscribe, received_messages, mqtt_disconnect
+
+def load(station,locker):
+    json_to_esp = {
+            "station_id": station , 
+            "nickname": locker
+        }    
+
+    mqtt_connect_and_publish('msg/load', json.dumps(json_to_esp))
+    pass
+
+def unload(station,locker):
+    json_to_esp = {
+            "station_id": station , 
+            "nickname": locker
+        }    
+
+    mqtt_connect_and_publish('msg/unload', json.dumps(json_to_esp))
+    pass
+
 
 def login_user(request):
     if request.method == 'POST':
@@ -195,7 +215,7 @@ def confirmar_reserva(request):
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
         station_name = data.get('station_name')
-        locker_id = data.get('locker_id')
+        locker_name = data.get('locker_name')
 
         
         try:
@@ -207,7 +227,7 @@ def confirmar_reserva(request):
 
             #Verificamos que exista la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(id=locker_id)
+            locker = Locker.objects.get(name=locker_name)
             
             #Verificamos estado del locker
             if locker.reservation.state != 0:
@@ -245,7 +265,7 @@ def confirmar_paquete(request):
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
         station_name = data.get('station_name')
-        locker_id = data.get('locker_id')
+        locker_name = data.get('locker_name')
         operador = data.get('operador')
         width = data.get('width')
         height = data.get('height')
@@ -261,7 +281,7 @@ def confirmar_paquete(request):
             
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(id=locker_id)
+            locker = Locker.objects.get(name=locker_name)
             available_lockers = Locker.objects.filter(station=station, reservation=None)
 
             #Verificamos que el locker este en estado 1
@@ -279,7 +299,7 @@ def confirmar_paquete(request):
             locker.reservation.operador_password = "operador"
             locker.reservation.save()
             locker.save()
-            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_id)})
+            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_name)})
 
             
             
@@ -304,7 +324,7 @@ def cancelar_reserva(request):
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
         station_name = data.get('station_name')
-        locker_id = data.get('locker_id')
+        locker_name = data.get('locker_name')
 
 
         try:
@@ -317,7 +337,7 @@ def cancelar_reserva(request):
             
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(id=locker_id)
+            locker = Locker.objects.get(name=locker_name)
             
             #Cambiamos de estado la reserva a cancelado
             locker.reservation.state = 3
@@ -326,7 +346,7 @@ def cancelar_reserva(request):
             locker.reservation = None
             locker.reservation.save()
             locker.save()
-            return JsonResponse({'success': True, 'message': 'Reservation cancelled successfully in locker ' + str(locker_id)})
+            return JsonResponse({'success': True, 'message': 'Reservation cancelled successfully in locker ' + str(locker_name)})
 
         #Excpeciones
         except Ecommerce.DoesNotExist:
@@ -349,7 +369,7 @@ def estado_reserva(request):
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
         station_name = data.get('station_name')
-        locker_id = data.get('locker_id')
+        locker_name = data.get('locker_name')
 
 
         try:
@@ -362,7 +382,7 @@ def estado_reserva(request):
             
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(id=locker_id)
+            locker = Locker.objects.get(name=locker_name)
             
             #Obtenemos json de la reserva
             data = {
@@ -371,7 +391,7 @@ def estado_reserva(request):
                 'ecommerce': locker.reservation.ecommerce.name,
                 'cliente': locker.reservation.cliente,
                 'operador': locker.reservation.operador,
-                'locker': locker.id
+                'locker': locker.name
             }
 
             return JsonResponse({'success': True, 'message': data})
@@ -486,7 +506,7 @@ def operador_abre(request):
         data = json.loads(request.body)
         usuario_clave = data.get('usuario_clave')
         station_name = data.get('station_name')
-        locker_id = data.get('locker_id')
+        locker_name = data.get('locker_name')
         usuario = data.get('usuario')
 
 
@@ -494,7 +514,7 @@ def operador_abre(request):
            
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(id=locker_id)
+            locker = Locker.objects.get(name=locker_name)
             available_lockers = Locker.objects.filter(station=station, reservation=None)
 
             #Verificamos que el locker este en estado 1
@@ -506,8 +526,11 @@ def operador_abre(request):
             if usuario != locker.reservation.operador:
                 return JsonResponse({'success': False, 'message': 'Invalid operator'})
             
+
             #Abrir locker
-            return JsonResponse({'success': True, 'message': ' Operador abriendo locker ' + str(locker_id)})
+            load(station_name,locker_name)
+            print("SE MANDO EL LOAD")
+            return JsonResponse({'success': True, 'message': ' Operador abriendo locker ' + str(locker_name)})
 
             
             
@@ -532,15 +555,16 @@ def cliente_abre(request):
         data = json.loads(request.body)
         usuario_clave = data.get('usuario_clave')
         station_name = data.get('station_name')
-        locker_id = data.get('locker_id')
+        locker_name = data.get('locker_name')
         usuario = data.get('usuario')
 
 
         try:
-
+            
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(id=locker_id)
+            locker = Locker.objects.get(name=locker_name)
+            print("ESTO ES LOCKER: ", locker)
             available_lockers = Locker.objects.filter(station=station, reservation=None)
 
             #Verificamos que el locker este en estado 1
@@ -553,7 +577,8 @@ def cliente_abre(request):
                 return JsonResponse({'success': False, 'message': 'Invalid operator'})
             
             #Abrir locker
-            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_id)})
+            unload(station_name, locker_name)
+            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_name)})
 
             
             
@@ -569,3 +594,46 @@ def cliente_abre(request):
 
     return JsonResponse({'details': 'No data found'})
 
+def dashboard(request):
+     if request.method == 'GET':
+        stations = Station.objects.all()
+        station_data = []
+
+        for station in stations:
+            station_info = {
+                'station': {
+                    'name': station.name,
+                    'lockers': []
+                }
+            }
+
+            lockers = Locker.objects.filter(station=station)
+            for locker in lockers:
+                locker_info = {
+                    'locker': {
+                        'name': locker.name,
+                        'length': locker.length,
+                        'width': locker.width,
+                        'height': locker.height,
+                        'state': locker.get_state_display(),
+                        'reservation': None
+                    }
+                }
+
+                if locker.reservation:
+                    reservation_info = {
+                        'reservation': {
+                            'name': locker.reservation.name,
+                            'datetime': locker.reservation.datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                            'operador': locker.reservation.operador,
+                            'cliente': locker.reservation.cliente,
+                            'state': locker.reservation.get_state_display(),
+                        }
+                    }
+                    locker_info['locker']['reservation'] = reservation_info['reservation']
+
+                station_info['station']['lockers'].append(locker_info['locker'])
+
+            station_data.append(station_info)
+
+        return JsonResponse({'data': station_data})

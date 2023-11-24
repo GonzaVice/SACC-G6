@@ -637,3 +637,19 @@ def dashboard(request):
             station_data.append(station_info)
 
         return JsonResponse({'data': station_data})
+     
+
+
+def get_stations_info(request):
+    if request.method == 'GET':
+        # Obtener todas las estaciones y sus datos básicos
+        stations = Station.objects.all()
+        station_info = []
+
+        for station in stations:
+            station_info.append({
+                'name': station.name,
+                'conexion': station.conexion,
+            })
+
+        return JsonResponse({'station_info': station_info})

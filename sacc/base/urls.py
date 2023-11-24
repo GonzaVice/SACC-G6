@@ -9,7 +9,9 @@ urlpatterns = [
     # Endpoint for user registration
     path('register/', views.register_user, name='register'),
     # Add other endpoints as needed
-    path('user/<int:user_id>/', views.get_user_by_id), 
+    path('user/<int:user_id>/', views.get_user_by_id),
+
+    path('get_stations_info/', views.get_stations_info, name='get_stations_info'),
 
     #1 
     path('get_stations/', views.get_stations, name='get_stations'),

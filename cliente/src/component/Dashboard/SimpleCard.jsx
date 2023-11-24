@@ -13,7 +13,7 @@ const SimpleCard = ({ title, number, margin }) => {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: margin || 0, // Agrega esta línea para el margen
+    margin: margin || 0,
   };
 
   const numberStyle = {
@@ -22,9 +22,13 @@ const SimpleCard = ({ title, number, margin }) => {
     fontSize: '1.2em',
   };
 
+  const titleStyle = {
+    color: 'lightcoral', // Cambia el color del título a rojo suave
+  };
+
   return (
     <div style={cardStyle}>
-      <h3>{title}</h3>
+      <h3 style={titleStyle}>{title}</h3>
       <p style={numberStyle}>{number}</p>
     </div>
   );

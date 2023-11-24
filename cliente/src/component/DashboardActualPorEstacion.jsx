@@ -3,7 +3,8 @@ import SimplePieCharts from "./Dashboard/SimplePieChart";
 import TablaEstacion from "./Tablas/TablaEstacion";
 import SimpleCard from "./Dashboard/SimpleCard";
 import { useState, useEffect } from "react";
-
+import DashboardHistoricoPorEstacion from "./DashboardHistoricoPorEstacion";
+import { useLocation } from 'react-router-dom';
 
 const datapie = [
     {name: "Grupo A", value: 400},
@@ -32,7 +33,7 @@ const datapie = [
         length: '10',
         width: '20',
         height: '60',
-        state: 'disponible', // Disp, Res, Conf, Carg
+        state: 'Disponible', // Disp, Res, Conf, Carg
         reservations: [
           {
             name: "Reserva 1",
@@ -73,7 +74,7 @@ const datapie = [
         length: '30',
         width: '20',
         height: '30',
-        state: 'disponible', // Disp, Res, Conf, Carg
+        state: 'Confirmado', // Disp, Res, Conf, Carg
         reservations: [
           {
             name: "Reserva 3",
@@ -114,7 +115,7 @@ const datapie = [
         length: '50',
         width: '20',
         height: '90',
-        state: 'disponible', // Disp, Res, Conf, Carg
+        state: 'Cargado', // Disp, Res, Conf, Carg
         reservations: [
           {
             name: "Reserva 5",
@@ -161,7 +162,7 @@ const datapie = [
           length: '10',
           width: '20',
           height: '60',
-          state: 'disponible', // Disp, Res, Conf, Carg
+          state: 'Disponible', // Disp, Res, Conf, Carg
           reservations: [
             {
               name: "Reserva 7",
@@ -202,7 +203,7 @@ const datapie = [
           length: '10',
           width: '20',
           height: '60',
-          state: 'disponible', // Disp, Res, Conf, Carg
+          state: 'Disponible', // Disp, Res, Conf, Carg
           reservations: [
             {
               name: "Reserva 9",
@@ -243,7 +244,7 @@ const datapie = [
           length: '10',
           width: '20',
           height: '60',
-          state: 'disponible', // Disp, Res, Conf, Carg
+          state: 'Disponible', // Disp, Res, Conf, Carg
           reservations: [
             {
               name: "Reserva 11",
@@ -291,6 +292,13 @@ const datapie = [
     const [estadoOnline, setEstadoOnline] = useState("Offline");
     const [tiempoReservaCarga, setTiempoReservaCarga] = useState(0);
     const [tiempoCargaRetiro, setTiempoCargaRetiro] = useState(0);
+    const location = useLocation();
+    const { station_name, connection } = location.state;
+    
+    const handleVerDatosHistoricos = () => {
+      console.log("Redirigiendo a datos históricos...");
+      // window.location.href = '/ruta-de-datos-historicos'; // Ejemplo de redirección
+    };
 
     const mostrarEstadoConexion = (estado) => {
       if (estado) {
@@ -300,13 +308,11 @@ const datapie = [
       }
     }
 
-
-  
     useEffect(() => {
-      const casillerosOcupados = stationsData[stationIdx].lockers.filter((locker) => locker.ocupado).length;
-      const casillerosDisponibles = stationsData[stationIdx].lockers.filter((locker) => !locker.ocupado).length;
+      const casillerosDisponibles = stationsData[stationIdx].lockers.filter((locker) => locker.state === "Disponible").length;
+      const casillerosOcupados = stationsData[stationIdx].lockers.filter((locker) => locker.state != "Disponible").length;
       setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
-      mostrarEstadoConexion(stationsData[stationIdx].estadoConexion);
+      mostrarEstadoConexion(stationsData[stationIdx].connection);
     }, [stationIdx, stationsData]);
   
     const containerStyle = {
@@ -320,6 +326,7 @@ const datapie = [
       <div>
         <h1 className="text-center text-2xl leading-9 font-bold">Dashboard Actual Por Estación</h1>
         <br />
+        <button onClick={handleVerDatosHistoricos}>Ver Datos Históricos</button>
   
         <div style={containerStyle}>
           <SimpleCard title="Casilleros Ocupados" number="2" margin="10px" />
@@ -329,14 +336,19 @@ const datapie = [
 
         <div style={containerStyle}> 
           <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Estado Ocupado Casilleros"/>
-          <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Tiempo Reserva-Carga/Carga-Retiro"/>
+          {/* <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Tiempo Reserva-Carga/Carga-Retiro Casillero 1"/>
+          <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Tiempo Reserva-Carga/Carga-Retiro Casillero 2"/>
+          <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Tiempo Reserva-Carga/Carga-Retiro Casillero 3"/> */}
+
+        
         </div>
   
         <br />
         <br />
         <br />
         <br />
-        <TablaEstacion data={stationsData[stationIdx].casilleros} conexion={stationsData[stationIdx].estadoConexion} />
+        <TablaEstacion data={stationsData[stationIdx].lockers} />
+        {/* <DashboardActualPorEstacion data={dataTablas} />	 */}
       </div>
     );
   };

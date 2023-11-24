@@ -1,15 +1,14 @@
 import {React, useState} from 'react';
 
-const TablaEstacion = ({ data, conexion }) => {
+const TablaEstacion = ({ data }) => {
 
   const handleViewReserva = (station) => {
     console.log(`Redirigiendo a Reserva ${station.address}`);
   };
 
-  const renderReservado = (reservado) => (reservado ? 'Sí' : 'No');
-  const renderOcupado = (ocupado) => (ocupado ? 'Sí' : 'No');
-  const renderEstadoConexion = (estadoConexion) =>
-    estadoConexion ? 'Conectado' : 'Sin conexión';
+  const dimensionesString = (height, width, length) => (
+    `${height} x ${width} x ${length}`
+  );
 
   if (!data) {
     return <p>Cargando...</p>;
@@ -25,11 +24,11 @@ const TablaEstacion = ({ data, conexion }) => {
         <tr>
           <th style={tableHeaderStyle}>Casillero</th>
           <th style={tableHeaderStyle}>Dimensiones (cm)</th>
-          <th style={tableHeaderStyle}>Reservado</th>
-          <th style={tableHeaderStyle}>Hora Reserva</th>
+          <th style={tableHeaderStyle}>Estado</th>
           <th style={tableHeaderStyle}>Ocupado</th>
+          <th style={tableHeaderStyle}>Abierto</th>
+          <th style={tableHeaderStyle}>Hora Reserva</th>
           <th style={tableHeaderStyle}>Hora Ocupado</th>
-          <th style={tableHeaderStyle}>Estado Conexión</th>
           <th style={tableHeaderStyle}>Porcentaje de Uso</th>
           <th style={tableHeaderStyle}>Ver Reserva</th>
         </tr>
@@ -38,33 +37,31 @@ const TablaEstacion = ({ data, conexion }) => {
       {data.map((casillero) => (
         <tr key={casillero.id}>
             <td style={tableCellStyle}>{casillero.id}</td>
-            <td style={tableCellStyle}>{casillero.dimensiones}</td>
-            <td style={tableCellStyle}>{renderReservado(casillero.reservado)}</td>
+            <td style={tableCellStyle}>{dimensionesString(casillero.height, casillero.width, casillero.length)}</td>
+            <td style={tableCellStyle}>{casillero.state}</td>
+            <td style={tableCellStyle}>casillero.ocupado</td>
+            <td style={tableCellStyle}>casillero.abierto</td>
             <td style={tableCellStyle}>
                 {casillero.reservado ? (
-                    <div key={casillero.historial[casillero.historial.length - 1].horaReserva}>
-                    {casillero.historial[casillero.historial.length - 1].horaReserva}
-                    </div>
-                ) : (
-                    'N/A'
-                )}
-            </td>
-            <td style={tableCellStyle}>{renderOcupado(casillero.ocupado)}</td>
-            <td style={tableCellStyle}>
-                {casillero.reservado ? (
-                    <div key={casillero.historial[casillero.historial.length - 1].horaCargado}>
-                    {casillero.historial[casillero.historial.length - 1].horaCargado}
+                    <div key={casillero.reservations[casillero.reservations.length - 1].horaReserva}>
+                    {casillero.reservations[casillero.reservations.length - 1].horaReserva}
                     </div>
                 ) : (
                     'N/A'
                 )}
             </td>
             <td style={tableCellStyle}>
-            {renderEstadoConexion(conexion)}
+                {casillero.reservado ? (
+                    <div key={casillero.reservations[casillero.reservations.length - 1].horaCargado}>
+                    {casillero.reservations[casillero.reservations.length - 1].horaCargado}
+                    </div>
+                ) : (
+                    'N/A'
+                )}
             </td>
             <td style={tableCellStyle}>{casillero.porcentajeUso}</td>
             <td style={tableCellStyle}>
-            {casillero.reservado ? (
+            {casillero.state!="Disponible" ? (
             <button onClick={() => handleViewReserva(casillero.idReserva)}>
                 Ver Reserva
             </button> ) : ('N/A')}

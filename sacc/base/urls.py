@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('get_stations_info/', views.get_stations_info, name='get_stations_info'),
 
+    path('get_all_stations/', views.get_all_stations, name='get_all_stations'),
     #1 
     path('get_stations/', views.get_stations, name='get_stations'),
     #2

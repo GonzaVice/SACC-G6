@@ -144,6 +144,36 @@ def get_stations(request):
         return JsonResponse({'stations': stations_info})
     return JsonResponse({'details': 'No data found'})
 
+def get_all_stations(request):
+    if request.method == 'GET':
+        print("ESTO ES GET ALL STATIONS")
+        stations = Station.objects.all()
+        stations_info = []
+        print("ESTO ES STATIONS: ", stations)
+        for station in stations:
+            lockers = Locker.objects.filter(station=station)
+            lockers_info = []
+
+            for locker in lockers:
+                locker_info = {
+                    'name' : locker.name,
+                    'length': locker.length,
+                    'width': locker.width,
+                    'height': locker.height,
+                    'state': locker.get_state_display()
+
+                }
+                lockers_info.append(locker_info)
+
+            station_info = {
+                'id': station.name,
+                'lockers': lockers_info
+            }
+            stations_info.append(station_info)
+
+        return JsonResponse({'stations': stations_info})
+    return JsonResponse({'details': 'No data found'})
+
 
 def reserva_casillero(request):
     if request.method == 'POST':

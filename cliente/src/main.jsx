@@ -1,5 +1,5 @@
+import { createRoot } from 'react-dom/client';
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import App from './App.jsx';
 import Login from './component/Registration/Login.jsx';
@@ -48,7 +48,10 @@ const Main = () => {
           {isLoggedIn ? (
             <Route path="/home" element={<Home />}/>
           ) : (
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <>
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="/home" element={<Navigate to="/login" />} /> {/* Redirect from home to login when not logged in */}
+            </>
           )}
 
           <Route path="/DashboardActualPorEstacion" element={<DashboardActualPorEstacion id={stationName}/>}/>
@@ -56,10 +59,15 @@ const Main = () => {
           <Route path="/CreateLocker" element={<CreateLocker />}/>
           <Route path="/CreateEcommerce" element={<CreateEcommerce />}/>
 
-        </Routes>
+      </Routes>
+
       </Router>
     </React.StrictMode>
   );
 };
 
-ReactDOM.createRoot(document.getElementById('root')).render(<Main />);
+// Create the root outside of the component
+const root = createRoot(document.getElementById('root'));
+
+// Render the component using the root
+root.render(<Main />);

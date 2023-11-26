@@ -7,6 +7,9 @@ import Home from './component/Home/Home.jsx';
 import SendKey from './component/SendKey/SendKey.jsx';
 import './index.css';
 import DashboardActualPorEstacion from './component/DashboardActualPorEstacion.jsx';
+import CreateEstacion from './component/EditEstacion/CreateEstacion.jsx';
+import CreateLocker from './component/EditLocker/CreateLocker.jsx';
+import CreateEcommerce from './component/EditEcommerce/CreateEcommerce.jsx';
 
 const LogoutButton = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -49,6 +52,9 @@ const Main = () => {
           )}
 
           <Route path="/DashboardActualPorEstacion" element={<DashboardActualPorEstacion id={stationName}/>}/>
+          <Route path="/CreateEstacion" element={<CreateEstacion />}/>
+          <Route path="/CreateLocker" element={<CreateLocker />}/>
+          <Route path="/CreateEcommerce" element={<CreateEcommerce />}/>
 
         </Routes>
       </Router>

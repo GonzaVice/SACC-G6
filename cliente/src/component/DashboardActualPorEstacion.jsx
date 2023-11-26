@@ -295,6 +295,39 @@ const datapie = [
     const location = useLocation();
     const { station_name, connection } = location.state;
     
+
+    useEffect(() => {
+      const fetchStations = async () => {
+          try {
+      
+              const csrfToken = getCsrfToken();
+              const headers = {
+                  'X-CSRFToken': csrfToken,
+              };
+
+              const response = await axios.get('http://127.0.0.1:8000/base/get_all_stations/', {
+                  headers,
+                  withCredentials: true,
+              });
+
+              setStations(response.data.station_info);
+              console.log(response)
+          } catch (error) {
+              console.error('Error al obtener las estaciones:', error);
+          }
+      };
+
+      fetchStations();
+  }, []); 
+
+
+
+
+
+    const printStationData = () => {
+      console.log("ESTACION NOMBRE:",station_name);
+    };
+
     const handleVerDatosHistoricos = () => {
       console.log("Redirigiendo a datos históricos...");
       // window.location.href = '/ruta-de-datos-historicos'; // Ejemplo de redirección
@@ -309,6 +342,7 @@ const datapie = [
     }
 
     useEffect(() => {
+      //printStationData();
       const casillerosDisponibles = stationsData[stationIdx].lockers.filter((locker) => locker.state === "Disponible").length;
       const casillerosOcupados = stationsData[stationIdx].lockers.filter((locker) => locker.state != "Disponible").length;
       setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
@@ -327,7 +361,9 @@ const datapie = [
         <h1 className="text-center text-2xl leading-9 font-bold">Dashboard Actual Por Estación</h1>
         <br />
         <button onClick={handleVerDatosHistoricos}>Ver Datos Históricos</button>
-  
+        
+        <h2 className="text-center text-2xl leading-9 font-bold">Estación: {station_name}</h2>
+
         <div style={containerStyle}>
           <SimpleCard title="Casilleros Ocupados" number="2" margin="10px" />
           <SimpleCard title="Casilleros Desocupados" number="1" margin="10px" />

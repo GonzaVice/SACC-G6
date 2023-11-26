@@ -683,3 +683,69 @@ def get_stations_info(request):
             })
 
         return JsonResponse({'station_info': station_info})
+    
+
+
+#CRUD de estaciones
+
+def create_station(request):
+    if request.method == 'POST':
+        # Obtener los datos de la estación
+        data = json.loads(request.body)
+        name = data.get('name')
+        #conexion = data.get('conexion')
+
+        # Crear la estación
+        new_station = Station.objects.create(
+            name=name,
+        )
+
+        return JsonResponse({'message': 'Station created successfully'})
+    
+    # Handle other HTTP methods or invalid requests
+    return JsonResponse({'message': 'Method not allowed'}, status=405)
+
+#CRUD de casilleros
+def create_locker(request):
+    if request.method == 'POST':
+        # Obtener los datos del casillero
+        data = json.loads(request.body)
+        name = data.get('name')
+        length = data.get('length')
+        width = data.get('width')
+        height = data.get('height')
+        station_name = data.get('station_name')
+
+        # Crear el casillero
+        station = Station.objects.get(name=station_name)
+        new_locker = Locker.objects.create(
+            name=name,
+            length=length,
+            width=width,
+            height=height,
+            station=station
+        )
+
+        return JsonResponse({'message': 'Locker created successfully'})
+    
+    # Handle other HTTP methods or invalid requests
+    return JsonResponse({'message': 'Method not allowed'}, status=405)
+
+#CRUD de ecommerce
+def create_ecommerce(request):
+    if request.method == 'POST':
+        # Obtener los datos del ecommerce
+        data = json.loads(request.body)
+        name = data.get('name')
+        key = data.get('key')
+
+        # Crear el ecommerce
+        new_ecommerce = Ecommerce.objects.create(
+            name=name,
+            key=key
+        )
+
+        return JsonResponse({'message': 'Ecommerce created successfully'})
+    
+    # Handle other HTTP methods or invalid requests
+    return JsonResponse({'message': 'Method not allowed'}, status=405)

@@ -39,7 +39,18 @@ urlpatterns = [
     
     
     #Dashboard
-    path('dashboard/', views.dashboard, name='dashboard')
+    path('dashboard/', views.dashboard, name='dashboard'),
+
+
+    #CRUD de estaciones
+    path('create_station/', views.create_station, name='create_station'),
+    
+    #CRUD de casilleros
+    path('create_locker/', views.create_locker, name='create_locker'),
+
+    #CRUD ecommerce
+    path('create_ecommerce/', views.create_ecommerce, name='create_ecommerce')
+    
 ]
 
 

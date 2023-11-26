@@ -41,6 +41,18 @@ const Home = () => {
         navigate('/DashboardActualPorEstacion', { state: { station_name: station.name, connection: station.conexion } });
     };
 
+    const handleCreateStationClick = () => {
+        navigate('/CreateEstacion');
+    };
+
+    const handleCreateLockerClick = () => {
+        navigate('/CreateLocker');
+    };
+ 
+    const handleCreateEcommerceClick = () => {
+        navigate('/CreateEcommerce');
+    };
+
     return (
         <div>
             <h1>Estaciones:</h1>
@@ -49,6 +61,17 @@ const Home = () => {
                     {station.name}
                 </button>
             ))}
+
+            <button onClick={handleCreateStationClick}>
+                Create Station
+            </button>
+            <button onClick={handleCreateLockerClick}>
+                Create Locker
+            </button>
+            <button onClick={handleCreateEcommerceClick}>
+                Create Ecommerce
+            </button>
+            
         </div>
     );
 };

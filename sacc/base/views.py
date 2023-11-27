@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 import json
 from django.core import serializers
 from .mqtt_util import mqtt_connect_and_publish, mqtt_subscribe, received_messages, mqtt_disconnect
+import time
 
 def load(station,locker):
     json_to_esp = {
@@ -613,6 +614,9 @@ def dashboard(request):
         stations = Station.objects.all()
         station_data = []
 
+        json_message = json.loads(received_messages[-1])
+        print("ESTE ES EL ESP",json_message)        
+
         for station in stations:
             station_info = {
                 'station': {
@@ -630,7 +634,11 @@ def dashboard(request):
                         'width': locker.width,
                         'height': locker.height,
                         'state': locker.get_state_display(),
-                        'reservation': None
+                        'reservation': None,
+                        'is_open': 'Find',
+                        'is_empty': 'Find',
+                        'state': 'Find',
+                        
                     }
                 }
 
@@ -793,3 +801,27 @@ def get_reservations_of_ecommerce(request):
 
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)
+
+
+
+def subscribe_mqtt(request):
+    if request.method == 'GET':
+            mqtt_subscribe('status')
+            while received_messages == []:
+                print('WAITING')
+                time.sleep(3)
+
+            json_message = json.loads(received_messages[-1])
+            print("ESTE ES EL JSON",json_message)
+           
+            return JsonResponse({'details': json_message})
+
+
+
+
+def mqtt_ask(request):
+    if request.method == 'GET':
+        
+        json_message = json.loads(received_messages[-1])
+        print("ESTE ES EL JSON",json_message)
+        return JsonResponse({'details': json_message})

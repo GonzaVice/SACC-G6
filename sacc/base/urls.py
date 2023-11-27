@@ -53,7 +53,12 @@ urlpatterns = [
     
     path('get_all_ecommerce/', views.get_all_ecommerce, name='get_all_ecommerce'),
 
-    path('get_reservations_of_ecommerce/', views.get_reservations_of_ecommerce, name='get_reservations_of_ecommerce')
+    path('get_reservations_of_ecommerce/', views.get_reservations_of_ecommerce, name='get_reservations_of_ecommerce'),
+
+    #Get physical data
+    path('subscribe_mqtt/', views.subscribe_mqtt, name='subscribe_mqtt'),
+
+    path('mqtt_ask/', views.mqtt_ask, name='mqtt_ask')
 ]
 
 

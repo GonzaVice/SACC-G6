@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 import secrets
-
+import random
 # Create your models here.
 
 #Modelo usuario
@@ -50,7 +50,7 @@ class Reservation(models.Model):
     ]
 
     # Campos existentes
-
+    identificador = models.IntegerField(default=random.randint(10000, 99999), editable=False)
     name = models.CharField(max_length=200, default='Default Reservation')
     datetime = models.DateTimeField(auto_now_add=True)
     operador = models.CharField(max_length=200,default='ValorPorDefecto') #mail del operador

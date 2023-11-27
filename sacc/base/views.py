@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.utils import timezone
+
 
 # Create your views here.
 from django.http import JsonResponse
@@ -144,6 +146,7 @@ def get_stations(request):
         return JsonResponse({'stations': stations_info})
     return JsonResponse({'details': 'No data found'})
 
+
 def get_all_stations(request):
     if request.method == 'GET':
         print("ESTO ES GET ALL STATIONS")
@@ -174,7 +177,7 @@ def get_all_stations(request):
         return JsonResponse({'stations': stations_info})
     return JsonResponse({'details': 'No data found'})
 
-
+#1
 def reserva_casillero(request):
     if request.method == 'POST':
         
@@ -218,7 +221,7 @@ def reserva_casillero(request):
                     )
                     locker.reservation = reservation
                     locker.save()
-                    return JsonResponse({'success': True, 'message': f'Locker reserved successfully in locker {locker.id}'})
+                    return JsonResponse({'success': True, 'message': f'Locker reserved successfully in locker {locker.id} with reservation id: {locker.reservation.identificador}'})
                     
             return JsonResponse({'success': False, 'message': 'Package does not fit in any locker'})
 
@@ -235,7 +238,7 @@ def reserva_casillero(request):
 
     return JsonResponse({'details': 'No data found'})
 
-
+#2
 def confirmar_reserva(request):
 
     if request.method == 'POST':
@@ -244,9 +247,7 @@ def confirmar_reserva(request):
         data = json.loads(request.body)
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
-        station_name = data.get('station_name')
-        locker_name = data.get('locker_name')
-
+        identificador = data.get('id')
         
         try:
             #Verificamos ecommerce
@@ -255,27 +256,27 @@ def confirmar_reserva(request):
             if key != ecommerce.key: 
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})    
 
-            #Verificamos que exista la estacion y locker
-            station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(name=locker_name)
-            
+            #Verificamos si existe la reserva
+            reservation = Reservation.objects.get(identificador=identificador)
+
             #Verificamos estado del locker
-            if locker.reservation.state != 0:
-                return JsonResponse({'success': False, 'message': 'Locker not reserved. Locker state: ' + str(locker.reservation.state)})
+            if reservation.state != 0:
+                return JsonResponse({'success': False, 'message': 'Locker not reserved. Locker state: ' + str(reservation.state)})
 
             #Verificamos que el tiempo de reserva no haya expirado
             #El tiempo de reserva son 10 minutos
             MAX_TIME = 10
-            if locker.reservation.datetime + timedelta(minutes=MAX_TIME) < datetime.now():
+            if reservation.datetime + timedelta(minutes=MAX_TIME) < timezone.now():
                 return JsonResponse({'success': False, 'message': 'Reservation time expired. Reservation max time: ' + str(MAX_TIME)})
 
-
             #Cambiamos el estado del locker
-            locker.reservation.state = 1
-            locker.reservation.save()
-            locker.save()
+            reservation.state = 1
+            reservation.save()
+            
             return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully'})
 
+        except Reservation.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Reservation does not exist'})
         except Locker.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Locker does not exist'})
         except Station.DoesNotExist:
@@ -285,7 +286,7 @@ def confirmar_reserva(request):
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)})
     
-
+#3
 def confirmar_paquete(request):
 
     if request.method == 'POST':
@@ -294,13 +295,12 @@ def confirmar_paquete(request):
         data = json.loads(request.body)
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
-        station_name = data.get('station_name')
-        locker_name = data.get('locker_name')
+       
         operador = data.get('operador')
         width = data.get('width')
         height = data.get('height')
         length = data.get('length')
-
+        identificador = data.get('id')
         try:
            
             # Verificamos que exista el ecommerce
@@ -309,43 +309,36 @@ def confirmar_paquete(request):
             if key != ecommerce.key: 
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})
             
-            # Verificamos si existe la estacion y locker
-            station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(name=locker_name)
-            available_lockers = Locker.objects.filter(station=station, reservation=None)
+            #Verificamos si existe la reserva
+            reservation = Reservation.objects.get(identificador=identificador)
 
             #Verificamos que el locker este en estado 1
-            if locker.reservation.state != 1:
-                return JsonResponse({'success': False, 'message': 'Locker not reserved. Locker state: ' + str(locker.reservation.state)})
+            if reservation.state != 1:
+                return JsonResponse({'success': False, 'message': 'Locker not reserved. Locker state: ' + str(reservation.state)})
 
             #Verificamos dimensiones del locker
-            if width > locker.width or height > locker.height or length > locker.length:
+            if width > width or height > height or length > length:
                 return JsonResponse({'success': False, 'message': 'Package does not fit in locker'})
                 #Hacer logica para cambiar de locker
 
             # Cambiamos el estado del locker
-            locker.reservation.state = 2
-            locker.reservation.operador = operador
-            locker.reservation.operador_password = "operador"
-            locker.reservation.save()
-            locker.save()
-            return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_name)})
+            reservation.state = 2
+            reservation.operador = operador
+            reservation.operador_password = "operador"
+            reservation.save()
+            return JsonResponse({'success': True, 'message': 'Reservation confirmed: ' + str(reservation.identificador)})
 
             
             
         #Excpeciones
         except Ecommerce.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
-        except Station.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Station does not exist'})
-        except Locker.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)})
 
     return JsonResponse({'details': 'No data found'})
 
-
+#4
 def cancelar_reserva(request):
     if request.method == 'POST':
         
@@ -353,8 +346,7 @@ def cancelar_reserva(request):
         data = json.loads(request.body)
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
-        station_name = data.get('station_name')
-        locker_name = data.get('locker_name')
+        identificador = data.get('id')
 
 
         try:
@@ -365,32 +357,27 @@ def cancelar_reserva(request):
             if key != ecommerce.key: 
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})
             
-            # Verificamos si existe la estacion y locker
-            station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(name=locker_name)
-            
+            #Verificamos si existe la reserva
+            reservation = Reservation.objects.get(identificador=identificador)
+
             #Cambiamos de estado la reserva a cancelado
-            locker.reservation.state = 3
+            reservation.state = 3
 
             #Desasociamos el locker de la reserva
-            locker.reservation = None
-            locker.reservation.save()
-            locker.save()
-            return JsonResponse({'success': True, 'message': 'Reservation cancelled successfully in locker ' + str(locker_name)})
+            reservation = None
+            reservation.save()
+    
+            return JsonResponse({'success': True, 'message': 'Reservation cancelled successfully: ' + str(reservation.identificador)})
 
         #Excpeciones
         except Ecommerce.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Ecommerce does not exist'})
-        except Station.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Station does not exist'})
-        except Locker.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Locker does not exist or is not available'})
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)})
 
     return JsonResponse({'details': 'No data found'})
 
-
+#5
 def estado_reserva(request):
     if request.method == 'POST':
         
@@ -398,9 +385,7 @@ def estado_reserva(request):
         data = json.loads(request.body)
         ecommerce_name = data.get('ecommerce')
         key = data.get('key')
-        station_name = data.get('station_name')
-        locker_name = data.get('locker_name')
-
+        identificador = data.get('id')
 
         try:
            
@@ -410,18 +395,16 @@ def estado_reserva(request):
             if key != ecommerce.key: 
                 return JsonResponse({'success': False, 'message': 'Invalid key/password'})
             
-            # Verificamos si existe la estacion y locker
-            station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(name=locker_name)
-            
+            #Verificamos si existe la reserva
+            reservation = Reservation.objects.get(identificador=identificador)
+
             #Obtenemos json de la reserva
             data = {
-                'id': locker.reservation.id,
-                'state': locker.reservation.state,
-                'ecommerce': locker.reservation.ecommerce.name,
-                'cliente': locker.reservation.cliente,
-                'operador': locker.reservation.operador,
-                'locker': locker.name
+                'id': reservation.identificador,
+                'state': reservation.state,
+                'ecommerce': reservation.ecommerce.name,
+                'cliente': reservation.cliente,
+                'operador': reservation.operador,
             }
 
             return JsonResponse({'success': True, 'message': data})
@@ -437,7 +420,7 @@ def estado_reserva(request):
 
     return JsonResponse({'details': 'No data found'})
 
-
+#6
 def reservas_activas(request):
     if request.method == 'POST':
         
@@ -482,7 +465,7 @@ def reservas_activas(request):
 
     return JsonResponse({'details': 'No data found'})
 
-
+#7
 def reservas_historicas(request):
     if request.method == 'POST':
         
@@ -624,6 +607,7 @@ def cliente_abre(request):
 
     return JsonResponse({'details': 'No data found'})
 
+
 def dashboard(request):
      if request.method == 'GET':
         stations = Station.objects.all()
@@ -693,7 +677,6 @@ def get_stations_info(request):
 
 
 #CRUD de estaciones
-
 def create_station(request):
     if request.method == 'POST':
         # Obtener los datos de la estación
@@ -755,6 +738,7 @@ def create_ecommerce(request):
     
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)
+
 
 def get_all_ecommerce(request):
     if request.method == 'GET':

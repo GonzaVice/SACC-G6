@@ -39,26 +39,53 @@ const Reservations = () => {
         fetchReservations();
     }, []); 
 
+    const reservationsStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+    };
+
+    const reservationCardStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        width: '300px',
+        margin: '10px',
+        padding: '10px',
+        borderRadius: '5px',
+        backgroundColor: '#333',
+        color: 'white',
+    };
+    const attributeTitleStyle = {
+        fontWeight: 'bold', // Make the attribute title text bold
+    };
+    const titleStyle = {
+        fontWeight: 'bold', // Make the title text bold
+    };
+    
     return (
-        <div>
-            <h1>Reservations:</h1>
+        <div style={reservationsStyle}>
+            <h1 style={titleStyle}>Reservations:</h1> {/* Apply the titleStyle to the title */}
             {reservations.map((reservation) => (
-                <div key={reservation.id}>
-                    <p>Name: {reservation.name}</p>
-                    <p>Operador: {reservation.operador}</p>
-                    <p>Cliente: {reservation.cliente}</p>
-                    <p>State: {reservation.state}</p>
-                    <p>Datetime: {reservation.datetime}</p>
-                    <p>Hora Confirmacion Reserva: {reservation.horaConfirmacionReserva}</p>
-                    <p>Hora Confirmacion Operador: {reservation.horaConfirmacionOperador}</p>
-                    <p>Hora Carga: {reservation.horaCarga}</p>
-                    <p>Hora Descarga: {reservation.horaDescarga}</p>
-                    <p>Hora Finalizacion: {reservation.horaFinalizacion}</p>
-                    <p>Hora Cancelacion: {reservation.horaCancelacion}</p>
+                <div style={reservationCardStyle} key={reservation.id}>
+                    <p><span style={attributeTitleStyle}>Name:</span> {reservation.name}</p>
+                    <p><span style={attributeTitleStyle}>Operador:</span> {reservation.operador}</p>
+                    <p><span style={attributeTitleStyle}>Cliente:</span> {reservation.cliente}</p>
+                    <p><span style={attributeTitleStyle}>State:</span> {reservation.state}</p>
+                    <p><span style={attributeTitleStyle}>Datetime:</span> {reservation.datetime}</p>
+                    <p><span style={attributeTitleStyle}>Hora Confirmacion Reserva:</span> {reservation.horaConfirmacionReserva}</p>
+                    <p><span style={attributeTitleStyle}>Hora Confirmacion Operador:</span> {reservation.horaConfirmacionOperador}</p>
+                    <p><span style={attributeTitleStyle}>Hora Carga:</span> {reservation.horaCarga}</p>
+                    <p><span style={attributeTitleStyle}>Hora Descarga:</span> {reservation.horaDescarga}</p>
+                    <p><span style={attributeTitleStyle}>Hora Finalizacion:</span> {reservation.horaFinalizacion}</p>
+                    <p><span style={attributeTitleStyle}>Hora Cancelacion:</span> {reservation.horaCancelacion}</p>
                 </div>
             ))}
         </div>
     );
+    
 };
 
 export default Reservations;

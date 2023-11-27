@@ -10,6 +10,8 @@ import DashboardActualPorEstacion from './component/DashboardActualPorEstacion.j
 import CreateEstacion from './component/EditEstacion/CreateEstacion.jsx';
 import CreateLocker from './component/EditLocker/CreateLocker.jsx';
 import CreateEcommerce from './component/EditEcommerce/CreateEcommerce.jsx';
+import Ecommerce from './component/EditEcommerce/GetAllEcommerce.jsx';
+import Reservations from './component/EditEcommerce/GetReservation.jsx';
 
 const LogoutButton = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -58,9 +60,9 @@ const Main = () => {
           <Route path="/CreateEstacion" element={<CreateEstacion />}/>
           <Route path="/CreateLocker" element={<CreateLocker />}/>
           <Route path="/CreateEcommerce" element={<CreateEcommerce />}/>
-
-      </Routes>
-
+          <Route path="/GetAllEcommerce" element={<Ecommerce />}/>
+          <Route path="/GetReservation" element={<Reservations />}/>
+        </Routes>
       </Router>
     </React.StrictMode>
   );

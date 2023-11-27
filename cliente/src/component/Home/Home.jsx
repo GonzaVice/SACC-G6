@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import './Home.css';
 
 const getCsrfToken = () => {
     return document.cookie.split('; ')
@@ -54,27 +54,26 @@ const Home = () => {
     };
 
     return (
-        <div>
+        <div className="home">
             <h1>Estaciones:</h1>
             {stations.map((station) => (
-                <button key={station.name} onClick={() => handleButtonClick(station)}>
+                <div className="station-card" key={station.name} onClick={() => handleButtonClick(station)}>
                     {station.name}
-                </button>
+                </div>
             ))}
 
-            <button onClick={handleCreateStationClick}>
+            <button className="btn btn-primary" onClick={handleCreateStationClick}>
                 Create Station
             </button>
-            <button onClick={handleCreateLockerClick}>
+            <button className="btn btn-secondary" onClick={handleCreateLockerClick}>
                 Create Locker
             </button>
-            <button onClick={handleCreateEcommerceClick}>
+            <button className="btn btn-tertiary" onClick={handleCreateEcommerceClick}>
                 Create Ecommerce
             </button>
-            
+
         </div>
     );
 };
 
 export default Home;
-

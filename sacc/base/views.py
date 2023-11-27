@@ -749,3 +749,57 @@ def create_ecommerce(request):
     
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)
+
+def get_all_ecommerce(request):
+    if request.method == 'GET':
+        # Obtener todas los ecommerce y sus datos básicos
+        ecommerce = Ecommerce.objects.all()
+        ecommerce_info = []
+
+        for ecommerce in ecommerce:
+            ecommerce_info.append({
+                'name': ecommerce.name,
+                'key': ecommerce.key,
+            })
+
+        return JsonResponse({'ecommerce_info': ecommerce_info})
+    
+    # Handle other HTTP methods or invalid requests
+    return JsonResponse({'message': 'Method not allowed'}, status=405)
+
+
+def get_reservations_of_ecommerce(request):
+    if request.method == 'POST':
+        # Obtener los datos del ecommerce
+        data = json.loads(request.body)
+        print("ESTO ES DATA: ", data)
+        name = data.get('name')
+        # key = data.get('key')
+
+        try:
+            #Buscar reservas del ecommerce
+            ecommerce = Ecommerce.objects.get(name=name)
+            reservations = Reservation.objects.filter(ecommerce=ecommerce)
+            reservations_json = {
+                'reservations': [{
+                    'id': reservation.id,
+                    'name': reservation.name,
+                    'operador': reservation.operador,
+                    'cliente': reservation.cliente,
+                    'state': reservation.get_state_display(),
+                    'datetime': reservation.datetime.strftime('%Y-%m-%d %H:%M:%S') if reservation.datetime else None,
+                    'horaConfirmacionReserva': reservation.horaConfirmacionReserva.strftime('%Y-%m-%d %H:%M:%S') if reservation.horaConfirmacionReserva else None,
+                    'horaConfirmacionOperador': reservation.horaConfirmacionOperador.strftime('%Y-%m-%d %H:%M:%S') if reservation.horaConfirmacionOperador else None,
+                    'horaCarga': reservation.horaCarga.strftime('%Y-%m-%d %H:%M:%S') if reservation.horaCarga else None,
+                    'horaDescarga': reservation.horaDescarga.strftime('%Y-%m-%d %H:%M:%S') if reservation.horaDescarga else None,
+                    'horaFinalizacion': reservation.horaFinalizacion.strftime('%Y-%m-%d %H:%M:%S') if reservation.horaFinalizacion else None,
+                    'horaCancelacion': reservation.horaCancelacion.strftime('%Y-%m-%d %H:%M:%S') if reservation.horaCancelacion else None,
+                } for reservation in reservations]
+            }
+        except Ecommerce.DoesNotExist:
+            return JsonResponse({'message': 'Ecommerce does not exist'}, status=404)
+
+        return JsonResponse({'message': 'Info of reservations of ecommerce', 'data': reservations_json})
+
+    # Handle other HTTP methods or invalid requests
+    return JsonResponse({'message': 'Method not allowed'}, status=405)

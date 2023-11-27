@@ -61,12 +61,12 @@ class Reservation(models.Model):
     state = models.IntegerField(choices=RESERVATION_STATES, default=RESERVADO)  # Agregar el campo 'state'
     ecommerce = models.ForeignKey(Ecommerce, on_delete=models.CASCADE, related_name='reservations', null=True)
 
-    horaConfirmacionReserva = models.DateTimeField(null=True)
-    horaConfirmacionOperador = models.DateTimeField(null=True)
-    horaCarga = models.DateTimeField(null=True)
-    horaDescarga = models.DateTimeField(null=True)
-    horaFinalizacion = models.DateTimeField(null=True)
-    horaCancelacion = models.DateTimeField(null=True)
+    horaConfirmacionReserva = models.DateTimeField(null=True, blank=True)
+    horaConfirmacionOperador = models.DateTimeField(null=True, blank=True)
+    horaCarga = models.DateTimeField(null=True, blank=True)
+    horaDescarga = models.DateTimeField(null=True, blank=True)
+    horaFinalizacion = models.DateTimeField(null=True, blank=True)
+    horaCancelacion = models.DateTimeField(null=True, blank=True)
 
 
     def __str__(self):

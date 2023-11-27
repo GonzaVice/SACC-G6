@@ -49,8 +49,11 @@ urlpatterns = [
     path('create_locker/', views.create_locker, name='create_locker'),
 
     #CRUD ecommerce
-    path('create_ecommerce/', views.create_ecommerce, name='create_ecommerce')
+    path('create_ecommerce/', views.create_ecommerce, name='create_ecommerce'),
     
+    path('get_all_ecommerce/', views.get_all_ecommerce, name='get_all_ecommerce'),
+
+    path('get_reservations_of_ecommerce/', views.get_reservations_of_ecommerce, name='get_reservations_of_ecommerce')
 ]
 
 

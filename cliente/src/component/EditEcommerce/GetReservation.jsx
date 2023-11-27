@@ -1,43 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom'; // Add this line to import useLocation
 
 const getCsrfToken = () => {
     return document.cookie.split('; ')
         .find(row => row.startsWith('csrftoken='))
         .split('=')[1];
 }
-
 const Reservations = () => {
     const [reservations, setReservations] = useState([]);
-    const [ecommerceName, setEcommerceName] = useState(''); // Set your ecommerce name here
+    const [ecommerceName, setEcommerceName] = useState('');
+    const location = useLocation();
 
     useEffect(() => {
-        const fetchReservations = async () => {
-            try {
-                const csrfToken = getCsrfToken();
-                const headers = {
-                    'X-CSRFToken': csrfToken,
-                    'Content-Type': 'application/json',
-                };
+        if (location.state && location.state.ecommerceName) {
+            setEcommerceName(location.state.ecommerceName);
 
-                const data = {
-                    name: 'Falabella',
-                };
+            const fetchReservations = async () => {
+                try {
+                    const csrfToken = getCsrfToken();
+                    const headers = {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json',
+                    };
 
-                const response = await axios.post('http://127.0.0.1:8000/base/get_reservations_of_ecommerce/', data, {
-                    headers,
-                    withCredentials: true,
-                });
+                    const data = {
+                        name: location.state.ecommerceName, // Use the passed e-commerce name
+                    };
 
-                setReservations(response.data.data.reservations);
-                console.log("Esta es la response:", response);
-            } catch (error) {
-                console.error('Error al obtener las reservas:', error);
-            }
-        };
+                    const response = await axios.post('http://127.0.0.1:8000/base/get_reservations_of_ecommerce/', data, {
+                        headers,
+                        withCredentials: true,
+                    });
 
-        fetchReservations();
-    }, []); 
+                    setReservations(response.data.data.reservations);
+                    console.log("Esta es la response:", response);
+                } catch (error) {
+                    console.error('Error al obtener las reservas:', error);
+                }
+            };
+
+            fetchReservations();
+        }
+    }, [location.state]);
 
     const reservationsStyle = {
         display: 'flex',

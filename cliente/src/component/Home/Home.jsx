@@ -52,6 +52,9 @@ const Home = () => {
     const handleCreateEcommerceClick = () => {
         navigate('/CreateEcommerce');
     };
+    const handleEcommercesClick = () => {
+        navigate('/GetAllEcommerce');
+    };
 
     return (
         <div className="home">
@@ -61,7 +64,9 @@ const Home = () => {
                     {station.name}
                 </div>
             ))}
-
+            <button className="btn btn-tertiary" onClick={handleEcommercesClick}>
+                Ecommerces
+            </button>
             <button className="btn btn-primary" onClick={handleCreateStationClick}>
                 Create Station
             </button>

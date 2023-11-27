@@ -56,8 +56,8 @@ const Ecommerce = () => {
         cursor: 'pointer',
     };
 
-    const handleGetReservationsClick = () => {
-        navigate('/GetReservation');
+    const handleGetReservationsClick = (ecommerceName) => {
+        navigate('/GetReservation', { state: { ecommerceName } });
     };
 
     return (
@@ -66,11 +66,11 @@ const Ecommerce = () => {
             {ecommerces.map((ecommerce) => (
                 <div style={ecommerceCardStyle} key={ecommerce.key}>
                     {ecommerce.name}
+                    <button className="btn btn-tertiary" onClick={() => handleGetReservationsClick(ecommerce.name)}>
+                        Ver Reservas
+                    </button>
                 </div>
             ))}
-            <button className="btn btn-tertiary" onClick={handleGetReservationsClick}>
-            Ver Reservas
-            </button>
         </div>
     );
 };

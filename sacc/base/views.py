@@ -654,10 +654,16 @@ def dashboard(request):
                     reservation_info = {
                         'reservation': {
                             'name': locker.reservation.name,
-                            'datetime': locker.reservation.datetime.strftime("%Y-%m-%d %H:%M:%S"),
                             'operador': locker.reservation.operador,
                             'cliente': locker.reservation.cliente,
                             'state': locker.reservation.get_state_display(),
+                            'datetime': locker.reservation.datetime.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.datetime else None,
+                            'horaConfirmacionReserva': locker.reservation.horaConfirmacionReserva.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaConfirmacionReserva else None,
+                            'horaConfirmacionOperador': locker.reservation.horaConfirmacionOperador.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaConfirmacionOperador else None,
+                            'horaCarga': locker.reservation.horaCarga.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaCarga else None,
+                            'horaDescarga': locker.reservation.horaDescarga.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaDescarga else None,
+                            'horaFinalizacion': locker.reservation.horaFinalizacion.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaFinalizacion else None,
+                            'horaCancelacion': locker.reservation.horaCancelacion.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaCancelacion else None,
                         }
                     }
                     locker_info['locker']['reservation'] = reservation_info['reservation']

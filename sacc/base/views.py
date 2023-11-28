@@ -873,23 +873,6 @@ def delete_ecommerce(request):
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)
 
-def get_all_ecommerce(request):
-    if request.method == 'GET':
-        # Obtener todas los ecommerce y sus datos básicos
-        ecommerce = Ecommerce.objects.all()
-        ecommerce_info = []
-
-        for ecommerce in ecommerce:
-            ecommerce_info.append({
-                'name': ecommerce.name,
-                'key': ecommerce.key,
-            })
-
-        return JsonResponse({'ecommerce_info': ecommerce_info})
-    
-    # Handle other HTTP methods or invalid requests
-    return JsonResponse({'message': 'Method not allowed'}, status=405)
-
 def edit_ecommerce(request):
     if request.method == 'POST':
         # Obtener los datos del ecommerce
@@ -906,6 +889,23 @@ def edit_ecommerce(request):
 
 
         return JsonResponse({'message': 'Ecommerce edited successfully with name: ' + name + ' and key: ' + new_key})
+    
+    # Handle other HTTP methods or invalid requests
+    return JsonResponse({'message': 'Method not allowed'}, status=405)
+
+def get_all_ecommerce(request):
+    if request.method == 'GET':
+        # Obtener todas los ecommerce y sus datos básicos
+        ecommerce = Ecommerce.objects.all()
+        ecommerce_info = []
+
+        for ecommerce in ecommerce:
+            ecommerce_info.append({
+                'name': ecommerce.name,
+                'key': ecommerce.key,
+            })
+
+        return JsonResponse({'ecommerce_info': ecommerce_info})
     
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)
@@ -970,3 +970,20 @@ def mqtt_ask(request):
         json_message = json.loads(received_messages[-1])
         print("ESTE ES EL JSON",json_message)
         return JsonResponse({'details': json_message})
+
+def locker_list(request):
+    if request.method == 'GET':
+        lockers = Locker.objects.all()
+        lockers_list = []
+
+        for locker in lockers:
+            locker_dict = {
+                'id': locker.id,
+                'name': locker.name,
+                'state': locker.get_state_display(),
+            }
+            lockers_list.append(locker_dict)
+
+        return JsonResponse(lockers_list, safe=False)
+
+    return JsonResponse({"message": "Method not allowed"}, status=405)

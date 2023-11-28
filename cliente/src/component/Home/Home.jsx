@@ -45,8 +45,8 @@ const Home = () => {
         navigate('/CreateEstacion');
     };
 
-    const handleCreateLockerClick = () => {
-        navigate('/CreateLocker');
+    const handleViewLockersClick = () => {
+        navigate('/all_lockers');
     };
  
     const handleCreateEcommerceClick = () => {
@@ -70,8 +70,8 @@ const Home = () => {
             <button className="btn btn-primary" onClick={handleCreateStationClick}>
                 Create Station
             </button>
-            <button className="btn btn-secondary" onClick={handleCreateLockerClick}>
-                Create Locker
+            <button className="btn btn-secondary" onClick={handleViewLockersClick}>
+                View Lockers
             </button>
             <button className="btn btn-tertiary" onClick={handleCreateEcommerceClick}>
                 Create Ecommerce

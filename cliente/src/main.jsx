@@ -13,6 +13,8 @@ import CreateLockers from './component/EditLocker/CreateLocker.jsx';
 import CreateEcommerce from './component/EditEcommerce/CreateEcommerce.jsx';
 import Ecommerce from './component/EditEcommerce/GetAllEcommerce.jsx';
 import Reservations from './component/EditEcommerce/GetReservation.jsx';
+import EditEcommerce from './component/EditEcommerce/EditEcommerce.jsx';
+
 
 const LogoutButton = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -64,6 +66,7 @@ const Main = () => {
           <Route path="/CreateEcommerce" element={<CreateEcommerce />}/>
           <Route path="/GetAllEcommerce" element={<Ecommerce />}/>
           <Route path="/GetReservation" element={<Reservations />}/>
+          <Route path="/EditEcommerce" element={<EditEcommerce />}/>
         </Routes>
       </Router>
     </React.StrictMode>

@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateEcommerce = () => {
   const [name, setName] = useState('');
   const [key, setKey] = useState('');
+  const navigate = useNavigate();
 
+
+  const handleEcommercesClick = () => {
+    navigate('/GetAllEcommerce');
+  };
+  
   const handleCreateEcommerce = async () => {
     try {
       const csrfToken = document.cookie
@@ -21,7 +28,12 @@ const CreateEcommerce = () => {
         name: name,
         key: key,
       };
-
+      // Alert indicating successful creation
+      alert('Ecommerce created successfully!');
+      
+      // Reset input fields after successful creation
+      setName('');
+      setKey('');
       const response = await axios.post('http://127.0.0.1:8000/base/create_ecommerce/', data, {
         headers,
         withCredentials: true,
@@ -41,6 +53,8 @@ const CreateEcommerce = () => {
       <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Name" />
       <input type="text" value={key} onChange={(e) => setKey(e.target.value)} placeholder="Enter Key" />
       <button onClick={handleCreateEcommerce}>Create Ecommerce</button>
+      <button onClick={handleEcommercesClick}>Go back</button>
+
     </div>
   );
 };

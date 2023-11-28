@@ -51,6 +51,10 @@ urlpatterns = [
     #CRUD ecommerce
     path('create_ecommerce/', views.create_ecommerce, name='create_ecommerce'),
     
+    path('delete_ecommerce/', views.delete_ecommerce, name='delete_ecommerce'),
+
+    path('edit_ecommerce/', views.edit_ecommerce, name='edit_ecommerce'),
+
     path('get_all_ecommerce/', views.get_all_ecommerce, name='get_all_ecommerce'),
 
     path('get_reservations_of_ecommerce/', views.get_reservations_of_ecommerce, name='get_reservations_of_ecommerce'),

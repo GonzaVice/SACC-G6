@@ -39,7 +39,7 @@ urlpatterns = [
     
     
     #Dashboard
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/', views.dashboard2, name='dashboard2'),
 
 
     #CRUD de estaciones

@@ -89,7 +89,7 @@ class Locker(models.Model):
         (3, "Cargado"),
     )
 
-    name = models.CharField(max_length=255)  # Campo para el nombre del casillero
+    name = models.IntegerField()  # Campo para el nombre del casillero
     length = models.IntegerField()  # Campo para la longitud en centímetros
     width = models.IntegerField()   # Campo para el ancho en centímetros
     height = models.IntegerField()  # Campo para la altura en centímetros

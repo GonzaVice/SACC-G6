@@ -14,6 +14,8 @@ import CreateEcommerce from './component/EditEcommerce/CreateEcommerce.jsx';
 import Ecommerce from './component/EditEcommerce/GetAllEcommerce.jsx';
 import Reservations from './component/EditEcommerce/GetReservation.jsx';
 import EditEcommerce from './component/EditEcommerce/EditEcommerce.jsx';
+import BitacoraReserva from './component/BitácoraReserva.jsx';
+import DashboardHistoricoPorEstacion from './component/DashboardHistoricoPorEstacion.jsx';
 
 
 const LogoutButton = ({ onLogout }) => {
@@ -60,6 +62,7 @@ const Main = () => {
           )}
 
           <Route path="/DashboardActualPorEstacion" element={<DashboardActualPorEstacion id={stationName}/>}/>
+          <Route path="/DashboardHistoricoPorEstacion" element={<DashboardHistoricoPorEstacion id={stationName}/>}/>
           <Route path="/CreateEstacion" element={<CreateEstacion />}/>
           <Route path="/all_lockers" element={<AllLockers />}/>
           <Route path="/CreateLocker" element={<CreateLockers />}/>
@@ -67,6 +70,7 @@ const Main = () => {
           <Route path="/GetAllEcommerce" element={<Ecommerce />}/>
           <Route path="/GetReservation" element={<Reservations />}/>
           <Route path="/EditEcommerce" element={<EditEcommerce />}/>
+          <Route path="/BitacoraReserva" element={<BitacoraReserva />}/>
         </Routes>
       </Router>
     </React.StrictMode>

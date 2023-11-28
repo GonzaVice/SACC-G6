@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import DashboardHistoricoPorEstacion from "./DashboardHistoricoPorEstacion";
 import { useLocation } from 'react-router-dom';
 import axios from "axios";
+import { set } from "lodash";
 
 const datapie = [
     {name: "Grupo A", value: 400},
@@ -301,6 +302,26 @@ const datapie = [
         .split('=')[1];
     };
 
+    const tiempoReservaCarga = (locker) => {
+      var tiempoReservaCarga = 0
+      if (locker.reservation) {
+        if (locker.reservation.horaCarga) {
+          tiempoReservaCarga = locker.reservation.horaCarga - locker.reservation.horaReserva
+        }
+      }
+      return tiempoReservaCarga
+    }
+
+    const tiempoCargaDescarga = (locker) => {
+      var tiempoCargaDescarga = 0
+      if (locker.reservation) {
+        if (locker.reservation.horaDescarga) {
+          tiempoCargaDescarga = locker.reservation.horaDescarga - locker.reservation.horaCarga
+        }
+      }
+      return tiempoCargaDescarga
+    }
+
     const mostrarEstadoConexion = (estado) => {
       if (estado) {
         setEstadoOnline("Online");
@@ -322,7 +343,26 @@ const datapie = [
             withCredentials: true,
           });
   
-          setStationData(response.data.data[0].station);
+          console.log("ESTO ES EL DATADATA",response.data.data);
+
+          for (var i = 0; i < response.data.data.length; i++) {
+            if (response.data.data[i].station['name'] == station_name) {
+              console.log("ENCONTRADO");
+              setStationData(response.data.data[i].station);
+
+            }
+            else {
+              console.log("NO ENCONTRADO");
+              setStationData(null);
+            }
+          }
+          if (stationData == null) {
+            mostrarEstadoConexion(false);
+          }
+          else {
+            mostrarEstadoConexion(true);
+          }
+          console.log('STATIONDATA', stationData)
         } catch (error) {
           console.error('Error al obtener las estaciones:', error);
         }
@@ -334,10 +374,18 @@ const datapie = [
 
     useEffect(() => {
       if (stationData && stationData.lockers) {
-        const casillerosDisponibles = stationData.lockers.filter((locker) => locker.state === "Disponible").length;
-        const casillerosOcupados = stationData.lockers.filter((locker) => locker.state !== "Disponible").length;
+        var casillerosDisponibles = stationData.lockers.filter((locker) => locker.state === 0).length;
+        var dispCounter = 0
+        for (var i = 0; i < stationData.lockers.length; i++) {
+          if (stationData.lockers[i].reservation) {
+            dispCounter++
+            console.log("RESERVADO");
+          }
+        }
+        var casillerosOcupados = dispCounter
+        
         setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
-        mostrarEstadoConexion(stationData.connection);
+        // mostrarEstadoConexion(stationData.connection);
         setCantidadCasillerosOcupados(casillerosOcupados);
         setCantidadCasillerosDesocupados(casillerosDisponibles);
       }
@@ -364,9 +412,9 @@ const datapie = [
         <h2 className="text-center text-2xl leading-9 font-bold">Estación: {station_name}</h2>
 
         <div style={containerStyle}>
-          <SimpleCard title="Casilleros Ocupados" number={cantidadCasillerosOcupados} margin="10px" />
-          <SimpleCard title="Casilleros Desocupados" number={cantidadCasillerosDesocupados} margin="10px" />
+          <SimpleCard title="Casilleros Reservados" number={cantidadCasillerosOcupados} margin="10px" />
           <SimpleCard title="Estado Conexión" number={estadoOnline} margin="10px" />
+          <SimpleCard title="Porcentaje Uso" number={cantidadCasillerosOcupados/3} margin="10px" />
         </div>
 
         <div style={containerStyle}> 
@@ -382,6 +430,21 @@ const datapie = [
         <br />
         <br />
         <TablaEstacion data={stationData} />
+
+        <div style={containerStyle}>
+          <h2 className="text-center text-2xl leading-9 font-bold">Casillero 1</h2>
+        </div>
+        {/* <SimpleCard title="Tiempo Reserva-Carga" number={tiempoReservaCarga(stationData.lockers[0])} margin="10px" /> */}
+
+        <div style={containerStyle}>
+          <h2 className="text-center text-2xl leading-9 font-bold">Casillero 2</h2>
+        </div>
+        {/* <SimpleCard title="Tiempo Reserva-Carga" number={tiempoReservaCarga(stationData.lockers[0])} margin="10px" /> */}
+
+        <div style={containerStyle}>
+          <h2 className="text-center text-2xl leading-9 font-bold">Casillero 3</h2>
+        </div>
+        {/* <SimpleCard title="Tiempo Reserva-Carga" number={tiempoReservaCarga(stationData.lockers[0])} margin="10px" /> */}
 
       </div>
       

@@ -714,8 +714,12 @@ def dashboard2(request):
             stations_names.append(station.name)
         
         ready = False
-
+        start_time = time.time()  # Start the timer
+        elapsed = 8
         while not ready:
+            # If more than 20 seconds have passed, break the loop
+            if time.time() - start_time > elapsed:
+                break
             time.sleep(1)
             #Si la lista esta vacia, no hay mensajes
             if received_messages:

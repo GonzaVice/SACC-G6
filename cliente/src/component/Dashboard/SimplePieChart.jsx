@@ -3,7 +3,7 @@ import { ResponsiveContainer, PieChart, Pie, Tooltip, Cell } from "recharts";
 
 const SimplePieCharts = ({ data, COLORS, margin, title }) => {
   return (
-    <div style={{ width: 250, height: 250, margin: margin || 0 }}>
+    <div style={{ width: 320, height: 320, margin: margin || 0 }}>
       <ResponsiveContainer>
         <h3>{title}</h3>
         <PieChart>

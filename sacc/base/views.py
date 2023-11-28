@@ -614,8 +614,42 @@ def dashboard(request):
         stations = Station.objects.all()
         station_data = []
 
+        all_data = []
+
+
+        stations_names = []
+        for station in stations:
+            stations_names.append(station.name)
+        
+        ready = False
+
+        while not ready:
+            #Si la lista esta vacia, no hay mensajes
+            if received_messages:
+                json_message = json.loads(received_messages[-1])
+                nickname = json_message['nickname']
+                if nickname in stations_names:
+                    #Remove that name from stations_names
+                    stations_names.remove(nickname)
+                    is_open = json_message['is_open']
+                    is_empty = json_message['is_empty']
+                    state = json_message['state']
+                    
+                
+
+            else:
+                print("There are no messages")    
+                
+            if len(stations_names) == 0:
+                ready = True
+            pass
+
         json_message = json.loads(received_messages[-1])
         print("ESTE ES EL ESP",json_message)        
+
+        #Get all stations names:
+        
+
 
         for station in stations:
             station_info = {
@@ -667,6 +701,87 @@ def dashboard(request):
         return JsonResponse({'data': station_data})
      
 
+def dashboard2(request):
+     if request.method == 'GET':
+        stations = Station.objects.all()
+        station_data = []
+        stations_names = []
+
+        all_data = []
+
+
+        for station in stations:
+            stations_names.append(station.name)
+        
+        ready = False
+        start_time = time.time()  # Start the timer
+        elapsed = 8
+        while not ready:
+            # If more than 20 seconds have passed, break the loop
+            if time.time() - start_time > elapsed:
+                break
+            time.sleep(1)
+            #Si la lista esta vacia, no hay mensajes
+            if received_messages:
+                json_message = json.loads(received_messages[-1])
+                station_name = json_message['station_name']
+                if station_name in stations_names:
+                    #Remove that name from stations_names
+                    stations_names.remove(station_name)
+                    station_info = {
+                        'station': {
+                            'name': station_name,
+                            'lockers': []
+                        }
+                    }
+                    for lockers in json_message['lockers']:
+                        #Chequeamos si el locker existe en la estacion
+                        locker = Locker.objects.filter(station=station, name=lockers['nickname']).first()  # Use .first() to get a single object
+                        if locker:
+                            locker_info = {
+                                'locker': {
+                                    'name': lockers['nickname'],
+                                    'length': lockers['length'],
+                                    'width': lockers['width'],
+                                    'height': lockers['height'],
+                                    'state': lockers['state'],
+                                    'reservation': None,
+                                    'is_open': lockers['is_open'],
+                                    'is_empty': lockers['is_empty'],
+                                    'state': lockers['state'],
+                                    
+                                }
+                            }
+                            
+                        if locker.reservation:
+                            reservation_info = {
+                                'reservation': {
+                                    'name': locker.reservation.name,
+                                    'operador': locker.reservation.operador,
+                                    'cliente': locker.reservation.cliente,
+                                    'state': locker.reservation.get_state_display(),
+                                    'datetime': locker.reservation.datetime.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.datetime else None,
+                                    'horaConfirmacionReserva': locker.reservation.horaConfirmacionReserva.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaConfirmacionReserva else None,
+                                    'horaConfirmacionOperador': locker.reservation.horaConfirmacionOperador.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaConfirmacionOperador else None,
+                                    'horaCarga': locker.reservation.horaCarga.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaCarga else None,
+                                    'horaDescarga': locker.reservation.horaDescarga.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaDescarga else None,
+                                    'horaFinalizacion': locker.reservation.horaFinalizacion.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaFinalizacion else None,
+                                    'horaCancelacion': locker.reservation.horaCancelacion.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaCancelacion else None,
+                                }
+                            }
+                            locker_info['locker']['reservation'] = reservation_info['reservation']
+                    
+                        station_info['station']['lockers'].append(locker_info['locker'])
+                        station_data.append(station_info)
+            else:
+                print("There are no messages")    
+                
+            if len(stations_names) == 0:
+                ready = True
+                return JsonResponse({'data': station_data})
+            
+        return JsonResponse({'data': station_data})
+     
 
 def get_stations_info(request):
     if request.method == 'GET':

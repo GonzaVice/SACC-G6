@@ -286,13 +286,10 @@ const datapie = [
   ];
 
   const DashboardHistoricoPorEstacion = ({ data }) => {
-    const [stationsData, setStationsData] = useState(data);
+    const [stationData, setStationData] = useState('')
     const [stationIdx, setStationIdx] = useState(0);
-    const [stationName, setStationName] = useState(stationsData[stationIdx].address);
     const [dataOcupados, setDataOcupados] = useState([]);
     const [estadoOnline, setEstadoOnline] = useState("Offline");
-    const [tiempoReservaCarga, setTiempoReservaCarga] = useState(0);
-    const [tiempoCargaRetiro, setTiempoCargaRetiro] = useState(0);
 
     const mostrarEstadoConexion = (estado) => {
       if (estado) {
@@ -300,6 +297,37 @@ const datapie = [
       } else {
         setEstadoOnline("Offline");
       }
+    }
+
+    const mostrarTiempoReservaCarga = (casillero) => { // tiempo reserva-carga de un solo casillero
+      let tiempoReservaCarga = 0;
+      casillero.reservations.forEach((reserva) => {
+        if (reserva.state === "Finalizado") {
+          tiempoReservaCarga += reserva.horaCarga - reserva.horaReserva;
+        }
+      }
+      )
+      return tiempoReservaCarga;
+    }
+
+    const mostrarTiempoCargaDescarga = (casillero) => { // tiempo carga-descarga de un solo casillero
+      let tiempoCargaDescarga = 0;
+      casillero.reservations.forEach((reserva) => {
+        if (reserva.state === "Finalizado") {
+          tiempoCargaDescarga += reserva.horaDescarga - reserva.horaCarga;
+        }
+      }
+      )
+      return tiempoCargaDescarga;
+    }
+
+    const datosReservaCargaDescarga = (data) => { // tiempo carga-descarga de todos los casilleros
+      const datachart = [];
+      data.forEach((casillero) => {
+        datachart.push({name: casillero.name, reservacarga: mostrarTiempoReservaCarga(casillero), cargadescarga: mostrarTiempoCargaDescarga(casillero)});
+      }
+      )
+      return datachart;
     }
 
     const mostrarReservasPendientes = (data) => {
@@ -312,14 +340,36 @@ const datapie = [
       )
       return reservasPendientes;
     }
-  
     useEffect(() => {
-      const casillerosOcupados = stationsData[stationIdx].casilleros.filter((casillero) => casillero.ocupado).length;
-      const casillerosDisponibles = stationsData[stationIdx].casilleros.filter((casillero) => !casillero.ocupado).length;
-      setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
-      mostrarEstadoConexion(stationsData[stationIdx].estadoConexion);
-      mostrarReservasPendientes(stationsData[stationIdx].casilleros);
-    }, [stationIdx, stationsData]);
+      const fetchStations = async () => {
+        try {
+          const csrfToken = getCsrfToken();
+          const headers = {
+            'X-CSRFToken': csrfToken,
+          };
+  
+          const response = await axios.get('http://127.0.0.1:8000/base/dashboard/', {
+            headers,
+            withCredentials: true,
+          });
+  
+          setStationData(response.data.data[0].station);
+        } catch (error) {
+          console.error('Error al obtener las estaciones:', error);
+        }
+      };
+  
+      fetchStations();
+      setDataLoaded(true);
+    }, []);
+  
+    // useEffect(() => {
+    //   const casillerosOcupados = stationsData[stationIdx].casilleros.filter((casillero) => casillero.ocupado).length;
+    //   const casillerosDisponibles = stationsData[stationIdx].casilleros.filter((casillero) => !casillero.ocupado).length;
+    //   setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
+    //   mostrarEstadoConexion(stationsData[stationIdx].estadoConexion);
+    //   mostrarReservasPendientes(stationsData[stationIdx].casilleros);
+    // }, [stationIdx, stationsData]);
   
     const containerStyle = {
       display: 'flex',
@@ -332,27 +382,36 @@ const datapie = [
       <div>
         <h1 className="text-center text-2xl leading-9 font-bold">Dashboard Historico Por Estación</h1>
         <br />
-  
+    
         <div style={containerStyle}>
           <SimpleCard title="Promedio # Casilleros Usados" number="2" margin="10px" />
           <SimpleCard title="Promedio # Casilleros Desocupados" number="1" margin="10px" />
-          <SimpleCard title="Promedio Tiempo Reserva-Carga" number={mostrarReservasPendientes(stationsData[stationIdx].casilleros)} margin="10px" />
-          <SimpleCard title="Promedio Tiempo Carga-Retiro" number={mostrarReservasPendientes(stationsData[stationIdx].casilleros)} margin="10px" />
+          <SimpleCard
+            title="Promedio Tiempo Reserva-Carga"
+            number={mostrarReservasPendientes(stationsData[stationIdx].casilleros)}
+            margin="10px"
+          />
+          <SimpleCard
+            title="Promedio Tiempo Carga-Retiro"
+            number={mostrarReservasPendientes(stationsData[stationIdx].casilleros)}
+            margin="10px"
+          />
         </div>
-
-        <div style={containerStyle}> 
-          <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Promedio Porcentaje Uso"/>
-          <SimplePieCharts data={dataOcupados} COLORS = {['#0088FE', '#00C49F']} margin="10px" title="Tiempo Reserva-Carga/Carga-Retiro"/>
+    
+        <div style={containerStyle}>
+          <SimplePieCharts data={dataOcupados} COLORS={['#0088FE', '#00C49F']} margin="10px" title="Promedio Porcentaje Uso" />
+          <SimplePieCharts data={dataOcupados} COLORS={['#0088FE', '#00C49F']} margin="10px" title="Tiempo Reserva-Carga/Carga-Retiro" />
         </div>
-  
+    
         <br />
         <br />
         <br />
         <br />
-        <TablaEstacion data={stationsData[stationIdx].casilleros} conexion={stationsData[stationIdx].estadoConexion} />
+        {/* <TablaEstacion data={stationsData[stationIdx].casilleros} conexion={stationsData[stationIdx].estadoConexion} /> */}
+        <SimpleBarCharts data={datosReservaCargaDescarga(stationData)} margin="10px" title="Promedio Tiempo Reserva-Carga/Carga-Retiro" />
       </div>
     );
-  };
-  
-
-export default DashboardHistoricoPorEstacion;
+    };
+    
+    export default DashboardHistoricoPorEstacion;
+    

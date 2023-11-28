@@ -3,9 +3,9 @@ import paho.mqtt.client as mqtt
 import ssl
 
 # Configuración del servidor HiveMQ
-mqtt_broker = "86718d4d31714885a63c85b39185fb86.s1.eu.hivemq.cloud"
+mqtt_broker = "06b594154ae6447c81f9a2dc82b08e15.s1.eu.hivemq.cloud"
 mqtt_port = 8883
-mqtt_username = "KaijuRex"
+mqtt_username = "KaijuRex3"
 mqtt_password = "Qwerty123"
 
 received_messages = []  # Almacena los mensajes recibidos

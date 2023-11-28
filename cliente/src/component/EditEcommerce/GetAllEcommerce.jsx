@@ -10,7 +10,7 @@ const getCsrfToken = () => {
 
 const Ecommerce = () => {
     const [ecommerces, setEcommerces] = useState([]);
-    const navigate = useNavigate(); // Call useNavigate here
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchEcommerces = async () => {
@@ -27,12 +27,12 @@ const Ecommerce = () => {
 
                 setEcommerces(response.data.ecommerce_info);
             } catch (error) {
-                console.error('Error al obtener los ecommerce:', error);
+                console.error('Error fetching ecommerces:', error);
             }
         };
 
         fetchEcommerces();
-    }, []); 
+    }, []);
 
     const deleteButtonStyle = {
         backgroundColor: 'red',
@@ -42,6 +42,7 @@ const Ecommerce = () => {
         border: 'none',
         cursor: 'pointer',
     };
+
     const ecommerceStyle = {
         display: 'flex',
         flexDirection: 'column',
@@ -74,25 +75,22 @@ const Ecommerce = () => {
                 'X-CSRFToken': csrfToken,
             };
 
-            // Send a POST request to delete_ecommerce endpoint
             await axios.post('http://127.0.0.1:8000/base/delete_ecommerce/', { name: ecommerceName }, {
                 headers,
                 withCredentials: true,
             });
 
-            // Reload the list of ecommerces after deletion
-            //fetchEcommerces();
             window.location.reload();
 
         } catch (error) {
             console.error('Error deleting ecommerce:', error);
-            // Handle errors or display an error message to the user
         }
     };
 
     const handleCreateEcommerceClick = () => {
         navigate('/CreateEcommerce');
     };
+
     const handleEditEcommerceClick = () => {
         navigate('/EditEcommerce');
     };
@@ -100,11 +98,11 @@ const Ecommerce = () => {
     return (
         <div style={ecommerceStyle}>
             <h1>Ecommerces:</h1>
-            {ecommerces.map((ecommerce) => (
-                <div style={ecommerceCardStyle} key={ecommerce.key}>
+            {ecommerces.map((ecommerce, index) => (
+                <div style={ecommerceCardStyle} key={index}>
                     <div>
-                        <p>Name: {ecommerce.name}</p>
-                        <p>Key: {ecommerce.key}</p>
+                        <p><strong>Name:</strong> {ecommerce.name}</p>
+                        <p><strong>Key:</strong> {ecommerce.key}</p>
                     </div>
                     <button className="btn btn-tertiary" onClick={() => handleGetReservationsClick(ecommerce.name)}>
                         Ver Reservas

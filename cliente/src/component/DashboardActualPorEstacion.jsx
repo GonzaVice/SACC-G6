@@ -1,10 +1,11 @@
 import React from "react";
 import SimplePieCharts from "./Dashboard/SimplePieChart";
-import TablaEstacion from "./Tablas/TablaEstacion";
+import TablaEstacion from "./Tablas/TablaEstacion.jsx";
 import SimpleCard from "./Dashboard/SimpleCard";
 import { useState, useEffect } from "react";
 import DashboardHistoricoPorEstacion from "./DashboardHistoricoPorEstacion";
 import { useLocation } from 'react-router-dom';
+import axios from "axios";
 
 const datapie = [
     {name: "Grupo A", value: 400},
@@ -285,52 +286,19 @@ const datapie = [
   ];
 
   const DashboardActualPorEstacion = () => {
-    const [stationsData, setStationsData] = useState(dataTablas);
-    const [stationIdx, setStationIdx] = useState(0);
-    const [stationName, setStationName] = useState(stationsData[stationIdx].address);
+    const [stationData, setStationData] = useState('')
     const [dataOcupados, setDataOcupados] = useState([]);
+    const [cantidadCasillerosOcupados, setCantidadCasillerosOcupados] = useState("0")
+    const[cantidadCasillerosDesocupados, setCantidadCasillerosDesocupados] = useState("0")
     const [estadoOnline, setEstadoOnline] = useState("Offline");
-    const [tiempoReservaCarga, setTiempoReservaCarga] = useState(0);
-    const [tiempoCargaRetiro, setTiempoCargaRetiro] = useState(0);
     const location = useLocation();
     const { station_name, connection } = location.state;
-    
+    const [isLoaded, setDataLoaded] = useState(false)
 
-    useEffect(() => {
-      const fetchStations = async () => {
-          try {
-      
-              const csrfToken = getCsrfToken();
-              const headers = {
-                  'X-CSRFToken': csrfToken,
-              };
-
-              const response = await axios.get('http://127.0.0.1:8000/base/get_all_stations/', {
-                  headers,
-                  withCredentials: true,
-              });
-
-              setStations(response.data.station_info);
-              console.log(response)
-          } catch (error) {
-              console.error('Error al obtener las estaciones:', error);
-          }
-      };
-
-      fetchStations();
-  }, []); 
-
-
-
-
-
-    const printStationData = () => {
-      console.log("ESTACION NOMBRE:",station_name);
-    };
-
-    const handleVerDatosHistoricos = () => {
-      console.log("Redirigiendo a datos históricos...");
-      // window.location.href = '/ruta-de-datos-historicos'; // Ejemplo de redirección
+    const getCsrfToken = () => {
+      return document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        .split('=')[1];
     };
 
     const mostrarEstadoConexion = (estado) => {
@@ -342,12 +310,43 @@ const datapie = [
     }
 
     useEffect(() => {
-      //printStationData();
-      const casillerosDisponibles = stationsData[stationIdx].lockers.filter((locker) => locker.state === "Disponible").length;
-      const casillerosOcupados = stationsData[stationIdx].lockers.filter((locker) => locker.state != "Disponible").length;
-      setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
-      mostrarEstadoConexion(stationsData[stationIdx].connection);
-    }, [stationIdx, stationsData]);
+      const fetchStations = async () => {
+        try {
+          const csrfToken = getCsrfToken();
+          const headers = {
+            'X-CSRFToken': csrfToken,
+          };
+  
+          const response = await axios.get('http://127.0.0.1:8000/base/dashboard/', {
+            headers,
+            withCredentials: true,
+          });
+  
+          setStationData(response.data.data[0].station);
+        } catch (error) {
+          console.error('Error al obtener las estaciones:', error);
+        }
+      };
+  
+      fetchStations();
+      setDataLoaded(true);
+    }, []);
+
+    useEffect(() => {
+      if (stationData && stationData.lockers) {
+        const casillerosDisponibles = stationData.lockers.filter((locker) => locker.state === "Disponible").length;
+        const casillerosOcupados = stationData.lockers.filter((locker) => locker.state !== "Disponible").length;
+        setDataOcupados([{ name: 'Ocupados', value: casillerosOcupados }, { name: 'Disponibles', value: casillerosDisponibles }]);
+        mostrarEstadoConexion(stationData.connection);
+        setCantidadCasillerosOcupados(casillerosOcupados);
+        setCantidadCasillerosDesocupados(casillerosDisponibles);
+      }
+    }, [stationData]);
+
+    const handleVerDatosHistoricos = () => {
+      console.log("Redirigiendo a datos históricos...");
+      // window.location.href = '/ruta-de-datos-historicos'; // Ejemplo de redirección
+    };
   
     const containerStyle = {
       display: 'flex',
@@ -355,7 +354,7 @@ const datapie = [
       alignItems: 'center',
       flexWrap: 'wrap',
     };
-  
+    console.log(stationData)
     return (
       <div>
         <h1 className="text-center text-2xl leading-9 font-bold">Dashboard Actual Por Estación</h1>
@@ -365,8 +364,8 @@ const datapie = [
         <h2 className="text-center text-2xl leading-9 font-bold">Estación: {station_name}</h2>
 
         <div style={containerStyle}>
-          <SimpleCard title="Casilleros Ocupados" number="2" margin="10px" />
-          <SimpleCard title="Casilleros Desocupados" number="1" margin="10px" />
+          <SimpleCard title="Casilleros Ocupados" number={cantidadCasillerosOcupados} margin="10px" />
+          <SimpleCard title="Casilleros Desocupados" number={cantidadCasillerosDesocupados} margin="10px" />
           <SimpleCard title="Estado Conexión" number={estadoOnline} margin="10px" />
         </div>
 
@@ -378,16 +377,27 @@ const datapie = [
 
         
         </div>
-  
+          
         <br />
         <br />
         <br />
-        <br />
-        <TablaEstacion data={stationsData[stationIdx].lockers} />
-        {/* <DashboardActualPorEstacion data={dataTablas} />	 */}
+        <TablaEstacion data={stationData} />
+
       </div>
+      
     );
   };
   
+  const tableHeaderStyle = {
+    textAlign: 'center',
+    padding: '10px',
+    borderBottom: '1px solid #ddd',
+  };
+  
+  const tableCellStyle = {
+    textAlign: 'center',
+    padding: '10px',
+    borderBottom: '1px solid #ddd',
+  };
 
 export default DashboardActualPorEstacion;

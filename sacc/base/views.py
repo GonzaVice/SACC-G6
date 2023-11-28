@@ -683,7 +683,6 @@ def get_stations_info(request):
         return JsonResponse({'station_info': station_info})
     
 
-
 #CRUD de estaciones
 def create_station(request):
     if request.method == 'POST':
@@ -747,6 +746,21 @@ def create_ecommerce(request):
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)
 
+def delete_ecommerce(request):
+    if request.method == 'POST':
+        # Obtener los datos del ecommerce
+        data = json.loads(request.body)
+        name = data.get('name')
+
+        #Eliminar el ecommerce
+        ecommerce = Ecommerce.objects.get(name=name)
+        ecommerce.delete()
+
+
+        return JsonResponse({'message': 'Ecommerce deleted successfully'})
+    
+    # Handle other HTTP methods or invalid requests
+    return JsonResponse({'message': 'Method not allowed'}, status=405)
 
 def get_all_ecommerce(request):
     if request.method == 'GET':
@@ -761,6 +775,26 @@ def get_all_ecommerce(request):
             })
 
         return JsonResponse({'ecommerce_info': ecommerce_info})
+    
+    # Handle other HTTP methods or invalid requests
+    return JsonResponse({'message': 'Method not allowed'}, status=405)
+
+def edit_ecommerce(request):
+    if request.method == 'POST':
+        # Obtener los datos del ecommerce
+        data = json.loads(request.body)
+        name = data.get('name')
+        new_name = data.get('new_name')
+        new_key = data.get('key')
+
+        #Editar el ecommerce
+        ecommerce = Ecommerce.objects.get(name=name)
+        ecommerce.key = new_key
+        ecommerce.name = new_name
+        ecommerce.save()
+
+
+        return JsonResponse({'message': 'Ecommerce edited successfully with name: ' + name + ' and key: ' + new_key})
     
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)

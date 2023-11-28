@@ -26,7 +26,6 @@ const Ecommerce = () => {
                 });
 
                 setEcommerces(response.data.ecommerce_info);
-                console.log(response)
             } catch (error) {
                 console.error('Error al obtener los ecommerce:', error);
             }
@@ -35,6 +34,14 @@ const Ecommerce = () => {
         fetchEcommerces();
     }, []); 
 
+    const deleteButtonStyle = {
+        backgroundColor: 'red',
+        color: 'white',
+        padding: '5px 10px',
+        borderRadius: '3px',
+        border: 'none',
+        cursor: 'pointer',
+    };
     const ecommerceStyle = {
         display: 'flex',
         flexDirection: 'column',
@@ -46,8 +53,8 @@ const Ecommerce = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '200px',
-        height: '50px',
+        width: '300px',
+        height: '100px',
         margin: '10px',
         padding: '10px',
         borderRadius: '5px',
@@ -60,17 +67,59 @@ const Ecommerce = () => {
         navigate('/GetReservation', { state: { ecommerceName } });
     };
 
+    const handleDeleteEcommerceClick = async (ecommerceName) => {
+        try {
+            const csrfToken = getCsrfToken();
+            const headers = {
+                'X-CSRFToken': csrfToken,
+            };
+
+            // Send a POST request to delete_ecommerce endpoint
+            await axios.post('http://127.0.0.1:8000/base/delete_ecommerce/', { name: ecommerceName }, {
+                headers,
+                withCredentials: true,
+            });
+
+            // Reload the list of ecommerces after deletion
+            //fetchEcommerces();
+            window.location.reload();
+
+        } catch (error) {
+            console.error('Error deleting ecommerce:', error);
+            // Handle errors or display an error message to the user
+        }
+    };
+
+    const handleCreateEcommerceClick = () => {
+        navigate('/CreateEcommerce');
+    };
+    const handleEditEcommerceClick = () => {
+        navigate('/EditEcommerce');
+    };
+
     return (
         <div style={ecommerceStyle}>
             <h1>Ecommerces:</h1>
             {ecommerces.map((ecommerce) => (
                 <div style={ecommerceCardStyle} key={ecommerce.key}>
-                    {ecommerce.name}
+                    <div>
+                        <p>Name: {ecommerce.name}</p>
+                        <p>Key: {ecommerce.key}</p>
+                    </div>
                     <button className="btn btn-tertiary" onClick={() => handleGetReservationsClick(ecommerce.name)}>
                         Ver Reservas
                     </button>
+                    <button className="btn btn-delete" style={deleteButtonStyle} onClick={() => handleDeleteEcommerceClick(ecommerce.name)}>
+                        Delete
+                    </button>
                 </div>
             ))}
+            <button className="btn btn-tertiary" onClick={handleCreateEcommerceClick}>
+                Create Ecommerce
+            </button>
+            <button className="btn" onClick={handleEditEcommerceClick}>
+                Edit Ecommerce
+            </button>
         </div>
     );
 };

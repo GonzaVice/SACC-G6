@@ -50,18 +50,22 @@ const CreateLocker = () => {
                     Locker Name:
                     <input type="text" value={lockerName} onChange={e => setLockerName(e.target.value)} />
                 </label>
+                <br/>
                 <label>
                     Locker Length:
                     <input type="text" value={lockerLength} onChange={e => setLockerLength(e.target.value)} />
                 </label>
+                <br/>
                 <label>
                     Locker Width:
                     <input type="text" value={lockerWidth} onChange={e => setLockerWidth(e.target.value)} />
                 </label>
+                <br/>
                 <label>
                     Locker Height:
                     <input type="text" value={lockerHeight} onChange={e => setLockerHeight(e.target.value)} />
                 </label>
+                <br/>
                 <label>
                     Station Name:
                     <input type="text" value={stationName} onChange={e => setStationName(e.target.value)} />

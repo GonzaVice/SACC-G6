@@ -1,0 +1,83 @@
+.table-container {
+    display: flex;
+    flex-direction: column; /* Alinear elementos en columna */
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0 auto;
+  }
+  
+  .table {
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  .table th,
+  .table td {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .table th:last-child,
+  .table td:last-child {
+    border-right: none;
+  }
+  
+  .table th {
+    border-top: 1px solid #ddd;
+    background-color: #fff; /* Cambiado a blanco */
+    color: #000;
+  }
+  
+  /* Estilos específicos para botones de acción */
+  .btn-danger {
+    background-color: #ff6961;
+    color: white;
+  }
+  
+  .btn-primary {
+    background-color: #ffd700;
+    color: white;
+  }
+  
+  .btn-secondary {
+    margin-top: 10px; /* Espacio entre la tabla y el botón "Create new locker" */
+  }
+  
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .popup-content {
+    background: #fff;
+    color:rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .popup-content button {
+    margin-top: 10px; /* Ajusta según tus necesidades */
+  }
+  
+  .button-space {
+    margin-right: 8px;  /* Ajusta según tus necesidades */
+  }
+  /* Puedes agregar más estilos según sea necesario */
+  
+  
+  
+  
+
+  

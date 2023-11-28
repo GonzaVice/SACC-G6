@@ -870,9 +870,58 @@ def locker_list(request):
                 'id': locker.id,
                 'name': locker.name,
                 'state': locker.get_state_display(),
+                'length': locker.length,
+                'width': locker.width,
+                'height': locker.height
             }
             lockers_list.append(locker_dict)
 
         return JsonResponse(lockers_list, safe=False)
 
     return JsonResponse({"message": "Method not allowed"}, status=405)
+
+def delete_locker(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            locker_name = data.get('locker_name')
+            locker = Locker.objects.get(name=locker_name)
+
+            # Obtén la reserva asociada al casillero
+            reservation = locker.reservation
+            print(locker.reservation.state)
+            if reservation:
+                # Cambia el estado de la reserva a "Cancelado"
+                reservation.state = 3
+                reservation.save()
+
+            locker.delete()
+            return JsonResponse({'message': 'Locker deleted successfully'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'message': 'Locker not found'}, status=404)
+    else:
+        return JsonResponse({'message': 'Method not allowed'}, status=405)
+    
+def edit_locker(request):
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            locker_id = data.get('locker_id')
+            print('HOLAA')
+            locker = Locker.objects.get(id=locker_id)
+            name = data.get('name')
+            length = data.get('length')
+            width = data.get('width')
+            height = data.get('height')
+            locker.name = name
+            locker.length = length
+            locker.width = width
+            locker.height = height
+            locker.save()
+
+            return JsonResponse({'message': 'Locker edited successfully'})
+    except Locker.DoesNotExist:
+        return JsonResponse({'message': 'Locker not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'message': f'Error editing locker: {str(e)}'}, status=500)
+

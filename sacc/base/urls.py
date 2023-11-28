@@ -47,8 +47,9 @@ urlpatterns = [
     
     #CRUD de casilleros
     path('create_locker/', views.create_locker, name='create_locker'),
-    
-     path('lockers/', views.locker_list, name='locker_list'),
+    path('lockers/', views.locker_list, name='locker_list'),
+    path('delete_locker/', views.delete_locker, name='delete_locker'),
+    path('edit_locker/', views.edit_locker, name='edit_locker'),
 
     #CRUD ecommerce
     path('create_ecommerce/', views.create_ecommerce, name='create_ecommerce'),

@@ -146,6 +146,7 @@ const DashboardActualPorEstacion = () => {
 
     const handleVerDatosHistoricos = () => {
       console.log("Redirigiendo a datos históricos...");
+      navigate('/DashboardHistoricoPorEstacion', {state: { station_name, station_id }});
       // window.location.href = '/ruta-de-datos-historicos'; // Ejemplo de redirección
     };
   

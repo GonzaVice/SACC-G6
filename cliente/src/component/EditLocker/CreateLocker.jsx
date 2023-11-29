@@ -1,44 +1,48 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const getCsrfToken = () => {
+    return document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        .split('=')[1];
+}
+
 const CreateLocker = () => {
+    const navigate = useNavigate();
     const [lockerName, setLockerName] = useState('');
     const [lockerLength, setLockerLength] = useState('');
     const [lockerWidth, setLockerWidth] = useState('');
     const [lockerHeight, setLockerHeight] = useState('');
     const [stationName, setStationName] = useState('');
 
-    const handleCreateLocker = async () => {
+    const handleCreateLocker = async (e) => {
+        e.preventDefault();
         try {
-            const csrfToken = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('csrftoken='))
-                .split('=')[1];
 
+            const csrfToken = getCsrfToken();
             const headers = {
-                'X-CSRFToken': csrfToken,
-                'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken,
             };
 
-            const data = {
-                name: lockerName,
-                length: lockerLength,
-                width: lockerWidth,
-                height: lockerHeight,
-                station_name: stationName,
-            };
-
-            const response = await axios.post('http://127.0.0.1:8000/base/create_locker/', data, {
+            const response = await axios.post('http://127.0.0.1:8000/base/create_locker/', 
+            {
+                'name': lockerName,
+                'length': lockerLength,
+                'width': lockerWidth,
+                'height': lockerHeight,
+                'station_name': stationName
+            }, {
                 headers,
                 withCredentials: true,
+                timeout: 10000,
             });
 
-            console.log(response.data); // Assuming the response contains a message
-            // Add further handling as needed after locker creation
+            navigate('/all_lockers')
 
         } catch (error) {
             console.error('Error creating locker:', error);
-            // Handle errors appropriately
+            
         }
     };
 

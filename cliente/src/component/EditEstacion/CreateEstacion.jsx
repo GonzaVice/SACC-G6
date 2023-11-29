@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const CreateEstacion = () => {
+    const navigate = useNavigate();
     const [stationName, setStationName] = useState('');
 
     const handleCreateStation = async () => {
@@ -27,7 +29,7 @@ const CreateEstacion = () => {
 
             console.log(response.data); // Assuming the response contains a message
             // Add further handling as needed after station creation
-
+            navigate('/home')
         } catch (error) {
             console.error('Error creating station:', error);
             // Handle errors appropriately

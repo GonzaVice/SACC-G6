@@ -120,11 +120,15 @@ const AllLockers = () => {
         fetchLockers();
     }, []);
 
+    const handleBackClick = () => {
+        navigate('/home');
+    };
+
     const handleCreateLockerClick = () => {
         navigate('/CreateLocker');
     };
 
-    const handleDeleteLocker =  async (name) => {
+    const handleDeleteLocker =  async (LockerId) => {
         try {
             const csrfToken = getCsrfToken();
             const headers = {
@@ -132,7 +136,10 @@ const AllLockers = () => {
             };
 
             // Realiza la solicitud POST para eliminar el casillero
-            await axios.post(`http://127.0.0.1:8000/base/delete_locker/`, { 'locker_name':name }, {
+            await axios.post(`http://127.0.0.1:8000/base/delete_locker/`, 
+            { 
+                'locker_id':LockerId, 
+            }, {
                 headers,
                 withCredentials: true,
             });
@@ -175,7 +182,7 @@ const AllLockers = () => {
                             <td>
                             <button
                                 className="btn btn-danger"
-                                onClick={() => handleDeleteLocker(locker.name)}
+                                onClick={() => handleDeleteLocker(locker.id)}
                             >
                                 Eliminar
                             </button>
@@ -193,9 +200,14 @@ const AllLockers = () => {
                 </tbody>
             </table>
             <br />
-            <button className="btn btn-secondary" onClick={handleCreateLockerClick}>
-                Create new locker
-            </button>
+            <div className="button-container">
+                <button className="btn btn-secondary" onClick={handleBackClick}>
+                    Back
+                </button>
+                <button className="btn btn-secondary" onClick={handleCreateLockerClick}>
+                    Create new locker
+                </button>
+            </div>
             {showEditPopup && (
                 <EditLockerPopup lockerId={selectedLockerId} lockers={lockers} onClose={handleCloseEditPopup} />
             )}

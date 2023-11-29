@@ -38,7 +38,12 @@ const Home = () => {
     }, []); 
 
     const handleButtonClick = (station) => {
-        navigate('/DashboardActualPorEstacion', { state: { station_name: station.name, connection: station.conexion } });
+        navigate('/DashboardActualPorEstacion', { state: 
+            { 
+                station_name: station.name, 
+                station_id: station.id 
+            } 
+        });
     };
 
     const handleCreateStationClick = () => {
@@ -64,14 +69,16 @@ const Home = () => {
                     {station.name}
                 </div>
             ))}
-            <button className="btn btn-tertiary" onClick={handleEcommercesClick}>
-                Ecommerces
-            </button>
-            <button className="btn btn-primary" onClick={handleCreateStationClick}>
+            <div className="button-container">
+                <button className="btn btn-secondary" onClick={handleViewLockersClick}>
+                    View Lockers
+                </button>
+                <button className="btn btn-secondary" onClick={handleEcommercesClick}>
+                    Ecommerces
+                </button>
+            </div>
+            <button className="btn btn-tertiary" onClick={handleCreateStationClick}>
                 Create Station
-            </button>
-            <button className="btn btn-secondary" onClick={handleViewLockersClick}>
-                View Lockers
             </button>
             <button className="btn btn-tertiary" onClick={handleCreateEcommerceClick}>
                 Create Ecommerce

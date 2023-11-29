@@ -15,6 +15,7 @@ import Ecommerce from './component/EditEcommerce/GetAllEcommerce.jsx';
 import Reservations from './component/EditEcommerce/GetReservation.jsx';
 import EditEcommerce from './component/EditEcommerce/EditEcommerce.jsx';
 import BitacoraReserva from './component/BitácoraReserva.jsx';
+import EditStation from './component/EditEstacion/EditStation.jsx';
 import DashboardHistoricoPorEstacion from './component/DashboardHistoricoPorEstacion.jsx';
 
 
@@ -70,6 +71,7 @@ const Main = () => {
           <Route path="/GetAllEcommerce" element={<Ecommerce />}/>
           <Route path="/GetReservation" element={<Reservations />}/>
           <Route path="/EditEcommerce" element={<EditEcommerce />}/>
+          <Route path="/edit/:station_id" element={<EditStation />} />
           <Route path="/BitacoraReserva" element={<BitacoraReserva />}/>
         </Routes>
       </Router>

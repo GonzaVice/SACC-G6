@@ -80,7 +80,7 @@ const SendKey = () => {
                 <label>
                     N° De casillero:  
                     <input
-                        type="text"
+                        type="number"
                         value={lockerId}
                         onChange={handleInputChangeLocker}
                         placeholder="Ingresar casillero..."

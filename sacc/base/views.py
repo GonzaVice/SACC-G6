@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
-
-
+from . import MAIL
 # Create your views here.
 from django.http import JsonResponse
 from .models import User
@@ -17,21 +16,21 @@ import time
 
 def load(station,locker):
     json_to_esp = {
-            "station_id": station , 
+            "station_name": station , 
             "nickname": locker
         }    
 
-    mqtt_connect_and_publish('msg/load', json.dumps(json_to_esp))
-    pass
+    mqtt_connect_and_publish('load', json.dumps(json_to_esp))
+    
 
 def unload(station,locker):
     json_to_esp = {
-            "station_id": station , 
+            "station_name": station , 
             "nickname": locker
         }    
 
-    mqtt_connect_and_publish('msg/unload', json.dumps(json_to_esp))
-    pass
+    mqtt_connect_and_publish('unload', json.dumps(json_to_esp))
+    
 
 
 def login_user(request):
@@ -129,7 +128,6 @@ def get_stations(request):
             for locker in lockers:
                 locker_info = {
                     'name' : locker.name,
-                    'id': locker.id,
                     'length': locker.length,
                     'width': locker.width,
                     'height': locker.height,
@@ -222,7 +220,7 @@ def reserva_casillero(request):
                     )
                     locker.reservation = reservation
                     locker.save()
-                    return JsonResponse({'success': True, 'message': f'Locker reserved successfully in locker {locker.id} with reservation id: {locker.reservation.identificador}'})
+                    return JsonResponse({'success': True, 'message': f'Locker reserved successfully in locker {locker.name} with reservation id: {locker.reservation.identificador}'})
                     
             return JsonResponse({'success': False, 'message': 'Package does not fit in any locker'})
 
@@ -272,8 +270,8 @@ def confirmar_reserva(request):
 
             #Cambiamos el estado del locker
             reservation.state = 1
+            reservation.horaConfirmacionReserva = timezone.now()
             reservation.save()
-            
             return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully'})
 
         except Reservation.DoesNotExist:
@@ -325,8 +323,30 @@ def confirmar_paquete(request):
             # Cambiamos el estado del locker
             reservation.state = 2
             reservation.operador = operador
-            reservation.operador_password = "operador"
+            #reservation.operador_password = "operador"
+            reservation.operador_password = Reservation.generate_random_password()
+            reservation.horaConfirmacionOperador = timezone.now()
             reservation.save()
+
+            #Buscar locker que tenga una reserva con el identificador
+            locker = Locker.objects.get(reservation=reservation)
+
+            #Mandar mail
+            body = f"""Escanear QR de la estacion.\n
+                    Ingresar los siguientes datos:\n
+                    Estacion: {locker.station.name}\n
+                    Casillero: {locker.name}\n
+                    Contrasena: {reservation.operador_password}\n
+                    Mail: {reservation.operador}\n
+                    Tipo de usuario: Operador
+
+                    Una vez mandado los datos, el pestillo del casillero se abrira,
+                    y podra dejar el paquete en el casillero.\n
+                    Una vez dejado el paquete, cerrar el casillero, y mantener la
+                    puerta cerrada hasta que se cierre el pestillo
+                    """
+            MAIL.sendMails(reservation.operador, body)
+
             return JsonResponse({'success': True, 'message': 'Reservation confirmed: ' + str(reservation.identificador)})
 
             
@@ -366,8 +386,9 @@ def cancelar_reserva(request):
 
             #Desasociamos el locker de la reserva
             reservation = None
+            reservation.horaCancelacion = timezone.now()
             reservation.save()
-    
+
             return JsonResponse({'success': True, 'message': 'Reservation cancelled successfully: ' + str(reservation.identificador)})
 
         #Excpeciones
@@ -520,7 +541,7 @@ def operador_abre(request):
         data = json.loads(request.body)
         usuario_clave = data.get('usuario_clave')
         station_name = data.get('station_name')
-        locker_name = data.get('locker_name')
+        locker_name = int(data.get('locker_name'))
         usuario = data.get('usuario')
 
 
@@ -528,7 +549,9 @@ def operador_abre(request):
            
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(name=locker_name)
+            #Buscar locker con el nombre de la estacion y nombre del locker
+            locker = Locker.objects.get(name=locker_name, station=station)  # Use .first() to get a single object
+            print("ESTO ES LOCKER: ", locker)
             available_lockers = Locker.objects.filter(station=station, reservation=None)
 
             #Verificamos que el locker este en estado 1
@@ -544,6 +567,25 @@ def operador_abre(request):
             #Abrir locker
             load(station_name,locker_name)
             print("SE MANDO EL LOAD")
+            locker.reservation.cliente_password = Reservation.generate_random_password()
+            locker.reservation.horaCarga = timezone.now()
+            locker.reservation.save()
+            #Mandar mail
+            body = f"""Escanear QR de la estacion.\n
+                    Ingresar los siguientes datos:\n
+                    Estacion: {locker.station.name}\n
+                    Casillero: {locker.name}\n
+                    Contrasena: {locker.reservation.cliente_password}\n
+                    Mail: {locker.reservation.cliente}\n
+                    Tipo de usuario: Cliente
+
+                    Una vez mandado los datos, el pestillo del casillero se abrira,
+                    y podra dejar el paquete en el casillero.\n
+                    Una vez dejado el paquete, cerrar el casillero, y mantener la
+                    puerta cerrada hasta que se cierre el pestillo
+                    """
+            MAIL.sendMails(locker.reservation.cliente, body)
+
             return JsonResponse({'success': True, 'message': ' Operador abriendo locker ' + str(locker_name)})
 
             
@@ -569,7 +611,7 @@ def cliente_abre(request):
         data = json.loads(request.body)
         usuario_clave = data.get('usuario_clave')
         station_name = data.get('station_name')
-        locker_name = data.get('locker_name')
+        locker_name = int(data.get('locker_name'))
         usuario = data.get('usuario')
 
 
@@ -577,7 +619,7 @@ def cliente_abre(request):
             
             # Verificamos si existe la estacion y locker
             station = Station.objects.get(name=station_name)
-            locker = Locker.objects.get(name=locker_name)
+            locker = Locker.objects.get(name=locker_name,station=station)
             print("ESTO ES LOCKER: ", locker)
             available_lockers = Locker.objects.filter(station=station, reservation=None)
 
@@ -592,6 +634,13 @@ def cliente_abre(request):
             
             #Abrir locker
             unload(station_name, locker_name)
+
+            locker.reservation.horaDescarga = timezone.now()
+            locker.reservation.horaFinalizacion = timezone.now()
+            locker.reservation.state = 4
+            locker.reservation.save()
+            
+            
             return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_name)})
 
             
@@ -737,13 +786,15 @@ def dashboard2(request):
                     for lockers in json_message['lockers']:
                         #Chequeamos si el locker existe en la estacion
                         locker = Locker.objects.filter(station=station, name=lockers['nickname']).first()  # Use .first() to get a single object
+                        size = lockers['size'] 
+                        height, width, length = map(int, size.split('x'))
                         if locker:
                             locker_info = {
                                 'locker': {
                                     'name': lockers['nickname'],
-                                    'length': lockers['length'],
-                                    'width': lockers['width'],
-                                    'height': lockers['height'],
+                                    'length': length,
+                                    'width': width,
+                                    'height': height,
                                     'state': lockers['state'],
                                     'reservation': None,
                                     'is_open': lockers['is_open'],
@@ -828,18 +879,20 @@ def create_locker(request):
         height = data.get('height')
         station_name = data.get('station_name')
 
-        # Crear el casillero
-        station = Station.objects.get(name=station_name)
-        new_locker = Locker.objects.create(
-            name=name,
-            length=length,
-            width=width,
-            height=height,
-            station=station
-        )
-
-        return JsonResponse({'message': 'Locker created successfully'})
-    
+        try:
+            station = Station.objects.get(name=station_name)
+            existing_locker = Locker.objects.get(name=name, station=station)
+            return JsonResponse({'message': 'Ya existe un casillero con este nombre en esta estación'}, status=400)
+        except Locker.DoesNotExist:
+            # Si no hay un casillero con el mismo nombre, crear uno nuevo
+            new_locker = Locker.objects.create(
+                name=name,
+                length=length,
+                width=width,
+                height=height,
+                station=station
+            )
+            return JsonResponse({'message': 'Casillero creado correctamente'}, status=201)
     # Handle other HTTP methods or invalid requests
     return JsonResponse({'message': 'Method not allowed'}, status=405)
 
@@ -967,8 +1020,6 @@ def subscribe_mqtt(request):
             return JsonResponse({'details': json_message})
 
 
-
-
 def mqtt_ask(request):
     if request.method == 'GET':
         
@@ -1005,7 +1056,7 @@ def delete_locker(request):
 
             # Obtén la reserva asociada al casillero
             reservation = locker.reservation
-            print(locker.reservation.state)
+            #print(locker.reservation.state)
             if reservation:
                 # Cambia el estado de la reserva a "Cancelado"
                 reservation.state = 3

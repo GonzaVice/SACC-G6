@@ -3,8 +3,8 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 import secrets
 import random
+import string
 # Create your models here.
-
 #Modelo usuario
 class User(models.Model):
 
@@ -68,6 +68,11 @@ class Reservation(models.Model):
     horaFinalizacion = models.DateTimeField(null=True, blank=True)
     horaCancelacion = models.DateTimeField(null=True, blank=True)
 
+    @staticmethod
+    def generate_random_password():
+        password_length = 5
+        characters = string.ascii_letters + string.digits + string.punctuation
+        return ''.join(random.choice(characters) for i in range(password_length))
 
     def __str__(self):
         return f"Reservation: {self.name} "

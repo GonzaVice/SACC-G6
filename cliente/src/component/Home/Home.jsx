@@ -54,9 +54,7 @@ const Home = () => {
         navigate('/all_lockers');
     };
  
-    const handleCreateEcommerceClick = () => {
-        navigate('/CreateEcommerce');
-    };
+
     const handleEcommercesClick = () => {
         navigate('/GetAllEcommerce');
     };
@@ -80,9 +78,7 @@ const Home = () => {
             <button className="btn btn-tertiary" onClick={handleCreateStationClick}>
                 Create Station
             </button>
-            <button className="btn btn-tertiary" onClick={handleCreateEcommerceClick}>
-                Create Ecommerce
-            </button>
+   
 
         </div>
     );

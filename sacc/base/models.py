@@ -67,6 +67,8 @@ class Reservation(models.Model):
     horaFinalizacion = models.DateTimeField(null=True, blank=True)
     horaCancelacion = models.DateTimeField(null=True, blank=True)
 
+    station = models.CharField(max_length=200,default='ValorPorDefecto') #mail del operador
+    
     @staticmethod
     def generate_random_password():
         password_length = 5

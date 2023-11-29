@@ -67,7 +67,10 @@ urlpatterns = [
     #Get physical data
     path('subscribe_mqtt/', views.subscribe_mqtt, name='subscribe_mqtt'),
 
-    path('mqtt_ask/', views.mqtt_ask, name='mqtt_ask')
+    path('mqtt_ask/', views.mqtt_ask, name='mqtt_ask'),
+
+    path('reservas_historicas_estacion/', views.reservas_historicas_estacion, name='reservas_historicas_estacion')
+
 ]
 
 

@@ -219,7 +219,9 @@ def reserva_casillero(request):
                         cliente_password="cliente",
                     )
                     locker.reservation = reservation
+                    locker.reservation.station = station.name
                     locker.save()
+                    locker.reservation.save()
                     return JsonResponse({'success': True, 'message': f'Locker reserved successfully in locker {locker.name} with reservation id: {locker.reservation.identificador}'})
                     
             return JsonResponse({'success': False, 'message': 'Package does not fit in any locker'})
@@ -639,7 +641,8 @@ def cliente_abre(request):
             locker.reservation.state = 4
             locker.reservation.cliente = 'xxxxxxxx'
             locker.reservation.save()
-            
+            locker.reservation = None
+            locker.save()
             
             return JsonResponse({'success': True, 'message': 'Reservation confirmed successfully in locker ' + str(locker_name)})
 
@@ -1040,16 +1043,36 @@ def reservas_historicas_estacion(request):
     if request.method == 'POST': 
             
         data = json.loads(request.body)
-        station_name = data.get('station_id')
+        station_name = data.get('station_name')
 
         try:
             station = Station.objects.get(name=station_name)
             lockers = Locker.objects.filter(station=station)
             json_reservations = {}
+            #Todas las reservas:
+            reservas = Reservation.objects.all()
 
+            for reserva in reservas:
+                if reserva.station == station_name:
+                    
+                    json_reservations[reserva.identificador] = {
+                        'datetime': reserva.datetime.strftime('%Y-%m-%d %H:%M:%S'),
+                        'operador': reserva.operador,
+                        'station': reserva.station,
+                        'cliente': reserva.cliente,
+                        'state': reserva.get_state_display(),
+                        'horaConfirmacionReserva': reserva.horaConfirmacionReserva.strftime('%Y-%m-%d %H:%M:%S') if reserva.horaConfirmacionReserva else None,
+                        'horaConfirmacionOperador': reserva.horaConfirmacionOperador.strftime('%Y-%m-%d %H:%M:%S') if reserva.horaConfirmacionOperador else None,
+                        'horaCarga': reserva.horaCarga.strftime('%Y-%m-%d %H:%M:%S') if reserva.horaCarga else None,
+                        'horaDescarga': reserva.horaDescarga.strftime('%Y-%m-%d %H:%M:%S') if reserva.horaDescarga else None,
+                        'horaFinalizacion': reserva.horaFinalizacion.strftime('%Y-%m-%d %H:%M:%S') if reserva.horaFinalizacion else None,
+                        'horaCancelacion': reserva.horaCancelacion.strftime('%Y-%m-%d %H:%M:%S') if reserva.horaCancelacion else None,
+                    }
+            return JsonResponse(json_reservations, status=200)
+           
 
         except Station.DoesNotExist:
             return JsonResponse({'message': 'Station not found'}, status=404)
-        
+
 
 

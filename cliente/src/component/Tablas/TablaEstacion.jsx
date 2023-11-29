@@ -1,17 +1,12 @@
 import {React, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const TablaEstacion = ({ data }) => { // 
   console.log("DATOS TABLA", data)
-  const handleViewReserva = (station) => {
-    console.log(`Redirigiendo a Reserva ${station.id}`);
-  };
-
-  const alertaReservaPendiente = (locker) => {
-    // si la diferencia entre la hora actual y la hora de reserva es mayor a 1 hora, se muestra la alerta
-    if (locker.reservations[locker.reservations.length - 1].horaReserva - Date.now() > 3600000) {
-      return true;
-    }
-    return false;
+  const navigate = useNavigate();
+  const handleViewReserva = (reserva) => {
+    navigate('/BitacoraReserva', { state: { reserva: reserva } });
   };
 
   const dimensionesString = (height, width, length) => (
@@ -38,8 +33,7 @@ const TablaEstacion = ({ data }) => { //
           <th style={tableHeaderStyle}>Estado</th>
           <th style={tableHeaderStyle}>Ocupado</th>
           <th style={tableHeaderStyle}>Abierto</th>
-          <th style={tableHeaderStyle}>Hora Reserva</th>
-          <th style={tableHeaderStyle}>Hora Ocupado</th>
+          <th style={tableHeaderStyle}>Fecha Reserva</th>
           <th style={tableHeaderStyle}>Ver Reserva</th>
         </tr>
       </thead>
@@ -72,28 +66,18 @@ const TablaEstacion = ({ data }) => { //
                 )}
             </td>
             <td style={tableCellStyle}>
-                {locker.reservado ? (
-                    <div key={locker.reservations[locker.reservations.length - 1].horaReserva}>
-                    {locker.reservations[locker.reservations.length - 1].horaReserva}
-                    </div>
+                {locker.reservation === null ? (
+                    <div>N/A</div>
                 ) : (
-                    'N/A'
-                )}
+                    <div>{locker.reservation.datetime}</div>
+                )}            
             </td>
             <td style={tableCellStyle}>
-                {locker.reservado ? (
-                    <div key={locker.reservations[locker.reservations.length - 1].horaCargado}>
-                    {locker.reservations[locker.reservations.length - 1].horaCargado}
-                    </div>
-                ) : (
-                    'N/A'
-                )}
-            </td>
-            <td style={tableCellStyle}>
-            {locker.state!=0 ? (
-            <button onClick={() => handleViewReserva(1)}>
-                Ver Reserva
-            </button> ) : ('N/A')}
+            {locker.reservation === null ? (
+             'N/A') : (
+             <button onClick={() => handleViewReserva(locker.reservation)}>
+             Ver Reserva
+            </button>)}
             </td>
         </tr>
         ))}

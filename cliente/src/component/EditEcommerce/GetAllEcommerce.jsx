@@ -95,6 +95,10 @@ const Ecommerce = () => {
         navigate('/EditEcommerce');
     };
 
+    const handleBackClick = () => {
+        navigate('/home');
+    };
+
     return (
         <div style={ecommerceStyle}>
             <h1>Ecommerces:</h1>
@@ -112,12 +116,17 @@ const Ecommerce = () => {
                     </button>
                 </div>
             ))}
-            <button className="btn btn-tertiary" onClick={handleCreateEcommerceClick}>
-                Create Ecommerce
-            </button>
-            <button className="btn" onClick={handleEditEcommerceClick}>
-                Edit Ecommerce
-            </button>
+            <div className="button-container">
+                <button className="btn btn-tertiary" onClick={handleCreateEcommerceClick}>
+                    Create Ecommerce
+                </button>
+                <button className="btn" onClick={handleEditEcommerceClick}>
+                    Edit Ecommerce
+                </button>
+                <button className="btn btn-secondary" onClick={handleBackClick}>
+                    Back
+                </button>
+            </div>
         </div>
     );
 };

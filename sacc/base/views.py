@@ -465,8 +465,7 @@ def reservas_activas(request):
             # Construct JSON with reservation data
             data = {
                 'reservations': [{
-                    'id': reservation.id,
-                    'name': reservation.name,
+                    'id': reservation.identificador,
                     'datetime': reservation.datetime.strftime('%Y-%m-%d %H:%M:%S'),
                     'operador': reservation.operador,
                     'cliente': reservation.cliente,
@@ -509,8 +508,7 @@ def reservas_historicas(request):
             # Construct JSON with reservation data
             data = {
                 'reservations': [{
-                    'id': reservation.id,
-                    'name': reservation.name,
+                    'id': reservation.identificador,
                     'datetime': reservation.datetime.strftime('%Y-%m-%d %H:%M:%S'),
                     'operador': reservation.operador,
                     'cliente': reservation.cliente,
@@ -724,7 +722,7 @@ def dashboard2(request):
                         if locker.reservation:
                             reservation_info = {
                                 'reservation': {
-                                    'name': locker.reservation.name,
+                                    'id': locker.reservation.identificador,
                                     'operador': locker.reservation.operador,
                                     'cliente': locker.reservation.cliente,
                                     'state': locker.reservation.get_state_display(),
@@ -900,8 +898,7 @@ def get_reservations_of_ecommerce(request):
             reservations = Reservation.objects.filter(ecommerce=ecommerce)
             reservations_json = {
                 'reservations': [{
-                    'id': reservation.id,
-                    'name': reservation.name,
+                    'id': reservation.identificador,
                     'operador': reservation.operador,
                     'cliente': reservation.cliente,
                     'state': reservation.get_state_display(),

@@ -51,7 +51,6 @@ class Reservation(models.Model):
 
     # Campos existentes
     identificador = models.IntegerField(default=random.randint(10000, 99999), editable=False)
-    name = models.CharField(max_length=200, default='Default Reservation')
     datetime = models.DateTimeField(auto_now_add=True)
     operador = models.CharField(max_length=200,default='ValorPorDefecto') #mail del operador
     operador_password = models.CharField(max_length=200,default='ValorPorDefecto') #mail del operador
@@ -75,7 +74,7 @@ class Reservation(models.Model):
         return ''.join(random.choice(characters) for i in range(password_length))
 
     def __str__(self):
-        return f"Reservation: {self.name} "
+        return f"Reservation: {self.identificador} "
 
 
 ## Modelo Estación de Casilleros

@@ -75,7 +75,7 @@ const Reservations = () => {
             <h1 style={titleStyle}>Reservations:</h1> {/* Apply the titleStyle to the title */}
             {reservations.map((reservation) => (
                 <div style={reservationCardStyle} key={reservation.id}>
-                    <p><span style={attributeTitleStyle}>Name:</span> {reservation.name}</p>
+                    <p><span style={attributeTitleStyle}>ID:</span> {reservation.id}</p>
                     <p><span style={attributeTitleStyle}>Operador:</span> {reservation.operador}</p>
                     <p><span style={attributeTitleStyle}>Cliente:</span> {reservation.cliente}</p>
                     <p><span style={attributeTitleStyle}>State:</span> {reservation.state}</p>

@@ -8,284 +8,6 @@ import { useLocation } from 'react-router-dom';
 import axios from "axios";
 import { set } from "lodash";
 
-const datapie = [
-    {name: "Grupo A", value: 400},
-    {name: "Grupo B", value: 300},
-    {name: "Grupo C", value: 300},
-    {name: "Grupo D", value: 200},
-  ]
-  
-  const datachart = [
-    {name: 'María', age:10, weight:60},
-    {name: 'Pedro', age:20, weight:80},
-    {name: 'Juan', age:30, weight:100},
-    {name: 'Ana', age:40, weight:120},
-    {name: 'Luis', age:50, weight:140},
-    {name: 'Sara', age:60, weight:160},
-  ]
-  
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-  
-  const dataTablas = [
-    {
-      name: "Estación 1",
-      connection: true,
-      lockers: [ {
-        id: 1,
-        length: '10',
-        width: '20',
-        height: '60',
-        state: 'Disponible', // Disp, Res, Conf, Carg
-        reservations: [
-          {
-            name: "Reserva 1",
-            horaReserva: '10:30',
-            operador: 'Juan',
-            operadorPassword: '1234',
-            cliente: 'Maria',
-            clientePassword: '1234',
-            horaConfirmacionReserva: '10:35',
-            horaConfirmacionOperario: '10:36',
-            horaCarga: '10:40',
-            horaDescarga: '18:51',
-            horaFinalizacion: '18:51',
-            horaCancelacion: '',
-            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-            ecommerce: "Mercado Libre",
-          },
-          {
-            name: "Reserva 2",
-            horaReserva: '12:30',
-            operador: 'AAA',
-            operadorPassword: '1234',
-            cliente: 'Si',
-            clientePassword: '1234',
-            horaConfirmacionReserva: '12:35',
-            horaConfirmacionOperario: '12:36',
-            horaCarga: '12:40',
-            horaDescarga: '19:51',
-            horaFinalizacion: '19:51',
-            horaCancelacion: '',
-            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-            ecommerce: "Mercado Libre",
-          },
-        ],
-      },
-      {
-        id: 2,
-        length: '30',
-        width: '20',
-        height: '30',
-        state: 'Confirmado', // Disp, Res, Conf, Carg
-        reservations: [
-          {
-            name: "Reserva 3",
-            horaReserva: '10:39',
-            operador: 'QQQQ',
-            operadorPassword: '1234',
-            cliente: 'PPP',
-            clientePassword: '1234',
-            horaConfirmacionReserva: '10:39',
-            horaConfirmacionOperario: '10:39',
-            horaCarga: '10:40',
-            horaDescarga: '18:51',
-            horaFinalizacion: '18:51',
-            horaCancelacion: '',
-            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-            ecommerce: "Mercado Libre",
-          },
-          {
-            name: "Reserva 4",
-            horaReserva: '10:30',
-            operador: 'Juan',
-            operadorPassword: '1234',
-            cliente: 'Maria',
-            clientePassword: '1234',
-            horaConfirmacionReserva: '10:35',
-            horaConfirmacionOperario: '10:36',
-            horaCarga: '10:40',
-            horaDescarga: '18:51',
-            horaFinalizacion: '18:51',
-            horaCancelacion: '',
-            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-            ecommerce: "Mercado Libre",
-          },
-        ],
-      },
-      {
-        id: 3,
-        length: '50',
-        width: '20',
-        height: '90',
-        state: 'Cargado', // Disp, Res, Conf, Carg
-        reservations: [
-          {
-            name: "Reserva 5",
-            horaReserva: '10:30',
-            operador: 'Juan',
-            operadorPassword: '1234',
-            cliente: 'Maria',
-            clientePassword: '1234',
-            horaConfirmacionReserva: '10:35',
-            horaConfirmacionOperario: '10:36',
-            horaCarga: '10:40',
-            horaDescarga: '18:51',
-            horaFinalizacion: '18:51',
-            horaCancelacion: '',
-            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-            ecommerce: "Mercado Libre",
-          },
-          {
-            name: "Reserva 6",
-            horaReserva: '10:30',
-            operador: 'Juan',
-            operadorPassword: '1234',
-            cliente: 'Maria',
-            clientePassword: '1234',
-            horaConfirmacionReserva: '10:35',
-            horaConfirmacionOperario: '10:36',
-            horaCarga: '10:40',
-            horaDescarga: '18:51',
-            horaFinalizacion: '18:51',
-            horaCancelacion: '',
-            state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-            ecommerce: "Mercado Libre",
-          },
-        ],
-      },
-      ]
-    },
-    {
-      name: "Estación 2",
-      estadoConexion: true,
-      lockers: [
-        {
-          id: 1,
-          length: '10',
-          width: '20',
-          height: '60',
-          state: 'Disponible', // Disp, Res, Conf, Carg
-          reservations: [
-            {
-              name: "Reserva 7",
-              horaReserva: '10:30',
-              operador: 'Juan',
-              operadorPassword: '1234',
-              cliente: 'Maria',
-              clientePassword: '1234',
-              horaConfirmacionReserva: '10:35',
-              horaConfirmacionOperario: '10:36',
-              horaCarga: '10:40',
-              horaDescarga: '18:51',
-              horaFinalizacion: '18:51',
-              horaCancelacion: '',
-              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-              ecommerce: "Mercado Libre",
-            },
-            {
-              name: "Reserva 8",
-              horaReserva: '10:30',
-              operador: 'Juan',
-              operadorPassword: '1234',
-              cliente: 'Maria',
-              clientePassword: '1234',
-              horaConfirmacionReserva: '10:35',
-              horaConfirmacionOperario: '10:36',
-              horaCarga: '10:40',
-              horaDescarga: '18:51',
-              horaFinalizacion: '18:51',
-              horaCancelacion: '',
-              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-              ecommerce: "Mercado Libre",
-            },
-          ],
-        },
-        {
-          id: 1,
-          length: '10',
-          width: '20',
-          height: '60',
-          state: 'Disponible', // Disp, Res, Conf, Carg
-          reservations: [
-            {
-              name: "Reserva 9",
-              horaReserva: '10:30',
-              operador: 'Juan',
-              operadorPassword: '1234',
-              cliente: 'Maria',
-              clientePassword: '1234',
-              horaConfirmacionReserva: '10:35',
-              horaConfirmacionOperario: '10:36',
-              horaCarga: '10:40',
-              horaDescarga: '18:51',
-              horaFinalizacion: '18:51',
-              horaCancelacion: '',
-              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-              ecommerce: "Mercado Libre",
-            },
-            {
-              name: "Reserva 10",
-              horaReserva: '10:30',
-              operador: 'Juan',
-              operadorPassword: '1234',
-              cliente: 'Maria',
-              clientePassword: '1234',
-              horaConfirmacionReserva: '10:35',
-              horaConfirmacionOperario: '10:36',
-              horaCarga: '10:40',
-              horaDescarga: '18:51',
-              horaFinalizacion: '18:51',
-              horaCancelacion: '',
-              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-              ecommerce: "Mercado Libre",
-            },
-          ],
-        },
-        {
-          id: 1,
-          length: '10',
-          width: '20',
-          height: '60',
-          state: 'Disponible', // Disp, Res, Conf, Carg
-          reservations: [
-            {
-              name: "Reserva 11",
-              horaReserva: '10:30',
-              operador: 'Juan',
-              operadorPassword: '1234',
-              cliente: 'Maria',
-              clientePassword: '1234',
-              horaConfirmacionReserva: '10:35',
-              horaConfirmacionOperario: '10:36',
-              horaCarga: '10:40',
-              horaDescarga: '18:51',
-              horaFinalizacion: '18:51',
-              horaCancelacion: '',
-              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-              ecommerce: "Mercado Libre",
-            },
-            {
-              name: "Reserva 12",
-              horaReserva: '10:30',
-              operador: 'Juan',
-              operadorPassword: '1234',
-              cliente: 'Maria',
-              clientePassword: '1234',
-              horaConfirmacionReserva: '10:35',
-              horaConfirmacionOperario: '10:36',
-              horaCarga: '10:40',
-              horaDescarga: '18:51',
-              horaFinalizacion: '18:51',
-              horaCancelacion: '',
-              state: "Reservado", // Res, Conf_Res, Conf_Op, Cancel, Finaliz
-              ecommerce: "Mercado Libre",
-            },
-          ],
-        },
-      ]
-    },
-  ];
-
   const DashboardActualPorEstacion = () => {
     const [stationData, setStationData] = useState('')
     const [dataOcupados, setDataOcupados] = useState([]);
@@ -302,26 +24,46 @@ const datapie = [
         .split('=')[1];
     };
 
+    function calcularHoras(fecha1, fecha2) {
+      fecha1 = new Date(fecha1);
+      fecha2 = new Date(fecha2);
+      var diferencia = Math.abs(fecha2 - fecha1);
+      var horas = diferencia / (1000 * 60 * 60);
+      return horas.toFixed(2);
+    }
+
+    function calcularDiasHoras(fecha1, fecha2) {
+      fecha1 = new Date(fecha1);
+      fecha2 = new Date(fecha2);
+      var diferencia = Math.abs(fecha2 - fecha1);
+      var totalHoras = diferencia / (1000 * 60 * 60);
+      var dias = Math.floor(totalHoras / 24);
+      var horas = totalHoras % 24;
+      return dias + " días y " + horas.toFixed(1) + " horas";
+  }
+
     const tiempoReservaCarga = (locker) => {
+      //toma el tiempo de reserva y carga con el formato "2023-11-02 01:53:17" y calcula el itempo de reserva-carga
       var tiempoReservaCarga = 0
+      console.log("LOCKER", locker)
       if (locker.reservation) {
         if (locker.reservation.horaCarga) {
-          tiempoReservaCarga = locker.reservation.horaCarga - locker.reservation.horaReserva
+          tiempoReservaCarga = calcularDiasHoras(locker.reservation.datetime, locker.reservation.horaCarga)
         }
       }
       return tiempoReservaCarga
     }
 
     const tiempoCargaDescarga = (locker) => {
-      var tiempoCargaDescarga = 0
+      var tiempoReservaCarga = 0
+      console.log("LOCKER", locker)
       if (locker.reservation) {
-        if (locker.reservation.horaDescarga) {
-          tiempoCargaDescarga = locker.reservation.horaDescarga - locker.reservation.horaCarga
+        if (locker.reservation.horaCarga && locker.reservation.horaDescarga) {
+          tiempoReservaCarga = calcularDiasHoras(locker.reservation.horaDescarga, locker.reservation.horaCarga)
         }
       }
-      return tiempoCargaDescarga
+      return tiempoReservaCarga
     }
-
     const mostrarEstadoConexion = (estado) => {
       if (estado) {
         setEstadoOnline("Online");
@@ -330,46 +72,54 @@ const datapie = [
       }
     }
 
-    useEffect(() => {
-      const fetchStations = async () => {
-        try {
-          const csrfToken = getCsrfToken();
-          const headers = {
-            'X-CSRFToken': csrfToken,
-          };
-  
-          const response = await axios.get('http://127.0.0.1:8000/base/dashboard/', {
-            headers,
-            withCredentials: true,
-          });
-  
-          console.log("ESTO ES EL DATADATA",response.data.data);
+    const fetchStations = async () => {
+      try {
+        const csrfToken = getCsrfToken();
+        const headers = {
+          'X-CSRFToken': csrfToken,
+        };
 
-          for (var i = 0; i < response.data.data.length; i++) {
-            if (response.data.data[i].station['name'] == station_name) {
-              console.log("ENCONTRADO");
-              setStationData(response.data.data[i].station);
+        const response = await axios.get('http://127.0.0.1:8000/base/dashboard/', {
+          headers,
+          withCredentials: true,
+        });
 
-            }
-            else {
-              console.log("NO ENCONTRADO");
-              setStationData(null);
-            }
-          }
-          if (stationData == null) {
-            mostrarEstadoConexion(false);
+        console.log("ESTO ES EL DATADATA",response.data.data);
+
+        for (var i = 0; i < response.data.data.length; i++) {
+          if (response.data.data[i].station['name'] == station_name) {
+            console.log("ENCONTRADO");
+            setStationData(response.data.data[i].station);
+
           }
           else {
-            mostrarEstadoConexion(true);
+            console.log("NO ENCONTRADO");
+            setStationData(null);
           }
-          console.log('STATIONDATA', stationData)
-        } catch (error) {
-          console.error('Error al obtener las estaciones:', error);
         }
-      };
+        if (stationData == null) {
+          mostrarEstadoConexion(false);
+        }
+        else {
+          mostrarEstadoConexion(true);
+        }
+        console.log('STATIONDATA', stationData)
+      } catch (error) {
+        console.error('Error al obtener las estaciones:', error);
+      }
+    };
   
+    useEffect(() => {
+      // Obtener datos inicialmente
       fetchStations();
-      setDataLoaded(true);
+  
+      // Establecer intervalo para obtener datos cada 5 segundos
+      const interval = setInterval(() => {
+        fetchStations();
+      }, 5000);
+  
+      // Limpiar el intervalo al desmontar el componente para evitar fugas de memoria
+      return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
@@ -414,7 +164,7 @@ const datapie = [
         <div style={containerStyle}>
           <SimpleCard title="Casilleros Reservados" number={cantidadCasillerosOcupados} margin="10px" />
           <SimpleCard title="Estado Conexión" number={estadoOnline} margin="10px" />
-          <SimpleCard title="Porcentaje Uso" number={cantidadCasillerosOcupados/3} margin="10px" />
+          <SimpleCard title="Porcentaje Uso (%)" number={((cantidadCasillerosOcupados/3)*100).toFixed(2)} margin="10px" />
         </div>
 
         <div style={containerStyle}> 
@@ -434,17 +184,20 @@ const datapie = [
         <div style={containerStyle}>
           <h2 className="text-center text-2xl leading-9 font-bold">Casillero 1</h2>
         </div>
-        {/* <SimpleCard title="Tiempo Reserva-Carga" number={tiempoReservaCarga(stationData.lockers[0])} margin="10px" /> */}
+        <SimpleCard title="Tiempo Reserva-Carga" number={stationData && stationData.lockers && stationData.lockers.length > 0 ? tiempoReservaCarga(stationData.lockers[0]) : 'N/A'} margin="10px" />
+        <SimpleCard title="Tiempo Carga-Descarga" number={stationData && stationData.lockers && stationData.lockers.length > 0 ? tiempoCargaDescarga(stationData.lockers[0]) : 'N/A'} margin="10px" />
 
         <div style={containerStyle}>
           <h2 className="text-center text-2xl leading-9 font-bold">Casillero 2</h2>
         </div>
-        {/* <SimpleCard title="Tiempo Reserva-Carga" number={tiempoReservaCarga(stationData.lockers[0])} margin="10px" /> */}
+        <SimpleCard title="Tiempo Reserva-Carga" number={stationData && stationData.lockers && stationData.lockers.length > 0 ? tiempoReservaCarga(stationData.lockers[1]) : 'N/A'} margin="10px" />
+        <SimpleCard title="Tiempo Carga-Descarga" number={stationData && stationData.lockers && stationData.lockers.length > 0 ? tiempoCargaDescarga(stationData.lockers[1]) : 'N/A'} margin="10px" />
 
         <div style={containerStyle}>
           <h2 className="text-center text-2xl leading-9 font-bold">Casillero 3</h2>
         </div>
-        {/* <SimpleCard title="Tiempo Reserva-Carga" number={tiempoReservaCarga(stationData.lockers[0])} margin="10px" /> */}
+        <SimpleCard title="Tiempo Reserva-Carga" number={stationData && stationData.lockers && stationData.lockers.length > 0 ? tiempoReservaCarga(stationData.lockers[2]) : 'N/A'} margin="10px" />
+        <SimpleCard title="Tiempo Carga-Descarga" number={stationData && stationData.lockers && stationData.lockers.length > 0 ? tiempoCargaDescarga(stationData.lockers[2]) : 'N/A'} margin="10px" />
 
       </div>
       

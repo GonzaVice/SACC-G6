@@ -12,11 +12,23 @@ const TablaEstacion = ({ data }) => { //
     const fechaReserva = new Date(reserva.datetime);
     const fechaActual = new Date();
     const diffTime = Math.abs(fechaActual - fechaReserva);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays > 3) {
-      return 'Vencida';
+    const diffMins = Math.ceil(diffTime / (1000 * 60));
+    if (diffMins > 10) {
+      return 'Reserva Vencida';
     } else {
-      return `Le quedan ${3 - diffDays} días`;
+      return `Le quedan ${10 - diffMins} minutos`;
+    }
+  };
+
+  const plazoCarga = (reserva) => {
+    const fechaCarga = new Date(reserva.horaCarga);
+    const fechaActual = new Date();
+    const diffTime = Math.abs(fechaActual - fechaCarga);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 10) {
+      return 'Paquete Olvidado';
+    } else {
+      return `Le quedan ${10 - diffDays} días`;
     }
   };
 
@@ -46,6 +58,7 @@ const TablaEstacion = ({ data }) => { //
           <th style={tableHeaderStyle}>Abierto</th>
           <th style={tableHeaderStyle}>Fecha Reserva</th>
           <th style={tableHeaderStyle}>Plazo Reserva</th>
+          <th style={tableHeaderStyle}>Paquete Olvidado</th>
           <th style={tableHeaderStyle}>Ver Reserva</th>
         </tr>
       </thead>
@@ -89,6 +102,13 @@ const TablaEstacion = ({ data }) => { //
                     <div>N/A</div>
                 ) : (
                     <div>{plazoReserva(locker.reservation)}</div>
+                )}
+            </td>
+            <td style={tableCellStyle}>
+                {locker.reservation === null ? (
+                    <div>N/A</div>
+                ) : (
+                    <div>{plazoCarga(locker.reservation)}</div>
                 )}
             </td>
             <td style={tableCellStyle}>

@@ -342,8 +342,8 @@ def confirmar_paquete(request):
 
                     Una vez mandado los datos, el pestillo del casillero se abrira,
                     y podra dejar el paquete en el casillero.\n
-                    Una vez dejado el paquete, cerrar el casillero, y mantener la
-                    puerta cerrada hasta que se cierre el pestillo
+                    Una vez dejado el paquete, CERRAR el casillero, y mantener la
+                    puerta cerrada HASTA QUE SE CIERRE  EL PESTILLO (SERVO)
                     """
             MAIL.sendMails(reservation.operador, body)
 
@@ -581,11 +581,12 @@ def operador_abre(request):
 
                     Una vez mandado los datos, el pestillo del casillero se abrira,
                     y podra dejar el paquete en el casillero.\n
-                    Una vez dejado el paquete, cerrar el casillero, y mantener la
-                    puerta cerrada hasta que se cierre el pestillo
+                    Una vez dejado el paquete, CERRAR el casillero, y MANTENER la
+                    puerta cerrada HASTA que se cierre el pestillo
                     """
             MAIL.sendMails(locker.reservation.cliente, body)
-
+            locker.reservation.operador = 'xxxxxxxx'
+            locker.reservation.save()
             return JsonResponse({'success': True, 'message': ' Operador abriendo locker ' + str(locker_name)})
 
             
@@ -638,6 +639,7 @@ def cliente_abre(request):
             locker.reservation.horaDescarga = timezone.now()
             locker.reservation.horaFinalizacion = timezone.now()
             locker.reservation.state = 4
+            locker.reservation.cliente = 'xxxxxxxx'
             locker.reservation.save()
             
             
@@ -658,98 +660,6 @@ def cliente_abre(request):
     return JsonResponse({'details': 'No data found'})
 
 
-def dashboard(request):
-     if request.method == 'GET':
-        stations = Station.objects.all()
-        station_data = []
-
-        all_data = []
-
-
-        stations_names = []
-        for station in stations:
-            stations_names.append(station.name)
-        
-        ready = False
-
-        while not ready:
-            #Si la lista esta vacia, no hay mensajes
-            if received_messages:
-                json_message = json.loads(received_messages[-1])
-                nickname = json_message['nickname']
-                if nickname in stations_names:
-                    #Remove that name from stations_names
-                    stations_names.remove(nickname)
-                    is_open = json_message['is_open']
-                    is_empty = json_message['is_empty']
-                    state = json_message['state']
-                    
-                
-
-            else:
-                print("There are no messages")    
-                
-            if len(stations_names) == 0:
-                ready = True
-            pass
-
-        json_message = json.loads(received_messages[-1])
-        print("ESTE ES EL ESP",json_message)        
-
-        #Get all stations names:
-        
-
-
-        for station in stations:
-            station_info = {
-                'station': {
-                    'name': station.name,
-                    'lockers': []
-                }
-            }
-
-            lockers = Locker.objects.filter(station=station)
-            for locker in lockers:
-                locker_info = {
-                    'locker': {
-                        'name': locker.name,
-                        'length': locker.length,
-                        'width': locker.width,
-                        'height': locker.height,
-                        'state': locker.get_state_display(),
-                        'reservation': None,
-                        'is_open': 'Find',
-                        'is_empty': 'Find',
-                        'state': 'Find',
-                        
-                    }
-                }
-
-                if locker.reservation:
-                    reservation_info = {
-                        'reservation': {
-                            'name': locker.reservation.name,
-                            'operador': locker.reservation.operador,
-                            'cliente': locker.reservation.cliente,
-                            'state': locker.reservation.get_state_display(),
-                            'datetime': locker.reservation.datetime.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.datetime else None,
-                            'horaConfirmacionReserva': locker.reservation.horaConfirmacionReserva.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaConfirmacionReserva else None,
-                            'horaConfirmacionOperador': locker.reservation.horaConfirmacionOperador.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaConfirmacionOperador else None,
-                            'horaCarga': locker.reservation.horaCarga.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaCarga else None,
-                            'horaDescarga': locker.reservation.horaDescarga.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaDescarga else None,
-                            'horaFinalizacion': locker.reservation.horaFinalizacion.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaFinalizacion else None,
-                            'horaCancelacion': locker.reservation.horaCancelacion.strftime('%Y-%m-%d %H:%M:%S') if locker.reservation.horaCancelacion else None,
-                        }
-                    }
-                    locker_info['locker']['reservation'] = reservation_info['reservation']
-
-                station_info['station']['lockers'].append(locker_info['locker'])
-
-            station_data.append(station_info)
-
-        return JsonResponse({'data': station_data})
-     
-
 def dashboard2(request):
      if request.method == 'GET':
         stations = Station.objects.all()
@@ -759,12 +669,12 @@ def dashboard2(request):
         all_data = []
 
 
-        for station in stations:
-            stations_names.append(station.name)
+        for s in stations:
+            stations_names.append(s.name)
         
         ready = False
         start_time = time.time()  # Start the timer
-        elapsed = 8
+        elapsed = 17
         while not ready:
             # If more than 20 seconds have passed, break the loop
             if time.time() - start_time > elapsed:
@@ -783,11 +693,18 @@ def dashboard2(request):
                             'lockers': []
                         }
                     }
+
                     for lockers in json_message['lockers']:
+                        station = Station.objects.get(name=station_name)
                         #Chequeamos si el locker existe en la estacion
+                        print(Locker.objects.filter(station=station, name=lockers['nickname']))
                         locker = Locker.objects.filter(station=station, name=lockers['nickname']).first()  # Use .first() to get a single object
-                        size = lockers['size'] 
+                        lockerss = Locker.objects.filter(station=station)
+                        print("ESTOS SON LOS LOCKER DE LA ESTACION: ", lockerss)
+                        print("ESTE ES EL STATIONS NAME: ", station_name)
+                        size = lockers['size']
                         height, width, length = map(int, size.split('x'))
+                        print("ESTE ES EL LOCKER: ", locker)
                         if locker:
                             locker_info = {
                                 'locker': {
@@ -1120,3 +1037,22 @@ def edit_station(request):
         return JsonResponse({'message': 'Station not found'}, status=404)
     except Exception as e:
         return JsonResponse({'message': f'Error editing locker: {str(e)}'}, status=500)
+    
+
+def reservas_historicas_estacion(request):
+    if request.method == 'POST': 
+            
+        data = json.loads(request.body)
+        station_name = data.get('station_id')
+
+        try:
+            station = Station.objects.get(name=station_name)
+            lockers = Locker.objects.filter(station=station)
+            json_reservations = {}
+
+
+        except Station.DoesNotExist:
+            return JsonResponse({'message': 'Station not found'}, status=404)
+        
+
+

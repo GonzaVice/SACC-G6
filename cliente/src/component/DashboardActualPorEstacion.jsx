@@ -184,6 +184,10 @@ const DashboardActualPorEstacion = () => {
       navigate(`/edit/${station_id}`);
     };
 
+    const handleBackClick = () => {
+      navigate('/home');
+    };
+
     return (
       <div>
         <h1 className="text-center text-2xl leading-9 font-bold">Dashboard Actual Por Estación</h1>
@@ -200,6 +204,9 @@ const DashboardActualPorEstacion = () => {
             onClick={() => handleEditClick()}
           >
             Editar
+          </button>
+          <button className="btn btn-secondary" onClick={handleBackClick}>
+            Back
           </button>
         </div>
         <button onClick={handleVerDatosHistoricos}>Ver Datos Históricos</button>

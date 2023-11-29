@@ -36,6 +36,10 @@ const CreateEstacion = () => {
         }
     };
 
+    const handleBackClick = () => {
+        navigate('/home');
+    };
+
     return (
         <div>
             <h1>Create Station</h1>
@@ -46,6 +50,8 @@ const CreateEstacion = () => {
                 onChange={(e) => setStationName(e.target.value)}
             />
             <button onClick={handleCreateStation}>Create Station</button>
+            <button onClick={handleBackClick}>Go back</button>
+            
         </div>
     );
 };

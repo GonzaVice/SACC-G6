@@ -116,6 +116,7 @@ const DashboardActualPorEstacion = () => {
   }, [stationData]);
 
   const handleEditClick = () => {
+    console.log(station_id)
     navigate(`/edit/${station_id}`);
   };
 

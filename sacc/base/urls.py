@@ -44,6 +44,8 @@ urlpatterns = [
 
     #CRUD de estaciones
     path('create_station/', views.create_station, name='create_station'),
+    path('delete_station/', views.delete_station, name='delete_station'),
+    path('edit_station/', views.edit_station, name='edit_station'),
     
     #CRUD de casilleros
     path('create_locker/', views.create_locker, name='create_locker'),

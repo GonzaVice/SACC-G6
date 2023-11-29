@@ -793,6 +793,7 @@ def get_stations_info(request):
             station_info.append({
                 'name': station.name,
                 'conexion': station.conexion,
+                'id': station.id
             })
 
         return JsonResponse({'station_info': station_info})
@@ -999,8 +1000,8 @@ def delete_locker(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            locker_name = data.get('locker_name')
-            locker = Locker.objects.get(name=locker_name)
+            locker_id = data.get('locker_id')
+            locker = Locker.objects.get(id=locker_id)
 
             # Obtén la reserva asociada al casillero
             reservation = locker.reservation
@@ -1040,3 +1041,31 @@ def edit_locker(request):
     except Exception as e:
         return JsonResponse({'message': f'Error editing locker: {str(e)}'}, status=500)
 
+def delete_station(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            station_id = data.get('station_id')
+            station = Station.objects.get(id=station_id)
+            station.delete()
+            return JsonResponse({'message': 'Station deleted successfully'})
+        except Locker.DoesNotExist:
+            return JsonResponse({'message': 'Station not found'}, status=404)
+    else:
+        return JsonResponse({'message': 'Method not allowed'}, status=405)
+    
+def edit_station(request):
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            station_id = data.get('station_id')
+            station = Station.objects.get(id=station_id)
+            name = data.get('name')
+            station.name = name
+            station.save()
+
+            return JsonResponse({'message': 'Station edited successfully'})
+    except Locker.DoesNotExist:
+        return JsonResponse({'message': 'Station not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'message': f'Error editing locker: {str(e)}'}, status=500)

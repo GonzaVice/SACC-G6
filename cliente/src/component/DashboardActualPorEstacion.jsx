@@ -4,25 +4,21 @@ import TablaEstacion from "./Tablas/TablaEstacion.jsx";
 import SimpleCard from "./Dashboard/SimpleCard";
 import { useState, useEffect } from "react";
 import DashboardHistoricoPorEstacion from "./DashboardHistoricoPorEstacion";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { set } from "lodash";
 
-  const DashboardActualPorEstacion = () => {
-    const [stationData, setStationData] = useState('')
-    const [dataOcupados, setDataOcupados] = useState([]);
-    const [cantidadCasillerosOcupados, setCantidadCasillerosOcupados] = useState("0")
-    const[cantidadCasillerosDesocupados, setCantidadCasillerosDesocupados] = useState("0")
-    const [estadoOnline, setEstadoOnline] = useState("Offline");
-    const location = useLocation();
-    const { station_name, connection } = location.state;
-    const [isLoaded, setDataLoaded] = useState(false)
+const DashboardActualPorEstacion = () => {
+  const [stationData, setStationData] = useState('')
+  const [dataOcupados, setDataOcupados] = useState([]);
+  const [cantidadCasillerosOcupados, setCantidadCasillerosOcupados] = useState("0")
+  const[cantidadCasillerosDesocupados, setCantidadCasillerosDesocupados] = useState("0")
+  const [estadoOnline, setEstadoOnline] = useState("Offline");
+  const location = useLocation();
+  const { station_name, station_id } = location.state;
+  const [isLoaded, setDataLoaded] = useState(false)
+  const navigate = useNavigate();
 
-    const getCsrfToken = () => {
-      return document.cookie.split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        .split('=')[1];
-    };
 
     function calcularHoras(fecha1, fecha2) {
       fecha1 = new Date(fecha1);
@@ -41,6 +37,12 @@ import { set } from "lodash";
       var horas = totalHoras % 24;
       return dias + " días y " + horas.toFixed(1) + " horas";
   }
+  const getCsrfToken = () => {
+    return document.cookie.split('; ')
+      .find(row => row.startsWith('csrftoken='))
+      .split('=')[1];
+  };
+
 
     const tiempoReservaCarga = (locker) => {
       //toma el tiempo de reserva y carga con el formato "2023-11-02 01:53:17" y calcula el itempo de reserva-carga
@@ -53,6 +55,7 @@ import { set } from "lodash";
       }
       return tiempoReservaCarga
     }
+
 
     const tiempoCargaDescarga = (locker) => {
       var tiempoReservaCarga = 0
@@ -153,10 +156,52 @@ import { set } from "lodash";
       flexWrap: 'wrap',
     };
     console.log(stationData)
+
+    const handleDeleteLocker =  async () => {
+      try {
+          const csrfToken = getCsrfToken();
+          const headers = {
+              'X-CSRFToken': csrfToken,
+          };
+  
+          // Realiza la solicitud POST para eliminar el casillero
+          await axios.post(`http://127.0.0.1:8000/base/delete_station/`, 
+          { 
+              'station_id':station_id
+          }, {
+              headers,
+              withCredentials: true,
+          });
+  
+          // Recarga la página después de eliminar el casillero
+          navigate('/home')
+      } catch (error) {
+          console.error(error);
+      }
+    };
+
+    const handleEditClick = () => {
+      navigate(`/edit/${station_id}`);
+    };
+
     return (
       <div>
         <h1 className="text-center text-2xl leading-9 font-bold">Dashboard Actual Por Estación</h1>
         <br />
+        <div className="button-container">
+          <button
+            className="btn btn-danger"
+            onClick={() => handleDeleteLocker()}
+          >
+            Eliminar
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => handleEditClick()}
+          >
+            Editar
+          </button>
+        </div>
         <button onClick={handleVerDatosHistoricos}>Ver Datos Históricos</button>
         
         <h2 className="text-center text-2xl leading-9 font-bold">Estación: {station_name}</h2>

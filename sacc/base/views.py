@@ -1076,3 +1076,8 @@ def reservas_historicas_estacion(request):
 
 
 
+from django.middleware.csrf import get_token
+
+def set_csrf_token(request):
+    get_token(request)
+    return JsonResponse({'detail': 'CSRF cookie set'})

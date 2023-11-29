@@ -69,7 +69,9 @@ urlpatterns = [
 
     path('mqtt_ask/', views.mqtt_ask, name='mqtt_ask'),
 
-    path('reservas_historicas_estacion/', views.reservas_historicas_estacion, name='reservas_historicas_estacion')
+    path('reservas_historicas_estacion/', views.reservas_historicas_estacion, name='reservas_historicas_estacion'),
+    path('set_csrf_token/', views.set_csrf_token, name='set_csrf_token')
+
 
 ]
 

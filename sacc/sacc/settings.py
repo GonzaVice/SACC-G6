@@ -159,6 +159,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-8%-o(hib$$gdkw8*#0%t6c@95xyznsj=8#pm(7jwq3we$r92%o'
 
+CSRF_USE_SESSIONS = True
 CORS_ALLOW_ALL_HEADERS = True   # Allow all headers (for testing purposes)
 CORS_ALLOW_ALL_ORIGINS = True   # Allow all origins (for testing purposes)
 

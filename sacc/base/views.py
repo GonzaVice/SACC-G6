@@ -347,7 +347,8 @@ def confirmar_paquete(request):
                     Una vez mandado los datos, el pestillo del casillero se abrira,
                     y podra dejar el paquete en el casillero.\n
                     Una vez dejado el paquete, CERRAR el casillero, y mantener la
-                    puerta cerrada HASTA QUE SE CIERRE  EL PESTILLO (SERVO)
+                    puerta cerrada HASTA QUE SE CIERRE  EL PESTILLO (SERVO).
+                    Cuando el led esta encendido, se puede abrir la puerta
                     """
             MAIL.sendMails(reservation.operador, body)
 
@@ -584,7 +585,8 @@ def operador_abre(request):
                     Una vez mandado los datos, el pestillo del casillero se abrira,
                     y podra dejar el paquete en el casillero.\n
                     Una vez dejado el paquete, CERRAR el casillero, y MANTENER la
-                    puerta cerrada HASTA que se cierre el pestillo
+                    puerta cerrada HASTA que se cierre el pestillo.
+                    Cuando el led esta encendido, se puede abrir la puerta
                     """
             MAIL.sendMails(locker.reservation.cliente, body)
             locker.reservation.operador = 'xxxxxxxx'

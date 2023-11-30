@@ -44,6 +44,25 @@ const TablaEstacion = ({ data }) => { //
     return <p>No hay datos disponibles.</p>;
   }
 
+  const inconsistencias = (locker) => {
+    if (locker.reservation) {
+      if (locker.is_empty) {
+        return 'El casillero está vacío pero tiene una reserva';
+      }
+      if (locker.is_open) {
+        return 'El casillero está abierto pero tiene una reserva';
+      }
+    } else {
+      if (!locker.is_empty) {
+        return 'El casillero está ocupado pero no tiene una reserva';
+      }
+      if (!locker.is_open) {
+        return 'El casillero está cerrado pero no tiene una reserva';
+      }
+    }
+    return 'Sin inconsistencias';
+  }
+
   console.log("DATA TABLA", data)
 
 

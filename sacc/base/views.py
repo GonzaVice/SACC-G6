@@ -13,6 +13,8 @@ import json
 from django.core import serializers
 from .mqtt_util import mqtt_connect_and_publish, mqtt_subscribe, received_messages, mqtt_disconnect
 import time
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt  # Disable CSRF (for demo purposes; handle CSRF properly in production)
 
 def load(station,locker):
     json_to_esp = {

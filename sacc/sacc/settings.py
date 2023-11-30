@@ -45,11 +45,11 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    '*' # Allow requests from any origin (for testing purposes)
+    '*', # Allow requests from any origin (for testing purposes)
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-   '*' # Allow requests from any origin (for testing purposes)
+   '*', # Allow requests from any origin (for testing purposes)
 ]
 
 MIDDLEWARE = [

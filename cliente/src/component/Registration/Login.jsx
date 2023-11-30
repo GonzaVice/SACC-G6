@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 //         .split('=')[1];
 // }
 const getCsrfToken = async () => {
-  const response = await axios.get('http://127.0.0.1:8000/base/set_csrf_token/', {withCredentials: true});
+  const response = await axios.get('http://68.183.138.37:8000/base/set_csrf_token/', {withCredentials: true});
   const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
   return csrfToken;
 }
@@ -30,7 +30,7 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/base/login/', {
+      const response = await axios.post('http://68.183.138.37:8000/base/login/', {
         email,
         password,
       }, {

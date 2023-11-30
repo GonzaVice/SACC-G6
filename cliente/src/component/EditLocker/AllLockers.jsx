@@ -47,7 +47,7 @@ const EditLockerPopup = ({ lockerId, lockers, onClose }) => {
           'X-CSRFToken': csrfToken,
         };
   
-        const response = await axios.post(`http://127.0.0.1:8000/base/edit_locker/`, 
+        const response = await axios.post(`http://68.183.138.37:8000/base/edit_locker/`, 
         {
             'locker_id': lockerId,
             'name': formData.name,
@@ -106,7 +106,7 @@ const AllLockers = () => {
                 'X-CSRFToken': csrfToken,
             };
 
-            const response = await axios.get('http://127.0.0.1:8000/base/lockers/', {
+            const response = await axios.get('http://68.183.138.37:8000/base/lockers/', {
                 headers,
                 withCredentials: true,
             });
@@ -136,7 +136,7 @@ const AllLockers = () => {
             };
 
             // Realiza la solicitud POST para eliminar el casillero
-            await axios.post(`http://127.0.0.1:8000/base/delete_locker/`, 
+            await axios.post(`http://68.183.138.37:8000/base/delete_locker/`, 
             { 
                 'locker_id':LockerId, 
             }, {

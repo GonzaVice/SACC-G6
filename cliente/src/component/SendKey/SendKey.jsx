@@ -44,7 +44,7 @@ const SendKey = () => {
 
         try {
 
-            const apiUrl = userType === 'operador' ? 'http://127.0.0.1:8000/base/operador_abre/' : 'http://127.0.0.1:8000/base/cliente_abre/';
+            const apiUrl = userType === 'operador' ? 'http://68.183.138.37:8000/base/operador_abre/' : 'http://68.183.138.37:8000/base/cliente_abre/';
             const response = await axios.post(apiUrl, {
                 "station_name":stationId,
                 "locker_name":lockerId,

@@ -10,7 +10,7 @@ import axios from 'axios';
 //         .split('=')[1];
 // }
 const getCsrfToken = async () => {
-  const response = await axios.get('http://127.0.0.1:8000/base/set_csrf_token/', {withCredentials: true});
+  const response = await axios.get('http://68.183.138.37:8000/base/set_csrf_token/', {withCredentials: true});
   const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
   return csrfToken;
 }
@@ -27,7 +27,7 @@ const Signup = ({ onSignup }) => {
     e.preventDefault();
 
     try {
-        const response = await axios.post('http://127.0.0.1:8000/base/register/', {
+        const response = await axios.post('http://68.183.138.37:8000/base/register/', {
             first_name: firstName,
             last_name: lastName,
             email,

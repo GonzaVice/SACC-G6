@@ -22,7 +22,7 @@ const Home = () => {
                     'X-CSRFToken': csrfToken,
                 };
 
-                const response = await axios.get('http://127.0.0.1:8000/base/get_stations_info/', {
+                const response = await axios.get('http://68.183.138.37:8000/base/get_stations_info/', {
                     headers,
                     withCredentials: true,
                 });

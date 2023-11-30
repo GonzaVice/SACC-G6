@@ -44,25 +44,6 @@ const TablaEstacion = ({ data }) => { //
     return <p>No hay datos disponibles.</p>;
   }
 
-  const inconsistencias = (locker) => {
-    if (locker-reservation && (locker.reservation=="Reservado" || locker.reservation=="Confirmado_Reserva" || locker.reservation=="Confirmado_Op")) {
-      if (locker.is_empty) {
-        return 'El casillero está vacío pero tiene una reserva';
-      }
-      if (locker.is_open) {
-        return 'El casillero está abierto pero tiene una reserva';
-      }
-    } else {
-      if (!locker.is_empty) {
-        return 'El casillero está ocupado pero no tiene una reserva';
-      }
-      if (!locker.is_open) {
-        return 'El casillero está cerrado pero no tiene una reserva';
-      }
-    }
-    return 'Sin inconsistencias';
-  }
-
   console.log("DATA TABLA", data)
 
 
@@ -78,7 +59,6 @@ const TablaEstacion = ({ data }) => { //
           <th style={tableHeaderStyle}>Fecha Reserva</th>
           <th style={tableHeaderStyle}>Plazo Reserva</th>
           <th style={tableHeaderStyle}>Paquete Olvidado</th>
-          <th style={tableHeaderStyle}>Inconsistencias</th>
           <th style={tableHeaderStyle}>Ver Reserva</th>
         </tr>
       </thead>
@@ -130,9 +110,6 @@ const TablaEstacion = ({ data }) => { //
                 ) : (
                     <div>{plazoCarga(locker.reservation)}</div>
                 )}
-            </td>
-            <td style={tableCellStyle}>
-                {inconsistencias(locker)}
             </td>
             <td style={tableCellStyle}>
             {locker.reservation === null ? (

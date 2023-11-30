@@ -5,10 +5,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SESSION_COOKIE_SECURE=False
+SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_SAMESITE = 'None'
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -156,11 +155,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-8%-o(hib$$gdkw8*#0%t6c@95xyznsj=8#pm(7jwq3we$r92%o'
 
-
-CORS_ALLOW_ALL_ORIGINS = True  # Allow requests from all origins (for testing purposes)
-
-# Optional: Allow all headers
-CORS_ALLOW_ALL_HEADERS = True
+CORS_ALLOW_ALL_HEADERS = True   # Allow all headers (for testing purposes)
+CORS_ALLOW_ALL_ORIGINS = True   # Allow all origins (for testing purposes)
 
 # Optional: Allow all methods
 CORS_ALLOW_METHODS = [

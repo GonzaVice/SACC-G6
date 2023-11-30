@@ -42,15 +42,19 @@ INSTALLED_APPS = [
 CORS_ORIGIN_WHITELIST = [
     '*' # Allow requests from any origin (for testing purposes)
 ]
-CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000', # Allow requests from any origin (for testing purposes)
-]
+if DEBUG:
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = [
-   'http://localhost:3000', # Allow requests from any origin (for testing purposes)
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000',
+#     'http://localhost:3000', # Allow requests from any origin (for testing purposes)
+# ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#    'http://localhost:3000', # Allow requests from any origin (for testing purposes)
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

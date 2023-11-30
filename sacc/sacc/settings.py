@@ -17,7 +17,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '*',
-    'http://68.183.138.37:81/'  # Include the port number without the 'http://'
+    '68.183.138.37:81'  # Include the port number without the 'http://'
     # Add other allowed hosts if needed
 ]
 

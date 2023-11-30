@@ -4,12 +4,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 // Function to get the CSRF token
-const getCsrfToken = () => {
-    return document.cookie.split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        .split('=')[1];
+// const getCsrfToken = () => {
+//     return document.cookie.split('; ')
+//         .find(row => row.startsWith('csrftoken='))
+//         .split('=')[1];
+// }
+const getCsrfToken = async () => {
+  const response = await axios.get('http://127.0.0.1:8000/base/set_csrf_token/', {withCredentials: true});
+  const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+  return csrfToken;
 }
-
 console.log(getCsrfToken());
 
 const Signup = ({ onSignup }) => {

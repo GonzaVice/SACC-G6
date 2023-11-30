@@ -5,7 +5,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SESSIONS_COOKIES_SECURE=True
+SESSION_COOKIE_SECURE=False
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'None'
 
@@ -20,8 +20,7 @@ SECRET_KEY = 'django-insecure-8%-o(hib$$gdkw8*#0%t6c@95xyznsj=8#pm(7jwq3we$r92%o
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '*'  # Include the port number without the 'http://'
-    # Add other allowed hosts if needed
+    '*' # Allow requests from any origin (for testing purposes)
 ]
 
 # Application definition
@@ -42,24 +41,16 @@ INSTALLED_APPS = [
 # settings.py
 
 CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:5173',  # Add the origin of your client here
-    # Add any other origins you want to allow
-    'http://localhost:5173',
+    '*' # Allow requests from any origin (for testing purposes)
 ]
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",  # Add your React app origin
-    "http://localhost:5173",
-    "http://127.0.0.1:5174",  # Add other allowed origins if needed
-    "http://localhost:5174",
+    '*' # Allow requests from any origin (for testing purposes)
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:5173",  # Add your React app origin
-    "http://localhost:5173",
-    "http://127.0.0.1:5174",  # Add other allowed origins if needed
-    "http://localhost:5174",
+   '*' # Allow requests from any origin (for testing purposes)
 ]
 
 MIDDLEWARE = [

@@ -82,7 +82,7 @@ const DashboardActualPorEstacion = () => {
           'X-CSRFToken': csrfToken,
         };
 
-        const response = await axios.get('http://127.0.0.1:8000/base/dashboard/', {
+        const response = await axios.get('http://68.183.138.37:8000/base/dashboard/', {
           headers,
           withCredentials: true,
         });
@@ -166,7 +166,7 @@ const DashboardActualPorEstacion = () => {
           };
   
           // Realiza la solicitud POST para eliminar el casillero
-          await axios.post(`http://127.0.0.1:8000/base/delete_station/`, 
+          await axios.post(`http://68.183.138.37:8000/base/delete_station/`, 
           { 
               'station_id':station_id
           }, {

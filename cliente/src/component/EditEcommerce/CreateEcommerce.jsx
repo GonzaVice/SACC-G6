@@ -34,7 +34,7 @@ const CreateEcommerce = () => {
       // Reset input fields after successful creation
       setName('');
       setKey('');
-      const response = await axios.post('http://127.0.0.1:8000/base/create_ecommerce/', data, {
+      const response = await axios.post('http://68.183.138.37:8000/base/create_ecommerce/', data, {
         headers,
         withCredentials: true,
       });

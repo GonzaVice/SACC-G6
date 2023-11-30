@@ -67,7 +67,7 @@ const DashboardHistoricoPorEstacion = () => {
           'X-CSRFToken': csrfToken,
         };
 
-        const response = await axios.post('http://127.0.0.1:8000/base/reservas_historicas_estacion/', {station_name} ,{
+        const response = await axios.post('http://68.183.138.37:8000/base/reservas_historicas_estacion/', {station_name} ,{
           headers,
           withCredentials: true,
         });

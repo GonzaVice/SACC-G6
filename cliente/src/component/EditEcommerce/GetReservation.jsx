@@ -28,7 +28,7 @@ const Reservations = () => {
                         name: location.state.ecommerceName, // Use the passed e-commerce name
                     };
 
-                    const response = await axios.post('http://127.0.0.1:8000/base/get_reservations_of_ecommerce/', data, {
+                    const response = await axios.post('http://68.183.138.37:8000/base/get_reservations_of_ecommerce/', data, {
                         headers,
                         withCredentials: true,
                     });

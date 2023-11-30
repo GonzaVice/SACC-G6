@@ -22,7 +22,7 @@ const CreateEstacion = () => {
                 name: stationName,
             };
 
-            const response = await axios.post('http://127.0.0.1:8000/base/create_station/', data, {
+            const response = await axios.post('http://68.183.138.37:8000/base/create_station/', data, {
                 headers,
                 withCredentials: true,
             });

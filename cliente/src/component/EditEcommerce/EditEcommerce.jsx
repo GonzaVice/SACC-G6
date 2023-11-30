@@ -26,7 +26,7 @@ const EditEcommerce = () => {
         key: key,
       };
 
-      const response = await axios.post('http://127.0.0.1:8000/base/edit_ecommerce/', data, {
+      const response = await axios.post('http://68.183.138.37:8000/base/edit_ecommerce/', data, {
         headers,
         withCredentials: true,
       });

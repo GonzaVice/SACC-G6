@@ -20,7 +20,7 @@ const Ecommerce = () => {
                     'X-CSRFToken': csrfToken,
                 };
 
-                const response = await axios.get('http://127.0.0.1:8000/base/get_all_ecommerce/', {
+                const response = await axios.get('http://68.183.138.37:8000/base/get_all_ecommerce/', {
                     headers,
                     withCredentials: true,
                 });
@@ -75,7 +75,7 @@ const Ecommerce = () => {
                 'X-CSRFToken': csrfToken,
             };
 
-            await axios.post('http://127.0.0.1:8000/base/delete_ecommerce/', { name: ecommerceName }, {
+            await axios.post('http://68.183.138.37:8000/base/delete_ecommerce/', { name: ecommerceName }, {
                 headers,
                 withCredentials: true,
             });

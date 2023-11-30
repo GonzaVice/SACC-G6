@@ -21,7 +21,7 @@ const EditStation = () => {
       };
 
       // Realiza la solicitud POST para editar el nombre de la estación
-      await axios.post(`http://127.0.0.1:8000/base/edit_station/`, 
+      await axios.post(`http://68.183.138.37:8000/base/edit_station/`, 
       { 
         'station_id': station_id,
         'name': newStationName,

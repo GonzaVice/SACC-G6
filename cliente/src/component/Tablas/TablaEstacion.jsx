@@ -45,7 +45,7 @@ const TablaEstacion = ({ data }) => { //
   }
 
   const inconsistencias = (locker) => {
-    if (locker.reservation) {
+    if (locker-reservation && (locker.reservation=="Reservado" || locker.reservation=="Confirmado_Reserva" || locker.reservation=="Confirmado_Op")) {
       if (locker.is_empty) {
         return 'El casillero está vacío pero tiene una reserva';
       }

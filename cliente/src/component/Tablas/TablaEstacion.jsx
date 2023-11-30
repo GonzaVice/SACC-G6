@@ -78,6 +78,7 @@ const TablaEstacion = ({ data }) => { //
           <th style={tableHeaderStyle}>Fecha Reserva</th>
           <th style={tableHeaderStyle}>Plazo Reserva</th>
           <th style={tableHeaderStyle}>Paquete Olvidado</th>
+          <th style={tableHeaderStyle}>Inconsistencias</th>
           <th style={tableHeaderStyle}>Ver Reserva</th>
         </tr>
       </thead>
@@ -129,6 +130,9 @@ const TablaEstacion = ({ data }) => { //
                 ) : (
                     <div>{plazoCarga(locker.reservation)}</div>
                 )}
+            </td>
+            <td style={tableCellStyle}>
+                {inconsistencias(locker)}
             </td>
             <td style={tableCellStyle}>
             {locker.reservation === null ? (

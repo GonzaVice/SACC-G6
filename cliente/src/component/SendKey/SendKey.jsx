@@ -50,11 +50,6 @@ const SendKey = () => {
                 "locker_name":lockerId,
                 "usuario_clave":lockerKey,
                 "usuario":userMail
-            }, {
-                headers: {
-                  'X-CSRFToken': getCsrfToken()
-                },
-                withCredentials: true
             });
 
             console.log('Respuesta del servidor:', response.data);

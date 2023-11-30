@@ -39,9 +39,9 @@ INSTALLED_APPS = [
 
 # settings.py
 
-CORS_ORIGIN_WHITELIST = [
-    '*' # Allow requests from any origin (for testing purposes)
-]
+# CORS_ORIGIN_WHITELIST = [
+#     '*' # Allow requests from any origin (for testing purposes)
+# ]
 
 if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True

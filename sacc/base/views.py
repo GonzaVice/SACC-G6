@@ -587,8 +587,6 @@ def operador_abre(request):
                     puerta cerrada HASTA que se cierre el pestillo
                     """
             MAIL.sendMails(locker.reservation.cliente, body)
-            locker.reservation.operador = 'xxxxxxxx'
-            locker.reservation.save()
             return JsonResponse({'success': True, 'message': ' Operador abriendo locker ' + str(locker_name)})
 
             
